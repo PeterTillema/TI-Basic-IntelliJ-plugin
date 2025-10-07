@@ -1,0 +1,56 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>nl.petertillema.tibasic</id>
+    <name>TI-Basic</name>
+    <vendor url="https://petertillema.nl">Peter Tillema</vendor>
+    <description>Edit your TI-Basic programs with this plugin and make use of advanced inspection to write optimized
+        code
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="TI-Basic file"
+                implementationClass="nl.petertillema.tibasic.language.TIBasicFileType"
+                fieldName="INSTANCE"
+                language="TIBasic"
+                extensions="basic"/>
+        <lang.parserDefinition
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.syntax.TIBasicParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                implementationClass="nl.petertillema.tibasic.syntax.TIBasicSyntaxHighlighterFactory"
+                language="TIBasic"/>
+        <colorSettingsPage
+                implementation="nl.petertillema.tibasic.syntax.TIBasicColorSettingsPage"/>
+        <lang.commenter
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicCommenter"/>
+        <trailingSpacesOptionsProvider
+                implementation="nl.petertillema.tibasic.editor.TIBasicTrailingSpacesOptionsProvider"/>
+        <lang.foldingBuilder
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicLoopFoldingBuilder"/>
+        <lang.formatter
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.formatting.TIBasicFormattingModelBuilder"/>
+        <codeStyleSettingsProvider
+                implementation="nl.petertillema.tibasic.editor.formatting.TIBasicCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider
+                implementation="nl.petertillema.tibasic.editor.formatting.TIBasicLanguageCodeStyleSettingsProvider"/>
+        <lang.findUsagesProvider
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.refactoring.TIBasicFindLabelUsagesProvider"/>
+        <localInspection
+                enabledByDefault="true"
+                displayName="Unused label"
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnusedLabelInspection" />
+        <localInspection
+                enabledByDefault="true"
+                displayName="Invalid Goto"
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"/>
+    </extensions>
+</idea-plugin>

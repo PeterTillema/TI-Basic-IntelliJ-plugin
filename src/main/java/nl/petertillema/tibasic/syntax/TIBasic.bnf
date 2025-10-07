@@ -1,0 +1,150 @@
+{
+  parserClass="nl.petertillema.tibasic.parser.TIBasicParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="TIBasic"
+  psiImplClassSuffix="Impl"
+  psiPackage="nl.petertillema.tibasic.psi"
+  psiImplPackage="nl.petertillema.tibasic.psi.impl"
+  psiImplUtilClass="nl.petertillema.tibasic.psi.impl.TIBasicPsiImplUtil"
+
+  elementTypeHolderClass="nl.petertillema.tibasic.psi.TIBasicTypes"
+  elementTypeClass="nl.petertillema.tibasic.psi.TIBasicElementType"
+  tokenTypeClass="nl.petertillema.tibasic.psi.TIBasicTokenType"
+
+  extends(".*expr")=expr
+}
+
+tibasicFile ::= newline* [statements] newline*
+private statements ::= statement (newline+ statement)*
+private statement ::= compound_statement | simple_statement
+
+private newline ::= CRLF | ":"
+
+end_block ::= newline+ (!"End" (statement newline*))*
+then_block ::= newline+ (!"Else" !"End" (statement newline*))*
+
+private simple_statement ::= small_statement
+private small_statement ::= delvar_command | goto | lbl | simple_command | arguments_command | assignment | expr
+
+private compound_statement ::= if | while | repeat | for
+
+private unused_ ::= SPECIAL_CHARACTER | COMMENT | TOKEN
+
+//////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
+expr ::= conversion_group
+  | or_group
+  | and_group
+  | comparison_group
+  | addition_group
+  | multiplication_group
+  | combinations_group
+  | negation_group
+  | exponential_group
+  | modifiers_group
+  | primary_group
+
+// Private rules to define operators with the same priority
+private conversion_group ::= dms_expr | dec_expr | frac_expr
+private or_group ::= or_expr | xor_expr
+private and_group ::= and_expr
+private comparison_group ::= eq_expr | ne_expr | gt_expr | ge_expr | lt_expr | le_expr
+private addition_group ::= plus_expr | minus_expr
+private multiplication_group ::= mul_expr | div_expr | implied_mul_expr
+private combinations_group ::= npr_expr | ncr_expr
+private negation_group ::= negation_expr
+private exponential_group ::= pow_expr | xroot_expr
+private modifiers_group ::= radian_expr | degree_expr | inverse_expr | pow2_expr | transpose_expr | pow3_expr
+private primary_group ::= literal_expr | func_expr | paren_expr
+
+// Public rules for each expression
+// Precedence 10
+dms_expr ::= expr "►DMS"
+dec_expr ::= expr "►Dec"
+frac_expr ::= expr "►Frac"
+// Precedence 9
+or_expr ::= expr " or " expr
+xor_expr ::= expr " xor " expr
+// Precedence 8
+and_expr ::= expr " and " expr
+// Precedence 7
+eq_expr ::= expr "=" expr
+ne_expr ::= expr "!=" expr
+gt_expr ::= expr ">" expr
+ge_expr ::= expr ">=" expr
+lt_expr ::= expr "<" expr
+le_expr ::= expr "<=" expr
+// Precedence 6
+plus_expr ::= expr "+" expr
+minus_expr ::= expr "-" expr
+// Precedence 5
+mul_expr ::= expr "*" expr
+div_expr ::= expr "/" expr
+implied_mul_expr ::= implied_mul_arg implied_mul_arg+
+private implied_mul_arg ::= NUMBER | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
+// Precedence 4
+npr_expr ::= expr " nPr " expr
+ncr_expr ::= expr " nCr " expr
+// Precedence 3.5
+negation_expr ::= ("‾" | "~") expr
+// Precedence 3
+pow_expr ::= expr "^" expr
+xroot_expr ::= expr "×√" expr
+// Precedence 2
+radian_expr ::= expr "^^r"
+degree_expr ::= expr "^^o"
+inverse_expr ::= expr "^^-1"
+pow2_expr ::= expr "^^2"
+transpose_expr ::= expr "^^T"
+pow3_expr ::= expr "^^3"
+// Precedence 1
+paren_expr ::= "(" expr [")"]
+func_expr ::= EXPR_FUNCTIONS_WITH_ARGS expr ("," expr)* [")"]
+
+// Base literal
+literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
+list_index ::= LIST_VARIABLE "(" expr [")"]
+matrix_index ::= MATRIX_VARIABLE "(" expr "," expr [")"]
+anonymous_list ::= "{" expr ("," expr)* ["}"]
+anonymous_matrix ::= "[" anonymous_matrix_row ("," anonymous_matrix_row)* ["]"]
+anonymous_matrix_row ::= "[" expr ("," expr)* ["]"]
+//////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
+
+/////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
+assignment ::= expr "->" assignment_target
+assignment_target ::= assignment_target_matrix_index | assignment_target_list_index | assignment_target_variable | assignment_target_dim
+private assignment_target_variable ::= LIST_VARIABLE | LIST_VARIABLE_NAME | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_TOKENS
+private assignment_target_matrix_index ::= MATRIX_VARIABLE "(" expr "," expr [")"]
+private assignment_target_list_index ::= LIST_VARIABLE "(" expr [")"]
+private assignment_target_dim ::= "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [")"]
+
+goto ::= "Goto " lbl_name
+{
+    methods=[getReferences]
+}
+lbl ::= "Lbl " lbl_name
+{
+    mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
+    implements="nl.petertillema.tibasic.psi.TIBasicNamedElement"
+    methods=[getName setName getNameIdentifier]
+}
+lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
+
+simple_command ::= COMMAND_NO_PARENS [expr ("," expr)*]
+arguments_command ::= COMMAND_WITH_PARENS expr ("," expr)* [")"]
+delvar_command ::= ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement]
+/////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
+
+////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
+if ::= "If " expr newline (then | if_statement)
+if_statement ::= statement
+then ::= "Then" then_block [else | "End"]
+else ::= "Else" end_block ["End"]
+
+while ::= "While " expr end_block ["End"]
+
+repeat ::= "Repeat " expr end_block ["End"]
+
+for ::= "For(" SIMPLE_VARIABLE "," expr "," expr ["," expr] [")"] end_block ["End"]
+////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
