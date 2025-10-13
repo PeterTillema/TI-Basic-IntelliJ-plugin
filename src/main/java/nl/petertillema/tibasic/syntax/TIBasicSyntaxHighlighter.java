@@ -10,6 +10,9 @@ import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
@@ -19,6 +22,11 @@ public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey NUMBER = createTextAttributesKey("TIBASIC_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey COMMAND = createTextAttributesKey("TIBASIC_COMMAND", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
     public static final TextAttributesKey FUNCTION = createTextAttributesKey("TIBASIC_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_CALL);
+    public static final TextAttributesKey OPERATOR = createTextAttributesKey("TIBASIC_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
+    public static final TextAttributesKey COMMA = createTextAttributesKey("TIBASIC_COMMA", DefaultLanguageHighlighterColors.COMMA);
+    public static final TextAttributesKey PARENTHESES = createTextAttributesKey("TIBASIC_PARENTHESIS", DefaultLanguageHighlighterColors.PARENTHESES);
+    public static final TextAttributesKey BRACKETS = createTextAttributesKey("TIBASIC_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
+    public static final TextAttributesKey BRACES = createTextAttributesKey("TIBASIC_BRACES", DefaultLanguageHighlighterColors.BRACES);
     public static final TextAttributesKey ANS_IDENTIFIER = createTextAttributesKey("TIBASIC_ANS_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey LIST_IDENTIFIER = createTextAttributesKey("TIBASIC_LIST_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey EQUATION_IDENTIFIER = createTextAttributesKey("TIBASIC_EQUATION_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
@@ -32,24 +40,47 @@ public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey IMAGE_IDENTIFIER = createTextAttributesKey("TIBASIC_IMAGE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey BAD_CHARACTER = createTextAttributesKey("TIBASIC_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
-    private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
-    private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
-    private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
-    private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
-    private static final TextAttributesKey[] COMMAND_KEYS = new TextAttributesKey[]{COMMAND};
-    private static final TextAttributesKey[] FUNCTION_KEYS = new TextAttributesKey[]{FUNCTION};
-    private static final TextAttributesKey[] ANS_IDENTIFIER_KEYS = new TextAttributesKey[]{ANS_IDENTIFIER};
-    private static final TextAttributesKey[] LIST_IDENTIFIER_KEYS = new TextAttributesKey[]{LIST_IDENTIFIER};
-    private static final TextAttributesKey[] EQUATION_IDENTIFIER_KEYS = new TextAttributesKey[]{EQUATION_IDENTIFIER};
-    private static final TextAttributesKey[] PICTURE_IDENTIFIER_KEYS = new TextAttributesKey[]{PICTURE_IDENTIFIER};
-    private static final TextAttributesKey[] GDB_IDENTIFIER_KEYS = new TextAttributesKey[]{GDB_IDENTIFIER};
-    private static final TextAttributesKey[] STRING_IDENTIFIER_KEYS = new TextAttributesKey[]{STRING_IDENTIFIER};
-    private static final TextAttributesKey[] SIMPLE_IDENTIFIER_KEYS = new TextAttributesKey[]{SIMPLE_IDENTIFIER};
-    private static final TextAttributesKey[] MATRIX_IDENTIFIER_KEYS = new TextAttributesKey[]{MATRIX_IDENTIFIER};
-    private static final TextAttributesKey[] STATISTIC_IDENTIFIER_KEYS = new TextAttributesKey[]{STATISTIC_IDENTIFIER};
-    private static final TextAttributesKey[] COLOR_IDENTIFIER_KEYS = new TextAttributesKey[]{COLOR_IDENTIFIER};
-    private static final TextAttributesKey[] IMAGE_IDENTIFIER_KEYS = new TextAttributesKey[]{IMAGE_IDENTIFIER};
-    private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
+    private static final Map<IElementType, TextAttributesKey> keys;
+
+    static {
+        keys = new HashMap<>();
+
+        // Basic things
+        keys.put(TIBasicTypes.COMMENT, COMMENT);
+        keys.put(TIBasicTypes.STRING, STRING);
+        keys.put(TIBasicTypes.NUMBER, NUMBER);
+        keys.put(TIBasicTypes.COMMA, COMMA);
+
+        // Brackets et alia
+        keys.put(TIBasicTypes.LPAREN, PARENTHESES);
+        keys.put(TIBasicTypes.RPAREN, PARENTHESES);
+        keys.put(TIBasicTypes.LBRACKET, BRACKETS);
+        keys.put(TIBasicTypes.RBRACKET, BRACKETS);
+        keys.put(TIBasicTypes.LCURLY, BRACES);
+        keys.put(TIBasicTypes.RCURLY, BRACES);
+
+        // Commands and functions
+        fillMap(keys, TIBasicTokenSets.COMMANDS, COMMAND);
+        keys.put(TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS, FUNCTION);
+        keys.put(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS, FUNCTION);
+
+        // Variables
+        keys.put(TIBasicTypes.ANS_VARIABLE, ANS_IDENTIFIER);
+        keys.put(TIBasicTypes.LIST_VARIABLE, LIST_IDENTIFIER);
+        keys.put(TIBasicTypes.EQUATION_VARIABLE_1, EQUATION_IDENTIFIER);
+        keys.put(TIBasicTypes.EQUATION_VARIABLE_2, EQUATION_IDENTIFIER);
+        keys.put(TIBasicTypes.EQUATION_VARIABLE_3, EQUATION_IDENTIFIER);
+        keys.put(TIBasicTypes.EQUATION_VARIABLE_4, EQUATION_IDENTIFIER);
+        keys.put(TIBasicTypes.STRING_VARIABLE, STRING);
+        keys.put(TIBasicTypes.SIMPLE_VARIABLE, SIMPLE_IDENTIFIER);
+        keys.put(TIBasicTypes.MATRIX_VARIABLE, MATRIX_IDENTIFIER);
+        keys.put(TIBasicTypes.COLOR_VARIABLE, COLOR_IDENTIFIER);
+
+        // Operators
+        fillMap(keys, TIBasicTokenSets.OPERATORS, OPERATOR);
+
+        keys.put(TokenType.BAD_CHARACTER, BAD_CHARACTER);
+    }
 
     @Override
     public @NotNull Lexer getHighlightingLexer() {
@@ -58,44 +89,7 @@ public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @Override
     public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(TIBasicTypes.COMMENT)) {
-            return COMMENT_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.STRING)) {
-            return STRING_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.NUMBER)) {
-            return NUMBER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.COMMAND_NO_PARENS) || tokenType.equals(TIBasicTypes.COMMAND_WITH_PARENS)) {
-            return COMMAND_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) || tokenType.equals(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS)) {
-            return FUNCTION_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.ANS_VARIABLE)) {
-            return ANS_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.LIST_VARIABLE)) {
-            return LIST_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.EQUATION_VARIABLE_1) || tokenType.equals(TIBasicTypes.EQUATION_VARIABLE_2) || tokenType.equals(TIBasicTypes.EQUATION_VARIABLE_3) || tokenType.equals(TIBasicTypes.EQUATION_VARIABLE_4)) {
-            return EQUATION_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.STRING_VARIABLE)) {
-            return STRING_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.SIMPLE_VARIABLE)) {
-            return SIMPLE_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TIBasicTypes.MATRIX_VARIABLE)) {
-            return MATRIX_IDENTIFIER_KEYS;
-        }
-        if (tokenType.equals(TokenType.BAD_CHARACTER)) {
-            return BAD_CHAR_KEYS;
-        }
-
-        return EMPTY_KEYS;
+        return SyntaxHighlighterBase.pack(keys.get(tokenType));
     }
 
 }
