@@ -1,68 +1,97 @@
 package nl.petertillema.tibasic.editor.formatting;
 
+import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
+import com.intellij.formatting.ChildAttributes;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
 import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import nl.petertillema.tibasic.language.TIBasicFile;
+import nl.petertillema.tibasic.psi.TIBasicElse;
 import nl.petertillema.tibasic.psi.TIBasicEndBlock;
-import nl.petertillema.tibasic.psi.TIBasicFor;
-import nl.petertillema.tibasic.psi.TIBasicRepeat;
+import nl.petertillema.tibasic.psi.TIBasicForStatement;
+import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
 import nl.petertillema.tibasic.psi.TIBasicThen;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
-import nl.petertillema.tibasic.psi.TIBasicWhile;
+import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class TIBasicBlock extends AbstractBlock {
+public class TIBasicBlock implements ASTBlock {
 
-    protected TIBasicBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment) {
-        super(node, wrap, alignment);
+    private final TIBasicBlock parent;
+    private final ASTNode node;
+    private final Indent indent;
+    private List<TIBasicBlock> subBlocks = null;
+
+    public TIBasicBlock(@Nullable TIBasicBlock parent, @NotNull ASTNode node, @NotNull Indent indent) {
+        this.parent = parent;
+        this.node = node;
+        this.indent = indent;
     }
 
     @Override
-    protected List<Block> buildChildren() {
-        var blocks = new ArrayList<Block>();
-        ASTNode child = myNode.getFirstChildNode();
-        while (child != null) {
-            if (child.getElementType() != TokenType.WHITE_SPACE && child.getElementType() != TIBasicTypes.CRLF) {
-                Block block = new TIBasicBlock(child, Wrap.createWrap(WrapType.NONE, false), null);
-                blocks.add(block);
-            }
-            child = child.getTreeNext();
+    public @Nullable ASTNode getNode() {
+        return this.node;
+    }
+
+    @Override
+    public @NotNull TextRange getTextRange() {
+        return this.node.getTextRange();
+    }
+
+    @Override
+    public @NotNull @Unmodifiable List<Block> getSubBlocks() {
+        if (this.subBlocks == null) {
+            this.subBlocks = this.buildSubBlocks();
         }
-        return blocks;
+
+        return Collections.unmodifiableList(this.subBlocks);
+    }
+
+    private List<TIBasicBlock> buildSubBlocks() {
+        var childBlocks = new ArrayList<TIBasicBlock>();
+        var children = this.node.getChildren(null);
+        var psi = this.node.getPsi();
+
+        for (var child : children) {
+            if (child.getElementType() != TokenType.WHITE_SPACE && child.getElementType() != TIBasicTypes.CRLF) {
+                var childIndent = Indent.getNoneIndent();
+                if (psi instanceof TIBasicThenBlock || psi instanceof TIBasicEndBlock) {
+                    childIndent = Indent.getNormalIndent();
+                }
+
+                var newBlock = new TIBasicBlock(this, child, childIndent);
+                childBlocks.add(newBlock);
+            }
+        }
+
+        return childBlocks;
+    }
+
+    @Override
+    public @Nullable Wrap getWrap() {
+        return null;
     }
 
     @Override
     public @Nullable Indent getIndent() {
-        var e = myNode.getPsi();
-        if (e.getParent() != null && (e.getParent() instanceof TIBasicEndBlock || e.getParent() instanceof TIBasicThenBlock)) {
-            return Indent.getNormalIndent();
-        }
-        return Indent.getNoneIndent();
+        return this.indent;
     }
 
     @Override
-    protected @Nullable Indent getChildIndent() {
-        var e = myNode.getPsi();
-        if (e instanceof TIBasicThen ||
-                e instanceof TIBasicThenBlock ||
-                e instanceof TIBasicFor ||
-                e instanceof TIBasicWhile ||
-                e instanceof TIBasicRepeat ||
-                e instanceof TIBasicEndBlock) {
-            return Indent.getNormalIndent();
-        }
-        return Indent.getNoneIndent();
+    public @Nullable Alignment getAlignment() {
+        return null;
     }
 
     @Override
@@ -71,7 +100,42 @@ public class TIBasicBlock extends AbstractBlock {
     }
 
     @Override
+    public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
+        var psi = this.node.getPsi();
+        if (newChildIndex > 0 && psi instanceof TIBasicFile) {
+            return ChildAttributes.DELEGATE_TO_PREV_CHILD;
+        }
+
+        var childIndent = Indent.getNoneIndent();
+
+        if (psi instanceof TIBasicForStatement ||
+                psi instanceof TIBasicThen ||
+                psi instanceof TIBasicElse ||
+                psi instanceof TIBasicWhileStatement ||
+                psi instanceof TIBasicRepeatStatement ||
+                psi instanceof TIBasicEndBlock) {
+            childIndent = Indent.getNormalIndent();
+        }
+        return new ChildAttributes(childIndent, null);
+    }
+
+    @Override
+    public boolean isIncomplete() {
+        return this.isIncomplete(this.node);
+    }
+
+    private boolean isIncomplete(ASTNode node) {
+        ASTNode lastChild = node == null ? null : node.getLastChildNode();
+        while (lastChild != null && (lastChild.getElementType() == TIBasicTypes.CRLF || lastChild.getElementType() == TokenType.WHITE_SPACE)) {
+            lastChild = lastChild.getTreePrev();
+        }
+        if (lastChild == null) return false;
+        if (lastChild.getElementType() == TokenType.ERROR_ELEMENT) return true;
+        return isIncomplete(lastChild);
+    }
+
+    @Override
     public boolean isLeaf() {
-        return myNode.getFirstChildNode() == null;
+        return this.node.getFirstChildNode() == null;
     }
 }
