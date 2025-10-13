@@ -7,7 +7,7 @@ import nl.petertillema.tibasic.psi.TIBasicEndBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicThen;
+import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicThenStatement;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
@@ -19,6 +19,11 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
     @Override
     public void visitFile(@NotNull PsiFile file) {
         file.acceptChildren(this);
+    }
+
+    @Override
+    public void visitStatement(@NotNull TIBasicStatement o) {
+        o.acceptChildren(this);
     }
 
     @Override

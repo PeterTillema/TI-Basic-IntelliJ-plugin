@@ -37,6 +37,7 @@ public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey MATRIX_IDENTIFIER = createTextAttributesKey("TIBASIC_MATRIX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey STATISTIC_IDENTIFIER = createTextAttributesKey("TIBASIC_STATISTIC_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey COLOR_IDENTIFIER = createTextAttributesKey("TIBASIC_COLOR_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
+    public static final TextAttributesKey WINDOW_IDENTIFIER = createTextAttributesKey("TIBASIC_WINDOW_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey IMAGE_IDENTIFIER = createTextAttributesKey("TIBASIC_IMAGE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey BAD_CHARACTER = createTextAttributesKey("TIBASIC_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
@@ -75,6 +76,7 @@ public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
         keys.put(TIBasicTypes.SIMPLE_VARIABLE, SIMPLE_IDENTIFIER);
         keys.put(TIBasicTypes.MATRIX_VARIABLE, MATRIX_IDENTIFIER);
         keys.put(TIBasicTypes.COLOR_VARIABLE, COLOR_IDENTIFIER);
+        keys.put(TIBasicTypes.WINDOW_TOKENS, WINDOW_IDENTIFIER);
 
         // Operators
         fillMap(keys, TIBasicTokenSets.OPERATORS, OPERATOR);

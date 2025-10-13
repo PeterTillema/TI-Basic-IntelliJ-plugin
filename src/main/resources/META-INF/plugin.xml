@@ -44,13 +44,25 @@
                 implementationClass="nl.petertillema.tibasic.refactoring.TIBasicFindLabelUsagesProvider"/>
         <localInspection
                 enabledByDefault="true"
-                displayName="Unused label"
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnusedLabelInspection" />
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnusedLabelInspection"
+                key="inspection.TIBasic.unused.label.display.name"
+                bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
-                displayName="Invalid Goto"
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"/>
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"
+                key="inspection.TIBasic.unknown.goto.target.display.name"
+                bundle="messages.TIBasicBundle"/>
+        <bundledColorScheme
+                order="after Light"
+                id="TIBasicSourceCoder3Light"
+                path="themes/TIBasicSourceCoder3Light.xml" />
+        <bundledColorScheme
+                order="after Dark"
+                id="TIBasicSourceCoder3Dark"
+                path="themes/TIBasicSourceCoder3Dark.xml" />
     </extensions>
 </idea-plugin>

@@ -1,0 +1,67 @@
+<scheme name="SourceCoder3 Dark" parent_scheme="Darcula">
+    <metaInfo>
+        <property name="created">2023-02-21T12:03:20</property>
+        <property name="ide">idea</property>
+        <property name="ideVersion">2023.1.0.0</property>
+        <property name="originalScheme">_@New Dark RC</property>
+        <property name="modified">2023-02-21T12:03:22</property>
+    </metaInfo>
+    <colors>
+        <option name="ADDED_LINES_COLOR" value="549159" />
+
+    </colors>
+    <attributes>
+        <option name="TIBASIC_COMMENT">
+            <value>
+                <option name="FOREGROUND" value="aa8866" />
+            </value>
+        </option>
+        <option name="TIBASIC_COMMAND">
+            <value>
+                <option name="FOREGROUND" value="3838f6" />
+                <option name="FONT_TYPE" value="1"/>
+            </value>
+        </option>
+        <option name="TIBASIC_FUNCTION">
+            <value>
+                <option name="FOREGROUND" value="007777" />
+                <option name="FONT_TYPE" value="1"/>
+            </value>
+        </option>
+        <option name="TIBASIC_NUMBER">
+            <value>
+                <option name="FOREGROUND" value="33aa33" />
+            </value>
+        </option>
+        <option name="TIBASIC_STRING">
+            <value>
+                <option name="FOREGROUND" value="119911" />
+            </value>
+        </option>
+        <option name="TIBASIC_SIMPLE_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="dd1111" />
+            </value>
+        </option>
+        <option name="TIBASIC_ANS_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="dd1111" />
+            </value>
+        </option>
+        <option name="TIBASIC_STRING_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="dd1111" />
+            </value>
+        </option>
+        <option name="TIBASIC_WINDOW_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="dd1111" />
+            </value>
+        </option>
+        <option name="TIBASIC_COLOR_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="990099" />
+            </value>
+        </option>
+    </attributes>
+</scheme>
