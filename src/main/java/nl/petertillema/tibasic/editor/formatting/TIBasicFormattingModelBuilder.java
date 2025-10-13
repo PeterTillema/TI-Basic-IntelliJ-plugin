@@ -15,7 +15,6 @@ public class TIBasicFormattingModelBuilder implements FormattingModelBuilder {
         return FormattingModelProvider.createFormattingModelForPsiFile(
                 formattingContext.getContainingFile(),
                 new TIBasicBlock(
-                        null,
                         formattingContext.getNode(),
                         Indent.getNoneIndent()
                 ),

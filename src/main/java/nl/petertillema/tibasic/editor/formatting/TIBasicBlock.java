@@ -10,13 +10,12 @@ import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
-import nl.petertillema.tibasic.language.TIBasicFile;
-import nl.petertillema.tibasic.psi.TIBasicElse;
+import nl.petertillema.tibasic.psi.TIBasicElseStatement;
 import nl.petertillema.tibasic.psi.TIBasicEndBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicThen;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
+import nl.petertillema.tibasic.psi.TIBasicThenStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +28,11 @@ import java.util.List;
 
 public class TIBasicBlock implements ASTBlock {
 
-    private final TIBasicBlock parent;
     private final ASTNode node;
     private final Indent indent;
     private List<TIBasicBlock> subBlocks = null;
 
-    public TIBasicBlock(@Nullable TIBasicBlock parent, @NotNull ASTNode node, @NotNull Indent indent) {
-        this.parent = parent;
+    public TIBasicBlock(@NotNull ASTNode node, @NotNull Indent indent) {
         this.node = node;
         this.indent = indent;
     }
@@ -71,7 +68,7 @@ public class TIBasicBlock implements ASTBlock {
                     childIndent = Indent.getNormalIndent();
                 }
 
-                var newBlock = new TIBasicBlock(this, child, childIndent);
+                var newBlock = new TIBasicBlock(child, childIndent);
                 childBlocks.add(newBlock);
             }
         }
@@ -101,19 +98,15 @@ public class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
+        System.out.println("getChildAttributes: " + this.node);
         var psi = this.node.getPsi();
-        if (newChildIndex > 0 && psi instanceof TIBasicFile) {
-            return ChildAttributes.DELEGATE_TO_PREV_CHILD;
-        }
-
         var childIndent = Indent.getNoneIndent();
 
         if (psi instanceof TIBasicForStatement ||
-                psi instanceof TIBasicThen ||
-                psi instanceof TIBasicElse ||
                 psi instanceof TIBasicWhileStatement ||
                 psi instanceof TIBasicRepeatStatement ||
-                psi instanceof TIBasicEndBlock) {
+                psi instanceof TIBasicThenStatement ||
+                psi instanceof TIBasicElseStatement) {
             childIndent = Indent.getNormalIndent();
         }
         return new ChildAttributes(childIndent, null);
@@ -121,6 +114,18 @@ public class TIBasicBlock implements ASTBlock {
 
     @Override
     public boolean isIncomplete() {
+        System.out.println("isIncomplete: " + this.node);
+        var psi = this.node.getPsi();
+        if (psi instanceof TIBasicWhileStatement ||
+                psi instanceof TIBasicRepeatStatement ||
+                psi instanceof TIBasicForStatement ||
+                psi instanceof TIBasicElseStatement) {
+            return !psi.getText().endsWith("End");
+        }
+        if (psi instanceof TIBasicThenStatement) {
+            return !(psi.getText().endsWith("End") || psi.getText().endsWith("Else"));
+        }
+
         return this.isIncomplete(this.node);
     }
 
