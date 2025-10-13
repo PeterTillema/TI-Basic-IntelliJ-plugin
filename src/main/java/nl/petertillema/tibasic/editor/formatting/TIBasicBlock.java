@@ -98,7 +98,6 @@ public class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
-        System.out.println("getChildAttributes: " + this.node);
         var psi = this.node.getPsi();
         var childIndent = Indent.getNoneIndent();
 
@@ -114,7 +113,6 @@ public class TIBasicBlock implements ASTBlock {
 
     @Override
     public boolean isIncomplete() {
-        System.out.println("isIncomplete: " + this.node);
         var psi = this.node.getPsi();
         if (psi instanceof TIBasicWhileStatement ||
                 psi instanceof TIBasicRepeatStatement ||
