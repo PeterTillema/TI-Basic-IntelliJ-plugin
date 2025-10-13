@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class TIBasicFindLabelUsagesProvider implements FindUsagesProvider {
 
-    private static final String GOTO = "Goto ";
-
     @Override
     public @Nullable WordsScanner getWordsScanner() {
         return new GotoLabelWordScanner();
@@ -60,24 +58,21 @@ public class TIBasicFindLabelUsagesProvider implements FindUsagesProvider {
 
             IElementType type;
             while ((type = lexer.getTokenType()) != null) {
-                if (type == TIBasicTypes.COMMAND_NO_PARENS) {
-                    var isGotoCommand = GOTO.contentEquals(fileText.subSequence(lexer.getTokenStart(), lexer.getTokenEnd()));
-                    if (isGotoCommand) {
-                        var beginLabelIndex = lexer.getTokenEnd();
+                if (type == TIBasicTypes.GOTO) {
+                    var beginLabelIndex = lexer.getTokenEnd();
 
-                        // Get everything up to the newline or end of the file
-                        do {
-                            lexer.advance();
-                            type = lexer.getTokenType();
-                        } while (type != null && type != TIBasicTypes.CRLF);
+                    // Get everything up to the newline or end of the file
+                    do {
+                        lexer.advance();
+                        type = lexer.getTokenType();
+                    } while (type != null && type != TIBasicTypes.CRLF);
 
-                        // Eventually process the occurrence
-                        var endLabelIndex = lexer.getTokenStart();
-                        if (endLabelIndex > beginLabelIndex) {
-                            occurrence.init(fileText, beginLabelIndex, endLabelIndex, null);
-                            if (!processor.process(occurrence)) {
-                                break;
-                            }
+                    // Eventually process the occurrence
+                    var endLabelIndex = lexer.getTokenStart();
+                    if (endLabelIndex > beginLabelIndex) {
+                        occurrence.init(fileText, beginLabelIndex, endLabelIndex, null);
+                        if (!processor.process(occurrence)) {
+                            break;
                         }
                     }
                 }
