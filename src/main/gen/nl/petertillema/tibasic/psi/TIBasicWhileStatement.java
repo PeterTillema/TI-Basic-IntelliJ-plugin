@@ -5,15 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicLbl extends TIBasicNamedElement {
+public interface TIBasicWhileStatement extends PsiElement {
 
   @NotNull
-  TIBasicLblName getLblName();
+  TIBasicEndBlock getEndBlock();
 
-  String getName();
-
-  PsiElement setName(String name);
-
-  PsiElement getNameIdentifier();
+  @NotNull
+  TIBasicExpr getExpr();
 
 }

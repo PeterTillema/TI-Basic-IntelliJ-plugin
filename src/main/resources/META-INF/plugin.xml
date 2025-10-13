@@ -18,7 +18,7 @@
                 extensions="basic"/>
         <lang.parserDefinition
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.syntax.TIBasicParserDefinition"/>
+                implementationClass="nl.petertillema.tibasic.parser.TIBasicParserDefinition"/>
         <lang.syntaxHighlighterFactory
                 implementationClass="nl.petertillema.tibasic.syntax.TIBasicSyntaxHighlighterFactory"
                 language="TIBasic"/>

@@ -4,19 +4,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import nl.petertillema.tibasic.psi.TIBasicEndBlock;
-import nl.petertillema.tibasic.psi.TIBasicExpr;
-import nl.petertillema.tibasic.psi.TIBasicFor;
-import nl.petertillema.tibasic.psi.TIBasicIf;
-import nl.petertillema.tibasic.psi.TIBasicRepeat;
-import nl.petertillema.tibasic.psi.TIBasicThenBlock;
-import nl.petertillema.tibasic.psi.TIBasicVisitor;
-import nl.petertillema.tibasic.psi.TIBasicWhile;
+import nl.petertillema.tibasic.psi.TIBasicForStatement;
+import nl.petertillema.tibasic.psi.TIBasicIfStatement;
+import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
+import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
+import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,26 +23,22 @@ public class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbA
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         var descriptors = new ArrayList<FoldingDescriptor>();
 
-        root.accept(new TIBasicVisitor() {
-            @Override
-            public void visitFile(@NotNull PsiFile file) {
-                file.acceptChildren(this);
-            }
+        root.accept(new TIBasicCommandRecursiveVisitor() {
 
             @Override
-            public void visitIf(@NotNull TIBasicIf o) {
-                o.acceptChildren(this);
+            public void visitIfStatement(@NotNull TIBasicIfStatement o) {
+                super.visitIfStatement(o);
 
-                if (o.getThen() != null) {
-                    o.getThen().acceptChildren(this);
+                if (o.getThenStatement() != null) {
+                    o.getThenStatement().acceptChildren(this);
 
-                    if (o.getThen().getElse() != null) {
-                        o.getThen().getElse().acceptChildren(this);
+                    if (o.getThenStatement().getElseStatement() != null) {
+                        o.getThenStatement().getElseStatement().acceptChildren(this);
 
                         // Add for "If" + "Then"
                         var ifStartOffset = o.getTextRange().getStartOffset();
-                        var ifThenLength = o.getThen().getElse().getTextRange().getStartOffset() - o.getTextRange().getStartOffset() - 1;
-                        var ifText = o.getText().substring(0, o.getThen().getTextRangeInParent().getStartOffset());
+                        var ifThenLength = o.getThenStatement().getElseStatement().getTextRange().getStartOffset() - o.getTextRange().getStartOffset() - 1;
+                        var ifText = o.getText().substring(0, o.getThenStatement().getTextRangeInParent().getStartOffset());
 
                         var descriptor = new FoldingDescriptor(
                                 o.getNode(),
@@ -60,7 +51,7 @@ public class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbA
                         descriptors.add(descriptor);
 
                         // Add for "Else"
-                        this.addLoopDescriptor(o.getThen().getElse(), 4);
+                        this.addLoopDescriptor(o.getThenStatement().getElseStatement(), 4);
                     } else {
                         this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
                     }
@@ -68,20 +59,20 @@ public class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbA
             }
 
             @Override
-            public void visitRepeat(@NotNull TIBasicRepeat o) {
-                o.acceptChildren(this);
+            public void visitRepeatStatement(@NotNull TIBasicRepeatStatement o) {
+                super.visitRepeatStatement(o);
                 this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
             }
 
             @Override
-            public void visitWhile(@NotNull TIBasicWhile o) {
-                o.acceptChildren(this);
+            public void visitWhileStatement(@NotNull TIBasicWhileStatement o) {
+                super.visitWhileStatement(o);
                 this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
             }
 
             @Override
-            public void visitFor(@NotNull TIBasicFor o) {
-                o.acceptChildren(this);
+            public void visitForStatement(@NotNull TIBasicForStatement o) {
+                super.visitForStatement(o);
                 this.addLoopDescriptor(o, o.getExprList().getLast().getTextRangeInParent().getEndOffset());
             }
 
@@ -101,15 +92,6 @@ public class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbA
                 descriptors.add(descriptor);
             }
 
-            @Override
-            public void visitThenBlock(@NotNull TIBasicThenBlock o) {
-                o.acceptChildren(this);
-            }
-
-            @Override
-            public void visitEndBlock(@NotNull TIBasicEndBlock o) {
-                o.acceptChildren(this);
-            }
         });
 
         return descriptors.toArray(FoldingDescriptor.EMPTY_ARRAY);

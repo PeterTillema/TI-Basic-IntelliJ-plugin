@@ -5,6 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicNewline extends PsiElement {
+public interface TIBasicCommandStatement extends PsiElement {
+
+  @NotNull
+  List<TIBasicExpr> getExprList();
 
 }

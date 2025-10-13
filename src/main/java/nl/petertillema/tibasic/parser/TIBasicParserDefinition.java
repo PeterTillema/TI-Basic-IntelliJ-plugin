@@ -1,4 +1,4 @@
-package nl.petertillema.tibasic.syntax;
+package nl.petertillema.tibasic.parser;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -12,8 +12,9 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.language.TIBasicLanguage;
-import nl.petertillema.tibasic.parser.TIBasicParser;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
+import nl.petertillema.tibasic.syntax.TIBasicLexerAdapter;
+import nl.petertillema.tibasic.syntax.TIBasicTokenSets;
 import org.jetbrains.annotations.NotNull;
 
 public class TIBasicParserDefinition implements ParserDefinition {

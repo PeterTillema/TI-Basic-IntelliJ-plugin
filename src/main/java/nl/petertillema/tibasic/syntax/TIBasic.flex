@@ -19,7 +19,7 @@ import nl.petertillema.tibasic.psi.TIBasicTypes;
 EOL = "\r"|"\n"|"\r\n"
 WHITE_SPACE = [\ \t\f]
 COMMENT = \/\/[^\r\n]*
-NUMBER = ((\~?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+))((\|E|ᴇ)(\~?[0-9]+))?) | "[i]" | "𝑖"
+NUMBER = ((\~?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+))(\|E(\~?[0-9]+))?) | "[i]" | "𝑖"
 
 // All kind of variables
 ANS_VARIABLE = "Ans"
@@ -61,17 +61,17 @@ EXPR_FUNCTIONS_WITH_ARGS = "round(" | "pxl-Test(" | "augment(" | "rowSwap(" | "r
 EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey"
 
 // Commands, which should be present at the start of the line
-COMMAND_WITH_PARENS = "Text(" | "Line(" | "Pt-On(" | "Pt-Off(" | "Pt-Change(" | "Pxl-On(" | "Pxl-Off(" | "Pxl-Change(" | "Shade(" | "Circle(" | "Tangent(" | "For(" | "IS>(" | "DS<(" | "Output(" | "Fill(" | "SortA(" | "SortD(" | "Menu(" | "Send(" | "Get(" |
+COMMAND_WITH_PARENS = "Text(" | "Line(" | "Pt-On(" | "Pt-Off(" | "Pt-Change(" | "Pxl-On(" | "Pxl-Off(" | "Pxl-Change(" | "Shade(" | "Circle(" | "Tangent(" | "IS>(" | "DS<(" | "Output(" | "Fill(" | "SortA(" | "SortD(" | "Menu(" | "Send(" | "Get(" |
     "Plot1(" | "Plot2(" | "Plot3(" | "GraphColor(" | "TextColor(" | "Matr>list(" | "Matr►list(" | "List>matr(" | "List►matr("
 COMMAND_NO_PARENS = "CubicReg " | "QuartReg " | "Radian" | "Degree" | "Normal" | "Sci" | "Eng" | "Float" | "Fix " | "Horiz" | "FullScreen" | "Full" | "Func" | "Param" | "Polar" | "Seq" | "IndpntAuto" | "IndpntAsk" | "DependAuto" | "DependAsk" | "Trace" |
     "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "Zoom In" | "Zoom Out" | "ZSquare" | "ZInteger" | "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn " | "FnOff " | "StorePic " | "RecallPic " | "StoreGDB " | "RecallGDB " |
-    "Vertical " | "Horizontal " | "DrawInv " | "DrawF " | "If " | "Then" | "Else" | "While " | "Repeat " | "Return" | "Lbl " | "Goto " | "Pause " | "Stop" | "Input " | "Prompt " | "Disp " | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn " | "PlotsOff " |
+    "Vertical " | "Horizontal " | "DrawInv " | "DrawF " | "Return" | "Pause " | "Stop" | "Input " | "Prompt " | "Disp " | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn " | "PlotsOff " |
     "DelVar " | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOn " | "AxesOff" | "GridOn" | "GridDot " | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" |
     "uvAxes" | "vwAxes" | "uwAxes"
 
 OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "->" | "→" | "Boxplot" | "[" | "]" | "{" | "}" | "^^r" | "ʳ" | "^^o" | "°" | "^^-1" | "⁻¹" | "ˉ¹" | "^^2" | "²" | "^^T" | "ᵀ" | "^^3" | "³" | "(" | ")" | " " | "\"" | "“" | "”" | "," |
-    "[i]" | "𝑖" | "!" | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." | "|E" | "ᴇ" | " or " | " xor " | ":" | " and " | "prgm" | "=" | "<" | ">" | "<=" | "≤" | ">=" | "≥" | "!=" | "≠" | "+" | "-" | "squareplot" | "□" | "plotsquare" |
-    "crossplot" | "﹢" | "plotcross" | "dotplot" | "plotdot" | "*" | "/" | " nPr " | " nCr " | "pi" | "'" | "\'" | "?" | "~" | "⁻" | "|-" |
+    "[i]" | "𝑖" | "!" | "prgm" | "squareplot" | "□" | "plotsquare" |
+    "crossplot" | "﹢" | "plotcross" | "dotplot" | "plotdot" | "*" | "/" | " nPr " | " nCr " | "pi" | "'" | "\'" | "?" |
     "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV" |
     ">Rect" | "►Rect" | ">Polar" | "►Polar" | "[e]" | "𝑒" | "SinReg " | "Logistic " | "LinRegTTest " | "ShadeNorm(" | "Shade_t(" | "Shadechi^2(" | "Shadeχ²(" | "Shadeχ^2(" |
     "Shadechi²(" | "ShadeF(" | "Shade𝙵(" | "Shade𝐅(" | "Z-Test(" | "T-Test " | "2-SampZTest(" | "1-PropZTest(" | "2-PropZTest(" | "chi^2-Test(" | "χ²-Test(" | "χ^2-Test(" | "chi²-Test(" | "ZInterval "
@@ -99,10 +99,41 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "->"
 
 <YYINITIAL> {
     {EOL}                                                     { return TIBasicTypes.CRLF; }
+    ":"                                                       { return TIBasicTypes.COLON; }
     ^{WHITE_SPACE}+                                           { return TokenType.WHITE_SPACE; }
+    {WHITE_SPACE}+$                                           { return TokenType.WHITE_SPACE; }
     {COMMENT}                                                 { return TIBasicTypes.COMMENT; }
-    {WHITE_SPACE}+ {COMMENT}                                  { return TIBasicTypes.COMMENT; }
     {NUMBER}                                                  { return TIBasicTypes.NUMBER; }
+    "If "                                                     { return TIBasicTypes.IF; }
+    "Then"                                                    { return TIBasicTypes.THEN; }
+    "Else"                                                    { return TIBasicTypes.ELSE; }
+    "End"                                                     { return TIBasicTypes.END; }
+    "While "                                                  { return TIBasicTypes.WHILE; }
+    "Repeat "                                                 { return TIBasicTypes.REPEAT; }
+    "For("                                                    { return TIBasicTypes.FOR; }
+    "Goto "                                                   { return TIBasicTypes.GOTO; }
+    "Lbl "                                                    { return TIBasicTypes.LBL; }
+    "+"                                                       { return TIBasicTypes.PLUS; }
+    "-"                                                       { return TIBasicTypes.MINUS; }
+    "*"                                                       { return TIBasicTypes.TIMES; }
+    "/"                                                       { return TIBasicTypes.DIVIDE; }
+    "="                                                       { return TIBasicTypes.EQ; }
+    "!="                                                      { return TIBasicTypes.NE; }
+    ">"                                                       { return TIBasicTypes.GT; }
+    ">="                                                      { return TIBasicTypes.GE; }
+    "<"                                                       { return TIBasicTypes.LT; }
+    "<="                                                      { return TIBasicTypes.LE; }
+    "~"                                                       { return TIBasicTypes.NEG; }
+    " or "                                                    { return TIBasicTypes.OR; }
+    " xor "                                                   { return TIBasicTypes.XOR; }
+    " and "                                                   { return TIBasicTypes.AND; }
+    ","                                                       { return TIBasicTypes.COMMA; }
+    "("                                                       { return TIBasicTypes.LPAREN; }
+    ")"                                                       { return TIBasicTypes.RPAREN; }
+    "{"                                                       { return TIBasicTypes.LCURLY; }
+    "}"                                                       { return TIBasicTypes.RCURLY; }
+    "["                                                       { return TIBasicTypes.LBRACKET; }
+    "]"                                                       { return TIBasicTypes.RBRACKET; }
     "\""                                                      { yybegin(STRING); }
     {ANS_VARIABLE}                                            { return TIBasicTypes.ANS_VARIABLE; }
     {LIST_VARIABLE}                                           { return TIBasicTypes.LIST_VARIABLE; }

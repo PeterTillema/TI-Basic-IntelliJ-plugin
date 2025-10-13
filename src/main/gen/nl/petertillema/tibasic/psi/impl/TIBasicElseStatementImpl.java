@@ -11,14 +11,14 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicForImpl extends ASTWrapperPsiElement implements TIBasicFor {
+public class TIBasicElseStatementImpl extends ASTWrapperPsiElement implements TIBasicElseStatement {
 
-  public TIBasicForImpl(@NotNull ASTNode node) {
+  public TIBasicElseStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitFor(this);
+    visitor.visitElseStatement(this);
   }
 
   @Override
@@ -31,12 +31,6 @@ public class TIBasicForImpl extends ASTWrapperPsiElement implements TIBasicFor {
   @NotNull
   public TIBasicEndBlock getEndBlock() {
     return findNotNullChildByClass(TIBasicEndBlock.class);
-  }
-
-  @Override
-  @NotNull
-  public List<TIBasicExpr> getExprList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
   }
 
 }

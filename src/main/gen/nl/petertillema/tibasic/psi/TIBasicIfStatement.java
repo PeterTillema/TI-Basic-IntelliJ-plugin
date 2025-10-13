@@ -7,37 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicIfStatement extends PsiElement {
 
-  @Nullable
-  TIBasicArgumentsCommand getArgumentsCommand();
-
-  @Nullable
-  TIBasicAssignment getAssignment();
-
-  @Nullable
-  TIBasicDelvarCommand getDelvarCommand();
-
-  @Nullable
+  @NotNull
   TIBasicExpr getExpr();
 
   @Nullable
-  TIBasicFor getFor();
+  TIBasicStatement getStatement();
 
   @Nullable
-  TIBasicGoto getGoto();
-
-  @Nullable
-  TIBasicIf getIf();
-
-  @Nullable
-  TIBasicLbl getLbl();
-
-  @Nullable
-  TIBasicRepeat getRepeat();
-
-  @Nullable
-  TIBasicSimpleCommand getSimpleCommand();
-
-  @Nullable
-  TIBasicWhile getWhile();
+  TIBasicThenStatement getThenStatement();
 
 }

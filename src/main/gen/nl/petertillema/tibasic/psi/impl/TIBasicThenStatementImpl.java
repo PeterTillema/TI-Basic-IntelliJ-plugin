@@ -11,14 +11,14 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicWhileImpl extends ASTWrapperPsiElement implements TIBasicWhile {
+public class TIBasicThenStatementImpl extends ASTWrapperPsiElement implements TIBasicThenStatement {
 
-  public TIBasicWhileImpl(@NotNull ASTNode node) {
+  public TIBasicThenStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitWhile(this);
+    visitor.visitThenStatement(this);
   }
 
   @Override
@@ -28,15 +28,15 @@ public class TIBasicWhileImpl extends ASTWrapperPsiElement implements TIBasicWhi
   }
 
   @Override
-  @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  @Nullable
+  public TIBasicElseStatement getElseStatement() {
+    return findChildByClass(TIBasicElseStatement.class);
   }
 
   @Override
   @NotNull
-  public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+  public TIBasicThenBlock getThenBlock() {
+    return findNotNullChildByClass(TIBasicThenBlock.class);
   }
 
 }

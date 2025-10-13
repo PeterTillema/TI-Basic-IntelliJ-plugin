@@ -12,30 +12,29 @@ public interface TIBasicTypes {
   IElementType ANONYMOUS_LIST = new TIBasicElementType("ANONYMOUS_LIST");
   IElementType ANONYMOUS_MATRIX = new TIBasicElementType("ANONYMOUS_MATRIX");
   IElementType ANONYMOUS_MATRIX_ROW = new TIBasicElementType("ANONYMOUS_MATRIX_ROW");
-  IElementType ARGUMENTS_COMMAND = new TIBasicElementType("ARGUMENTS_COMMAND");
-  IElementType ASSIGNMENT = new TIBasicElementType("ASSIGNMENT");
+  IElementType ASSIGNMENT_STATEMENT = new TIBasicElementType("ASSIGNMENT_STATEMENT");
   IElementType ASSIGNMENT_TARGET = new TIBasicElementType("ASSIGNMENT_TARGET");
+  IElementType COMMAND_STATEMENT = new TIBasicElementType("COMMAND_STATEMENT");
   IElementType DEC_EXPR = new TIBasicElementType("DEC_EXPR");
   IElementType DEGREE_EXPR = new TIBasicElementType("DEGREE_EXPR");
   IElementType DELVAR_COMMAND = new TIBasicElementType("DELVAR_COMMAND");
   IElementType DIV_EXPR = new TIBasicElementType("DIV_EXPR");
   IElementType DMS_EXPR = new TIBasicElementType("DMS_EXPR");
-  IElementType ELSE = new TIBasicElementType("ELSE");
+  IElementType ELSE_STATEMENT = new TIBasicElementType("ELSE_STATEMENT");
   IElementType END_BLOCK = new TIBasicElementType("END_BLOCK");
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
-  IElementType FOR = new TIBasicElementType("FOR");
+  IElementType FOR_STATEMENT = new TIBasicElementType("FOR_STATEMENT");
   IElementType FRAC_EXPR = new TIBasicElementType("FRAC_EXPR");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
   IElementType GE_EXPR = new TIBasicElementType("GE_EXPR");
-  IElementType GOTO = new TIBasicElementType("GOTO");
+  IElementType GOTO_STATEMENT = new TIBasicElementType("GOTO_STATEMENT");
   IElementType GT_EXPR = new TIBasicElementType("GT_EXPR");
-  IElementType IF = new TIBasicElementType("IF");
   IElementType IF_STATEMENT = new TIBasicElementType("IF_STATEMENT");
   IElementType IMPLIED_MUL_EXPR = new TIBasicElementType("IMPLIED_MUL_EXPR");
   IElementType INVERSE_EXPR = new TIBasicElementType("INVERSE_EXPR");
-  IElementType LBL = new TIBasicElementType("LBL");
   IElementType LBL_NAME = new TIBasicElementType("LBL_NAME");
+  IElementType LBL_STATEMENT = new TIBasicElementType("LBL_STATEMENT");
   IElementType LE_EXPR = new TIBasicElementType("LE_EXPR");
   IElementType LIST_INDEX = new TIBasicElementType("LIST_INDEX");
   IElementType LITERAL_EXPR = new TIBasicElementType("LITERAL_EXPR");
@@ -54,37 +53,67 @@ public interface TIBasicTypes {
   IElementType POW_3_EXPR = new TIBasicElementType("POW_3_EXPR");
   IElementType POW_EXPR = new TIBasicElementType("POW_EXPR");
   IElementType RADIAN_EXPR = new TIBasicElementType("RADIAN_EXPR");
-  IElementType REPEAT = new TIBasicElementType("REPEAT");
-  IElementType SIMPLE_COMMAND = new TIBasicElementType("SIMPLE_COMMAND");
-  IElementType THEN = new TIBasicElementType("THEN");
+  IElementType REPEAT_STATEMENT = new TIBasicElementType("REPEAT_STATEMENT");
+  IElementType STATEMENT = new TIBasicElementType("STATEMENT");
   IElementType THEN_BLOCK = new TIBasicElementType("THEN_BLOCK");
+  IElementType THEN_STATEMENT = new TIBasicElementType("THEN_STATEMENT");
   IElementType TRANSPOSE_EXPR = new TIBasicElementType("TRANSPOSE_EXPR");
-  IElementType WHILE = new TIBasicElementType("WHILE");
+  IElementType WHILE_STATEMENT = new TIBasicElementType("WHILE_STATEMENT");
   IElementType XOR_EXPR = new TIBasicElementType("XOR_EXPR");
   IElementType XROOT_EXPR = new TIBasicElementType("XROOT_EXPR");
 
+  IElementType AND = new TIBasicTokenType("AND");
   IElementType ANS_VARIABLE = new TIBasicTokenType("ANS_VARIABLE");
+  IElementType COLON = new TIBasicTokenType("COLON");
   IElementType COLOR_VARIABLE = new TIBasicTokenType("COLOR_VARIABLE");
+  IElementType COMMA = new TIBasicTokenType("COMMA");
   IElementType COMMAND_NO_PARENS = new TIBasicTokenType("COMMAND_NO_PARENS");
   IElementType COMMAND_WITH_PARENS = new TIBasicTokenType("COMMAND_WITH_PARENS");
   IElementType COMMENT = new TIBasicTokenType("COMMENT");
   IElementType CRLF = new TIBasicTokenType("CRLF");
+  IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
+  IElementType ELSE = new TIBasicTokenType("ELSE");
+  IElementType END = new TIBasicTokenType("END");
+  IElementType EQ = new TIBasicTokenType("EQ");
   IElementType EQUATION_VARIABLE_1 = new TIBasicTokenType("EQUATION_VARIABLE_1");
   IElementType EQUATION_VARIABLE_2 = new TIBasicTokenType("EQUATION_VARIABLE_2");
   IElementType EQUATION_VARIABLE_3 = new TIBasicTokenType("EQUATION_VARIABLE_3");
   IElementType EQUATION_VARIABLE_4 = new TIBasicTokenType("EQUATION_VARIABLE_4");
   IElementType EXPR_FUNCTIONS_NO_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_NO_ARGS");
   IElementType EXPR_FUNCTIONS_WITH_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_WITH_ARGS");
+  IElementType FOR = new TIBasicTokenType("FOR");
+  IElementType GE = new TIBasicTokenType("GE");
+  IElementType GOTO = new TIBasicTokenType("GOTO");
+  IElementType GT = new TIBasicTokenType("GT");
+  IElementType IF = new TIBasicTokenType("IF");
+  IElementType LBL = new TIBasicTokenType("LBL");
+  IElementType LBRACKET = new TIBasicTokenType("LBRACKET");
+  IElementType LCURLY = new TIBasicTokenType("LCURLY");
+  IElementType LE = new TIBasicTokenType("LE");
   IElementType LIST_VARIABLE = new TIBasicTokenType("LIST_VARIABLE");
   IElementType LIST_VARIABLE_NAME = new TIBasicTokenType("LIST_VARIABLE_NAME");
+  IElementType LPAREN = new TIBasicTokenType("LPAREN");
+  IElementType LT = new TIBasicTokenType("LT");
   IElementType MATRIX_VARIABLE = new TIBasicTokenType("MATRIX_VARIABLE");
+  IElementType MINUS = new TIBasicTokenType("MINUS");
+  IElementType NE = new TIBasicTokenType("NE");
+  IElementType NEG = new TIBasicTokenType("NEG");
   IElementType NUMBER = new TIBasicTokenType("NUMBER");
+  IElementType OR = new TIBasicTokenType("OR");
+  IElementType PLUS = new TIBasicTokenType("PLUS");
+  IElementType RBRACKET = new TIBasicTokenType("RBRACKET");
+  IElementType RCURLY = new TIBasicTokenType("RCURLY");
+  IElementType REPEAT = new TIBasicTokenType("REPEAT");
+  IElementType RPAREN = new TIBasicTokenType("RPAREN");
   IElementType SIMPLE_VARIABLE = new TIBasicTokenType("SIMPLE_VARIABLE");
-  IElementType SPECIAL_CHARACTER = new TIBasicTokenType("SPECIAL_CHARACTER");
   IElementType STRING = new TIBasicTokenType("STRING");
   IElementType STRING_VARIABLE = new TIBasicTokenType("STRING_VARIABLE");
+  IElementType THEN = new TIBasicTokenType("THEN");
+  IElementType TIMES = new TIBasicTokenType("TIMES");
   IElementType TOKEN = new TIBasicTokenType("TOKEN");
+  IElementType WHILE = new TIBasicTokenType("WHILE");
   IElementType WINDOW_TOKENS = new TIBasicTokenType("WINDOW_TOKENS");
+  IElementType XOR = new TIBasicTokenType("XOR");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -101,14 +130,14 @@ public interface TIBasicTypes {
       else if (type == ANONYMOUS_MATRIX_ROW) {
         return new TIBasicAnonymousMatrixRowImpl(node);
       }
-      else if (type == ARGUMENTS_COMMAND) {
-        return new TIBasicArgumentsCommandImpl(node);
-      }
-      else if (type == ASSIGNMENT) {
-        return new TIBasicAssignmentImpl(node);
+      else if (type == ASSIGNMENT_STATEMENT) {
+        return new TIBasicAssignmentStatementImpl(node);
       }
       else if (type == ASSIGNMENT_TARGET) {
         return new TIBasicAssignmentTargetImpl(node);
+      }
+      else if (type == COMMAND_STATEMENT) {
+        return new TIBasicCommandStatementImpl(node);
       }
       else if (type == DEC_EXPR) {
         return new TIBasicDecExprImpl(node);
@@ -125,8 +154,8 @@ public interface TIBasicTypes {
       else if (type == DMS_EXPR) {
         return new TIBasicDmsExprImpl(node);
       }
-      else if (type == ELSE) {
-        return new TIBasicElseImpl(node);
+      else if (type == ELSE_STATEMENT) {
+        return new TIBasicElseStatementImpl(node);
       }
       else if (type == END_BLOCK) {
         return new TIBasicEndBlockImpl(node);
@@ -134,8 +163,8 @@ public interface TIBasicTypes {
       else if (type == EQ_EXPR) {
         return new TIBasicEqExprImpl(node);
       }
-      else if (type == FOR) {
-        return new TIBasicForImpl(node);
+      else if (type == FOR_STATEMENT) {
+        return new TIBasicForStatementImpl(node);
       }
       else if (type == FRAC_EXPR) {
         return new TIBasicFracExprImpl(node);
@@ -146,14 +175,11 @@ public interface TIBasicTypes {
       else if (type == GE_EXPR) {
         return new TIBasicGeExprImpl(node);
       }
-      else if (type == GOTO) {
-        return new TIBasicGotoImpl(node);
+      else if (type == GOTO_STATEMENT) {
+        return new TIBasicGotoStatementImpl(node);
       }
       else if (type == GT_EXPR) {
         return new TIBasicGtExprImpl(node);
-      }
-      else if (type == IF) {
-        return new TIBasicIfImpl(node);
       }
       else if (type == IF_STATEMENT) {
         return new TIBasicIfStatementImpl(node);
@@ -164,11 +190,11 @@ public interface TIBasicTypes {
       else if (type == INVERSE_EXPR) {
         return new TIBasicInverseExprImpl(node);
       }
-      else if (type == LBL) {
-        return new TIBasicLblImpl(node);
-      }
       else if (type == LBL_NAME) {
         return new TIBasicLblNameImpl(node);
+      }
+      else if (type == LBL_STATEMENT) {
+        return new TIBasicLblStatementImpl(node);
       }
       else if (type == LE_EXPR) {
         return new TIBasicLeExprImpl(node);
@@ -224,23 +250,23 @@ public interface TIBasicTypes {
       else if (type == RADIAN_EXPR) {
         return new TIBasicRadianExprImpl(node);
       }
-      else if (type == REPEAT) {
-        return new TIBasicRepeatImpl(node);
+      else if (type == REPEAT_STATEMENT) {
+        return new TIBasicRepeatStatementImpl(node);
       }
-      else if (type == SIMPLE_COMMAND) {
-        return new TIBasicSimpleCommandImpl(node);
-      }
-      else if (type == THEN) {
-        return new TIBasicThenImpl(node);
+      else if (type == STATEMENT) {
+        return new TIBasicStatementImpl(node);
       }
       else if (type == THEN_BLOCK) {
         return new TIBasicThenBlockImpl(node);
       }
+      else if (type == THEN_STATEMENT) {
+        return new TIBasicThenStatementImpl(node);
+      }
       else if (type == TRANSPOSE_EXPR) {
         return new TIBasicTransposeExprImpl(node);
       }
-      else if (type == WHILE) {
-        return new TIBasicWhileImpl(node);
+      else if (type == WHILE_STATEMENT) {
+        return new TIBasicWhileStatementImpl(node);
       }
       else if (type == XOR_EXPR) {
         return new TIBasicXorExprImpl(node);

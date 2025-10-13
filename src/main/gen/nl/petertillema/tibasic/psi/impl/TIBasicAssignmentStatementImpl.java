@@ -11,14 +11,14 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicSimpleCommandImpl extends ASTWrapperPsiElement implements TIBasicSimpleCommand {
+public class TIBasicAssignmentStatementImpl extends ASTWrapperPsiElement implements TIBasicAssignmentStatement {
 
-  public TIBasicSimpleCommandImpl(@NotNull ASTNode node) {
+  public TIBasicAssignmentStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitSimpleCommand(this);
+    visitor.visitAssignmentStatement(this);
   }
 
   @Override
@@ -29,8 +29,14 @@ public class TIBasicSimpleCommandImpl extends ASTWrapperPsiElement implements TI
 
   @Override
   @NotNull
-  public List<TIBasicExpr> getExprList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
+  public TIBasicAssignmentTarget getAssignmentTarget() {
+    return findNotNullChildByClass(TIBasicAssignmentTarget.class);
+  }
+
+  @Override
+  @NotNull
+  public TIBasicExpr getExpr() {
+    return findNotNullChildByClass(TIBasicExpr.class);
   }
 
 }

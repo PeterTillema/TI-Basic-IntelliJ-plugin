@@ -10,15 +10,16 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.psi.PsiReference;
 
-public class TIBasicAssignmentImpl extends ASTWrapperPsiElement implements TIBasicAssignment {
+public class TIBasicGotoStatementImpl extends ASTWrapperPsiElement implements TIBasicGotoStatement {
 
-  public TIBasicAssignmentImpl(@NotNull ASTNode node) {
+  public TIBasicGotoStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitAssignment(this);
+    visitor.visitGotoStatement(this);
   }
 
   @Override
@@ -29,14 +30,13 @@ public class TIBasicAssignmentImpl extends ASTWrapperPsiElement implements TIBas
 
   @Override
   @NotNull
-  public TIBasicAssignmentTarget getAssignmentTarget() {
-    return findNotNullChildByClass(TIBasicAssignmentTarget.class);
+  public TIBasicLblName getLblName() {
+    return findNotNullChildByClass(TIBasicLblName.class);
   }
 
   @Override
-  @NotNull
-  public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+  public PsiReference[] getReferences() {
+    return TIBasicPsiImplUtil.getReferences(this);
   }
 
 }

@@ -8,17 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicElseImpl extends ASTWrapperPsiElement implements TIBasicElse {
+public class TIBasicLblStatementImpl extends TIBasicNamedElementImpl implements TIBasicLblStatement {
 
-  public TIBasicElseImpl(@NotNull ASTNode node) {
+  public TIBasicLblStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitElse(this);
+    visitor.visitLblStatement(this);
   }
 
   @Override
@@ -29,8 +28,23 @@ public class TIBasicElseImpl extends ASTWrapperPsiElement implements TIBasicElse
 
   @Override
   @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public TIBasicLblName getLblName() {
+    return findNotNullChildByClass(TIBasicLblName.class);
+  }
+
+  @Override
+  public String getName() {
+    return TIBasicPsiImplUtil.getName(this);
+  }
+
+  @Override
+  public PsiElement setName(String name) {
+    return TIBasicPsiImplUtil.setName(this, name);
+  }
+
+  @Override
+  public PsiElement getNameIdentifier() {
+    return TIBasicPsiImplUtil.getNameIdentifier(this);
   }
 
 }

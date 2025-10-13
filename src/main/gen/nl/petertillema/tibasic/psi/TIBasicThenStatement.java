@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicSimpleCommand extends PsiElement {
+public interface TIBasicThenStatement extends PsiElement {
+
+  @Nullable
+  TIBasicElseStatement getElseStatement();
 
   @NotNull
-  List<TIBasicExpr> getExprList();
+  TIBasicThenBlock getThenBlock();
 
 }

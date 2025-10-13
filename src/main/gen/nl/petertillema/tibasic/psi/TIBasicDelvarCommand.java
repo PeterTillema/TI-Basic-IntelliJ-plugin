@@ -8,36 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicDelvarCommand extends PsiElement {
 
   @Nullable
-  TIBasicArgumentsCommand getArgumentsCommand();
-
-  @Nullable
-  TIBasicAssignment getAssignment();
-
-  @Nullable
-  TIBasicDelvarCommand getDelvarCommand();
-
-  @Nullable
-  TIBasicExpr getExpr();
-
-  @Nullable
-  TIBasicFor getFor();
-
-  @Nullable
-  TIBasicGoto getGoto();
-
-  @Nullable
-  TIBasicIf getIf();
-
-  @Nullable
-  TIBasicLbl getLbl();
-
-  @Nullable
-  TIBasicRepeat getRepeat();
-
-  @Nullable
-  TIBasicSimpleCommand getSimpleCommand();
-
-  @Nullable
-  TIBasicWhile getWhile();
+  TIBasicStatement getStatement();
 
 }

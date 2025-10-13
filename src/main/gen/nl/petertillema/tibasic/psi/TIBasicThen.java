@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicThen extends PsiElement {
 
   @Nullable
-  TIBasicElse getElse();
+  TIBasicElseStatement getElseStatement();
 
   @NotNull
   TIBasicThenBlock getThenBlock();

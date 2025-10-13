@@ -11,14 +11,14 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicRepeatImpl extends ASTWrapperPsiElement implements TIBasicRepeat {
+public class TIBasicRepeatStatementImpl extends ASTWrapperPsiElement implements TIBasicRepeatStatement {
 
-  public TIBasicRepeatImpl(@NotNull ASTNode node) {
+  public TIBasicRepeatStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitRepeat(this);
+    visitor.visitRepeatStatement(this);
   }
 
   @Override

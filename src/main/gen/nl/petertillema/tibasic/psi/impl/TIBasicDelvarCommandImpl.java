@@ -29,68 +29,8 @@ public class TIBasicDelvarCommandImpl extends ASTWrapperPsiElement implements TI
 
   @Override
   @Nullable
-  public TIBasicArgumentsCommand getArgumentsCommand() {
-    return findChildByClass(TIBasicArgumentsCommand.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicAssignment getAssignment() {
-    return findChildByClass(TIBasicAssignment.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicDelvarCommand getDelvarCommand() {
-    return findChildByClass(TIBasicDelvarCommand.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicExpr getExpr() {
-    return findChildByClass(TIBasicExpr.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicFor getFor() {
-    return findChildByClass(TIBasicFor.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicGoto getGoto() {
-    return findChildByClass(TIBasicGoto.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicIf getIf() {
-    return findChildByClass(TIBasicIf.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicLbl getLbl() {
-    return findChildByClass(TIBasicLbl.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicRepeat getRepeat() {
-    return findChildByClass(TIBasicRepeat.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicSimpleCommand getSimpleCommand() {
-    return findChildByClass(TIBasicSimpleCommand.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicWhile getWhile() {
-    return findChildByClass(TIBasicWhile.class);
+  public TIBasicStatement getStatement() {
+    return findChildByClass(TIBasicStatement.class);
   }
 
 }

@@ -8,8 +8,8 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
-import nl.petertillema.tibasic.psi.TIBasicGoto;
-import nl.petertillema.tibasic.psi.TIBasicLbl;
+import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
+import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public class TIBasicUnusedLabelInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         var gotoLabels = new ArrayList<String>();
-        var lbls = new ArrayList<TIBasicLbl>();
+        var lbls = new ArrayList<TIBasicLblStatement>();
 
         return new TIBasicCommandRecursiveVisitor() {
 
@@ -38,12 +38,12 @@ public class TIBasicUnusedLabelInspection extends LocalInspectionTool {
             }
 
             @Override
-            public void visitGoto(@NotNull TIBasicGoto o) {
+            public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
                 gotoLabels.add(o.getLblName().getText());
             }
 
             @Override
-            public void visitLbl(@NotNull TIBasicLbl o) {
+            public void visitLblStatement(@NotNull TIBasicLblStatement o) {
                 lbls.add(o);
             }
         };

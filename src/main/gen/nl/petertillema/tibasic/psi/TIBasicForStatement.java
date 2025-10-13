@@ -5,15 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicIf extends PsiElement {
+public interface TIBasicForStatement extends PsiElement {
 
   @NotNull
-  TIBasicExpr getExpr();
+  TIBasicEndBlock getEndBlock();
 
-  @Nullable
-  TIBasicIfStatement getIfStatement();
-
-  @Nullable
-  TIBasicThen getThen();
+  @NotNull
+  List<TIBasicExpr> getExprList();
 
 }
