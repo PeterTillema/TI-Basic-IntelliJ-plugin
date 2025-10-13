@@ -64,5 +64,13 @@
                 order="after Dark"
                 id="TIBasicSourceCoder3Dark"
                 path="themes/TIBasicSourceCoder3Dark.xml" />
+        <lang.braceMatcher
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicPairedBraceMatcher"/>
+        <lang.quoteHandler
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicQuoteHandler" />
+        <colorProvider
+                implementation="nl.petertillema.tibasic.editor.TIBasicElementColorProvider"/>
     </extensions>
 </idea-plugin>
