@@ -59,20 +59,27 @@
         <bundledColorScheme
                 order="after Light"
                 id="TIBasicSourceCoder3Light"
-                path="themes/TIBasicSourceCoder3Light.xml" />
+                path="themes/TIBasicSourceCoder3Light.xml"/>
         <bundledColorScheme
                 order="after Dark"
                 id="TIBasicSourceCoder3Dark"
-                path="themes/TIBasicSourceCoder3Dark.xml" />
+                path="themes/TIBasicSourceCoder3Dark.xml"/>
         <lang.braceMatcher
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicPairedBraceMatcher"/>
         <lang.quoteHandler
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.editor.TIBasicQuoteHandler" />
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicQuoteHandler"/>
         <colorProvider
                 implementation="nl.petertillema.tibasic.editor.TIBasicElementColorProvider"/>
         <enterHandlerDelegate
                 implementation="nl.petertillema.tibasic.editor.formatting.TIBasicEndEnterHandler"/>
+        <configurationType
+                implementation="nl.petertillema.tibasic.run.TIBasicConfigurationType"/>
+        <runConfigurationProducer
+                implementation="nl.petertillema.tibasic.run.TIBasicRunConfigurationProvider"/>
+        <runLineMarkerContributor
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.run.TIBasicRunLineMarkerContributor"/>
     </extensions>
 </idea-plugin>
