@@ -10,7 +10,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
-import com.intellij.psi.PsiReference;
 
 public class TIBasicGotoStatementImpl extends ASTWrapperPsiElement implements TIBasicGotoStatement {
 
@@ -30,13 +29,8 @@ public class TIBasicGotoStatementImpl extends ASTWrapperPsiElement implements TI
 
   @Override
   @NotNull
-  public TIBasicLblName getLblName() {
-    return findNotNullChildByClass(TIBasicLblName.class);
-  }
-
-  @Override
-  public PsiReference[] getReferences() {
-    return TIBasicPsiImplUtil.getReferences(this);
+  public TIBasicGotoName getGotoName() {
+    return findNotNullChildByClass(TIBasicGotoName.class);
   }
 
 }

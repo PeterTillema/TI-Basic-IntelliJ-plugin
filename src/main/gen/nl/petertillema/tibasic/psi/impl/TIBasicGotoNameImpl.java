@@ -8,16 +8,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.psi.PsiReference;
 
-public class TIBasicLblNameImpl extends TIBasicNamedElementImpl implements TIBasicLblName {
+public class TIBasicGotoNameImpl extends ASTWrapperPsiElement implements TIBasicGotoName {
 
-  public TIBasicLblNameImpl(@NotNull ASTNode node) {
+  public TIBasicGotoNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitLblName(this);
+    visitor.visitGotoName(this);
   }
 
   @Override
@@ -27,18 +29,8 @@ public class TIBasicLblNameImpl extends TIBasicNamedElementImpl implements TIBas
   }
 
   @Override
-  public String getName() {
-    return TIBasicPsiImplUtil.getName(this);
-  }
-
-  @Override
-  public PsiElement setName(String name) {
-    return TIBasicPsiImplUtil.setName(this, name);
-  }
-
-  @Override
-  public PsiElement getNameIdentifier() {
-    return TIBasicPsiImplUtil.getNameIdentifier(this);
+  public PsiReference[] getReferences() {
+    return TIBasicPsiImplUtil.getReferences(this);
   }
 
 }

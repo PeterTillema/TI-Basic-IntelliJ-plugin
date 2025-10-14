@@ -23,7 +23,7 @@ public class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
         var file = (TIBasicFile) myElement.getContainingFile();
         var labels = TIBasicUtil.findLabels(file, getValue());
 
-        return !labels.isEmpty() ? labels.getFirst() : null;
+        return !labels.isEmpty() ? labels.getFirst().getLblName() : null;
     }
 
     @Override
@@ -33,9 +33,7 @@ public class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
         var variants = new ArrayList<LookupElement>();
 
         for (var label : labels) {
-            if (label.getName() != null && !label.getName().isEmpty()) {
-                variants.add(LookupElementBuilder.create(label).withTypeText(label.getContainingFile().getName()));
-            }
+            variants.add(LookupElementBuilder.create(label.getLblName()).withPresentableText(label.getText()));
         }
 
         return variants.toArray();

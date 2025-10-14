@@ -4,10 +4,10 @@ package nl.petertillema.tibasic.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
-public interface TIBasicGotoStatement extends PsiElement {
+public interface TIBasicGotoName extends PsiElement {
 
-  @NotNull
-  TIBasicGotoName getGotoName();
+  PsiReference[] getReferences();
 
 }

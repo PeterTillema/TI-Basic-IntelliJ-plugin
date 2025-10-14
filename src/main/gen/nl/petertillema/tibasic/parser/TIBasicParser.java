@@ -591,14 +591,52 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // GOTO lbl_name
+  // (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
+  public static boolean goto_name(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "goto_name")) return false;
+    if (!nextTokenIs(b, "<goto name>", NUMBER, SIMPLE_VARIABLE)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, GOTO_NAME, "<goto name>");
+    r = goto_name_0(b, l + 1);
+    r = r && goto_name_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // SIMPLE_VARIABLE | NUMBER
+  private static boolean goto_name_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "goto_name_0")) return false;
+    boolean r;
+    r = consumeToken(b, SIMPLE_VARIABLE);
+    if (!r) r = consumeToken(b, NUMBER);
+    return r;
+  }
+
+  // [SIMPLE_VARIABLE | NUMBER]
+  private static boolean goto_name_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "goto_name_1")) return false;
+    goto_name_1_0(b, l + 1);
+    return true;
+  }
+
+  // SIMPLE_VARIABLE | NUMBER
+  private static boolean goto_name_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "goto_name_1_0")) return false;
+    boolean r;
+    r = consumeToken(b, SIMPLE_VARIABLE);
+    if (!r) r = consumeToken(b, NUMBER);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // GOTO goto_name
   public static boolean goto_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "goto_statement")) return false;
     if (!nextTokenIs(b, GOTO)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, GOTO);
-    r = r && lbl_name(b, l + 1);
+    r = r && goto_name(b, l + 1);
     exit_section_(b, m, GOTO_STATEMENT, r);
     return r;
   }

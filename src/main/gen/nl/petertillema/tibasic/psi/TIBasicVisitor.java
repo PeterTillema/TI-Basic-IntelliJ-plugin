@@ -87,6 +87,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
+  public void visitGotoName(@NotNull TIBasicGotoName o) {
+    visitPsiElement(o);
+  }
+
   public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
     visitPsiElement(o);
   }
@@ -108,11 +112,11 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitLblName(@NotNull TIBasicLblName o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitLblStatement(@NotNull TIBasicLblStatement o) {
-    visitNamedElement(o);
+    visitPsiElement(o);
   }
 
   public void visitLeExpr(@NotNull TIBasicLeExpr o) {

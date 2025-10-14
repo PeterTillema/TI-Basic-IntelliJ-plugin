@@ -122,17 +122,19 @@ private assignment_target_list_index ::= LIST_VARIABLE LPAREN expr [RPAREN]
 private assignment_target_dim ::= "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [RPAREN]
 
 delvar_command ::= ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement]
-goto_statement ::= GOTO lbl_name
+
+goto_statement ::= GOTO goto_name
+goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 {
     methods=[getReferences]
 }
 lbl_statement ::= LBL lbl_name
+lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
     implements="nl.petertillema.tibasic.psi.TIBasicNamedElement"
     methods=[getName setName getNameIdentifier]
 }
-lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [(expr (COMMA expr)*)]

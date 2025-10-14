@@ -28,6 +28,7 @@ public interface TIBasicTypes {
   IElementType FRAC_EXPR = new TIBasicElementType("FRAC_EXPR");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
   IElementType GE_EXPR = new TIBasicElementType("GE_EXPR");
+  IElementType GOTO_NAME = new TIBasicElementType("GOTO_NAME");
   IElementType GOTO_STATEMENT = new TIBasicElementType("GOTO_STATEMENT");
   IElementType GT_EXPR = new TIBasicElementType("GT_EXPR");
   IElementType IF_STATEMENT = new TIBasicElementType("IF_STATEMENT");
@@ -175,6 +176,9 @@ public interface TIBasicTypes {
       }
       else if (type == GE_EXPR) {
         return new TIBasicGeExprImpl(node);
+      }
+      else if (type == GOTO_NAME) {
+        return new TIBasicGotoNameImpl(node);
       }
       else if (type == GOTO_STATEMENT) {
         return new TIBasicGotoStatementImpl(node);

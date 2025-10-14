@@ -31,8 +31,8 @@ public class TIBasicUnknownGotoTargetInspection extends LocalInspectionTool {
 
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
-                if (!lblLabels.contains(o.getLblName().getText())) {
-                    holder.registerProblem(o.getLblName(), "Invalid Goto target", ERROR);
+                if (!lblLabels.contains(o.getGotoName().getText())) {
+                    holder.registerProblem(o.getGotoName(), "Invalid Goto target", ERROR);
                 }
             }
         };
