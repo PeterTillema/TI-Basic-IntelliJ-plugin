@@ -7,9 +7,9 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
+import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,29 +22,22 @@ public class TIBasicUnusedLabelInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         var gotoLabels = new ArrayList<String>();
-        var lbls = new ArrayList<TIBasicLblStatement>();
 
-        return new TIBasicCommandRecursiveVisitor() {
-
-            @Override
-            public void visitFile(@NotNull PsiFile file) {
-                super.visitFile(file);
-
-                for (var lbl : lbls) {
-                    if (!gotoLabels.contains(lbl.getLblName().getText())) {
-                        holder.registerProblem(lbl, "Unused label", LIKE_UNUSED_SYMBOL, new RemoveLabelQuickFix());
-                    }
-                }
-            }
-
+        // Collect all the goto's first
+        holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
                 gotoLabels.add(o.getLblName().getText());
             }
+        });
+
+        return new TIBasicVisitor() {
 
             @Override
             public void visitLblStatement(@NotNull TIBasicLblStatement o) {
-                lbls.add(o);
+                if (!gotoLabels.contains(o.getLblName().getText())) {
+                    holder.registerProblem(o, "Unused label", LIKE_UNUSED_SYMBOL, new RemoveLabelQuickFix());
+                }
             }
         };
     }

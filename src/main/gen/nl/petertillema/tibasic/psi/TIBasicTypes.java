@@ -106,6 +106,7 @@ public interface TIBasicTypes {
   IElementType REPEAT = new TIBasicTokenType("REPEAT");
   IElementType RPAREN = new TIBasicTokenType("RPAREN");
   IElementType SIMPLE_VARIABLE = new TIBasicTokenType("SIMPLE_VARIABLE");
+  IElementType STO = new TIBasicTokenType("STO");
   IElementType STRING = new TIBasicTokenType("STRING");
   IElementType STRING_VARIABLE = new TIBasicTokenType("STRING_VARIABLE");
   IElementType THEN = new TIBasicTokenType("THEN");

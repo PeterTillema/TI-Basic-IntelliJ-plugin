@@ -234,13 +234,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // expr "->" assignment_target
+  // expr STO assignment_target
   public static boolean assignment_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_statement")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ASSIGNMENT_STATEMENT, "<assignment statement>");
     r = expr(b, l + 1, -1);
-    r = r && consumeToken(b, "->");
+    r = r && consumeToken(b, STO);
     r = r && assignment_target(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;

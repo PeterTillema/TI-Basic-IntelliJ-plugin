@@ -69,7 +69,7 @@ COMMAND_NO_PARENS = "CubicReg " | "QuartReg " | "Radian" | "Degree" | "Normal" |
     "DelVar " | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOn " | "AxesOff" | "GridOn" | "GridDot " | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" |
     "uvAxes" | "vwAxes" | "uwAxes"
 
-OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "->" | "→" | "Boxplot" | "[" | "]" | "{" | "}" | "^^r" | "ʳ" | "^^o" | "°" | "^^-1" | "⁻¹" | "ˉ¹" | "^^2" | "²" | "^^T" | "ᵀ" | "^^3" | "³" | "(" | ")" | " " | "\"" | "“" | "”" | "," |
+OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "Boxplot" | "^^r" | "ʳ" | "^^o" | "°" | "^^-1" | "⁻¹" | "ˉ¹" | "^^2" | "²" | "^^T" | "ᵀ" | "^^3" | "³" | "(" | ")" | " " | "\"" | "“" | "”" | "," |
     "[i]" | "𝑖" | "!" | "prgm" | "squareplot" | "□" | "plotsquare" |
     "crossplot" | "﹢" | "plotcross" | "dotplot" | "plotdot" | "*" | "/" | " nPr " | " nCr " | "pi" | "'" | "\'" | "?" |
     "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV" |
@@ -134,6 +134,7 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "->"
     "}"                                                       { return TIBasicTypes.RCURLY; }
     "["                                                       { return TIBasicTypes.LBRACKET; }
     "]"                                                       { return TIBasicTypes.RBRACKET; }
+    "->"                                                      { return TIBasicTypes.STO; }
     "\""                                                      { yybegin(STRING); }
     {ANS_VARIABLE}                                            { return TIBasicTypes.ANS_VARIABLE; }
     {LIST_VARIABLE}                                           { return TIBasicTypes.LIST_VARIABLE; }
