@@ -24,7 +24,7 @@ public class TIBasicRunConfigurationProvider extends LazyRunConfigurationProduce
         if (extension == null) extension = "";
 
         var inputPath = psiLocation.getContainingFile().getVirtualFile().getPath();
-        var outputPath = inputPath.substring(0, inputPath.length() - extension.length()) + ".8xp";
+        var outputPath = inputPath.substring(0, inputPath.length() - extension.length()) + "8xp";
 
         configuration.setInputPathField(inputPath);
         configuration.setOutputPathField(outputPath);
@@ -36,6 +36,10 @@ public class TIBasicRunConfigurationProvider extends LazyRunConfigurationProduce
     @Override
     public boolean isConfigurationFromContext(@NotNull TIBasicRunConfiguration configuration, @NotNull ConfigurationContext context) {
         System.out.println("isConfigurationFromContext");
-        return false;
+        var psiLocation = context.getPsiLocation();
+        if (psiLocation == null || !(psiLocation.getContainingFile() instanceof TIBasicFile)) return false;
+
+        var inputPath = psiLocation.getContainingFile().getVirtualFile().getPath();
+        return configuration.getInputPathField().equals(inputPath);
     }
 }
