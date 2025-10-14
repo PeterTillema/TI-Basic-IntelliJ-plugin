@@ -72,5 +72,7 @@
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicQuoteHandler" />
         <colorProvider
                 implementation="nl.petertillema.tibasic.editor.TIBasicElementColorProvider"/>
+        <enterHandlerDelegate
+                implementation="nl.petertillema.tibasic.editor.formatting.TIBasicEndEnterHandler"/>
     </extensions>
 </idea-plugin>
