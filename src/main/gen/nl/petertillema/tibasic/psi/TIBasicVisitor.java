@@ -28,7 +28,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitAssignmentTarget(@NotNull TIBasicAssignmentTarget o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitCommandStatement(@NotNull TIBasicCommandStatement o) {
@@ -69,6 +69,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
 
   public void visitExpr(@NotNull TIBasicExpr o) {
     visitPsiElement(o);
+  }
+
+  public void visitForIdentifier(@NotNull TIBasicForIdentifier o) {
+    visitNamedElement(o);
   }
 
   public void visitForStatement(@NotNull TIBasicForStatement o) {

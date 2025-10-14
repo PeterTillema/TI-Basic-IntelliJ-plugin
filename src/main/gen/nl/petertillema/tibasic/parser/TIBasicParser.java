@@ -540,13 +540,27 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FOR SIMPLE_VARIABLE COMMA expr COMMA expr [COMMA expr] [RPAREN] end_block [END]
+  // SIMPLE_VARIABLE
+  public static boolean for_identifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_identifier")) return false;
+    if (!nextTokenIs(b, SIMPLE_VARIABLE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, SIMPLE_VARIABLE);
+    exit_section_(b, m, FOR_IDENTIFIER, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // FOR for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN] end_block [END]
   public static boolean for_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "for_statement")) return false;
     if (!nextTokenIs(b, FOR)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, FOR, SIMPLE_VARIABLE, COMMA);
+    r = consumeToken(b, FOR);
+    r = r && for_identifier(b, l + 1);
+    r = r && consumeToken(b, COMMA);
     r = r && expr(b, l + 1, -1);
     r = r && consumeToken(b, COMMA);
     r = r && expr(b, l + 1, -1);

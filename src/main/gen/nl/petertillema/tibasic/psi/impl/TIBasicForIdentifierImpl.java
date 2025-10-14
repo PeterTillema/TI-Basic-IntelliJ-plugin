@@ -8,17 +8,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicForStatementImpl extends ASTWrapperPsiElement implements TIBasicForStatement {
+public class TIBasicForIdentifierImpl extends TIBasicNamedElementImpl implements TIBasicForIdentifier {
 
-  public TIBasicForStatementImpl(@NotNull ASTNode node) {
+  public TIBasicForIdentifierImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitForStatement(this);
+    visitor.visitForIdentifier(this);
   }
 
   @Override
@@ -28,21 +27,18 @@ public class TIBasicForStatementImpl extends ASTWrapperPsiElement implements TIB
   }
 
   @Override
-  @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public String getName() {
+    return TIBasicPsiImplUtil.getName(this);
   }
 
   @Override
-  @NotNull
-  public List<TIBasicExpr> getExprList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
+  public PsiElement setName(String name) {
+    return TIBasicPsiImplUtil.setName(this, name);
   }
 
   @Override
-  @NotNull
-  public TIBasicForIdentifier getForIdentifier() {
-    return findNotNullChildByClass(TIBasicForIdentifier.class);
+  public PsiElement getNameIdentifier() {
+    return TIBasicPsiImplUtil.getNameIdentifier(this);
   }
 
 }

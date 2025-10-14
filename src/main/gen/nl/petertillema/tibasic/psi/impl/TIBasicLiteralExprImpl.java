@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class TIBasicLiteralExprImpl extends TIBasicExprImpl implements TIBasicLiteralExpr {
 
@@ -49,6 +50,11 @@ public class TIBasicLiteralExprImpl extends TIBasicExprImpl implements TIBasicLi
   @Nullable
   public TIBasicMatrixIndex getMatrixIndex() {
     return findChildByClass(TIBasicMatrixIndex.class);
+  }
+
+  @Override
+  public PsiReference[] getReferences() {
+    return TIBasicPsiImplUtil.getReferences(this);
   }
 
 }

@@ -13,4 +13,7 @@ public interface TIBasicForStatement extends PsiElement {
   @NotNull
   List<TIBasicExpr> getExprList();
 
+  @NotNull
+  TIBasicForIdentifier getForIdentifier();
+
 }

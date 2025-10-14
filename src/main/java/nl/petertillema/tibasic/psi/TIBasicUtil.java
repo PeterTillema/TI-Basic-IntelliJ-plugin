@@ -21,8 +21,32 @@ public class TIBasicUtil {
         return new ArrayList<>(labels);
     }
 
-    public static List<TIBasicGotoStatement> findGotos(TIBasicFile file) {
-        return List.of();
+    public static List<TIBasicAssignmentStatement> findAssignments(TIBasicFile file, String key) {
+        var assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
+
+        return assignments.stream()
+                .filter(assignment -> assignment.getAssignmentTarget().getText().equals(key))
+                .toList();
+    }
+
+    public static List<TIBasicAssignmentStatement> findAssignments(TIBasicFile file) {
+        var assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
+
+        return new ArrayList<>(assignments);
+    }
+
+    public static List<TIBasicForStatement> findForLoops(TIBasicFile file, String key) {
+        var forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
+
+        return forLoops.stream()
+                .filter(forLoop -> forLoop.getNode().getChildren(null)[1].getText().equals(key))
+                .toList();
+    }
+
+    public static List<TIBasicForStatement> findForLoops(TIBasicFile file) {
+        var forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
+
+        return new ArrayList<>(forLoops);
     }
 
 }

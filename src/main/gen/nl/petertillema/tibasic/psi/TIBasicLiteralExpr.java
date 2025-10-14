@@ -4,6 +4,7 @@ package nl.petertillema.tibasic.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 public interface TIBasicLiteralExpr extends TIBasicExpr {
 
@@ -18,5 +19,7 @@ public interface TIBasicLiteralExpr extends TIBasicExpr {
 
   @Nullable
   TIBasicMatrixIndex getMatrixIndex();
+
+  PsiReference[] getReferences();
 
 }
