@@ -7,7 +7,7 @@ import java.util.List;
 
 import static nl.petertillema.tibasic.TIBasicPaletteColors.TIBASIC_PALETTE;
 
-public class DCSColoredColorPalettePanel extends AbstractDCSColorPalettePanel {
+public final class DCSColoredColorPalettePanel extends AbstractDCSColorPalettePanel {
 
     public DCSColoredColorPalettePanel() {
         super(true);

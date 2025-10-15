@@ -10,7 +10,7 @@ import java.io.OutputStream;
 /**
  * Minimal controllable ProcessHandler used to model a short-lived background task.
  */
-public class TIBasicTokenizerProcessHandler extends ProcessHandler {
+public final class TIBasicTokenizerProcessHandler extends ProcessHandler {
 
     @Override
     protected void destroyProcessImpl() {

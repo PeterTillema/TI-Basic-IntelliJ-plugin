@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import static com.intellij.codeInspection.ProblemHighlightType.LIKE_UNUSED_SYMBOL;
 
-public class TIBasicUnusedLabelInspection extends LocalInspectionTool {
+public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

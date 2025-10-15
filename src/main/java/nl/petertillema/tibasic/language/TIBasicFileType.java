@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TIBasicFileType extends LanguageFileType {
+public final class TIBasicFileType extends LanguageFileType {
 
     public static final TIBasicFileType INSTANCE = new TIBasicFileType();
 
-    protected TIBasicFileType() {
+    private TIBasicFileType() {
         super(TIBasicLanguage.INSTANCE);
     }
 

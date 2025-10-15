@@ -6,9 +6,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import nl.petertillema.tibasic.language.TIBasicLanguage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class TIBasicLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
+public final class TIBasicLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
 
     @Override
     public @NotNull Language getLanguage() {
@@ -23,12 +22,12 @@ public class TIBasicLanguageCodeStyleSettingsProvider extends LanguageCodeStyleS
     }
 
     @Override
-    public @Nullable IndentOptionsEditor getIndentOptionsEditor() {
+    public @NotNull IndentOptionsEditor getIndentOptionsEditor() {
         return new IndentOptionsEditor(this);
     }
 
     @Override
-    public @Nullable String getCodeSample(@NotNull SettingsType settingsType) {
+    public @NotNull String getCodeSample(@NotNull SettingsType settingsType) {
         return """
                 // This is some sample TI-Basic code
                 Ans->B

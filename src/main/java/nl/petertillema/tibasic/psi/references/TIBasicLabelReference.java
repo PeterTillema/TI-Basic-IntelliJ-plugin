@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
+public final class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
 
     public TIBasicLabelReference(@NotNull PsiElement element, TextRange range) {
         super(element, range);

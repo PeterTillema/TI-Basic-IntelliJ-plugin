@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.Map;
 
-public class TIBasicColorSettingsPage implements ColorSettingsPage {
+public final class TIBasicColorSettingsPage implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
             new AttributesDescriptor("Braces and Operators//Operator sign", TIBasicSyntaxHighlighter.OPERATOR),
@@ -36,7 +36,7 @@ public class TIBasicColorSettingsPage implements ColorSettingsPage {
     };
 
     @Override
-    public @Nullable Icon getIcon() {
+    public @NotNull Icon getIcon() {
         return TIBasicIcons.FILE;
     }
 

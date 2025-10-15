@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import static com.intellij.codeInspection.ProblemHighlightType.ERROR;
 
-public class TIBasicUnknownGotoTargetInspection extends LocalInspectionTool {
+public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

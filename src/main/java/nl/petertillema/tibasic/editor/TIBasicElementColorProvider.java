@@ -10,7 +10,7 @@ import java.awt.*;
 
 import static nl.petertillema.tibasic.TIBasicPaletteColors.TIBASIC_COLORS;
 
-public class TIBasicElementColorProvider implements ElementColorProvider {
+public final class TIBasicElementColorProvider implements ElementColorProvider {
 
     @Override
     public @Nullable Color getColorFrom(@NotNull PsiElement element) {

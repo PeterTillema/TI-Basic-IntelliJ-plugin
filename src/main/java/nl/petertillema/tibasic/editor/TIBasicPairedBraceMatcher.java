@@ -8,7 +8,7 @@ import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TIBasicPairedBraceMatcher implements PairedBraceMatcher {
+public final class TIBasicPairedBraceMatcher implements PairedBraceMatcher {
 
     private static final BracePair[] BRACE_PAIRS = new BracePair[]{
             new BracePair(TIBasicTypes.LPAREN, TIBasicTypes.RPAREN, false),

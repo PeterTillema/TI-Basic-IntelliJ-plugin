@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import org.jetbrains.annotations.NotNull;
 
-public class TIBasicFile extends PsiFileBase {
+public final class TIBasicFile extends PsiFileBase {
 
     public TIBasicFile(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, TIBasicLanguage.INSTANCE);

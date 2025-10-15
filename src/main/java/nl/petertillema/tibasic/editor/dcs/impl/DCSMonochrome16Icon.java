@@ -8,7 +8,7 @@ import java.util.List;
 
 import static nl.petertillema.tibasic.TIBasicPaletteColors.MONOCHROME_PALETTE;
 
-public class DCSMonochrome16Icon extends AbstractDCSIcon {
+public final class DCSMonochrome16Icon extends AbstractDCSIcon {
 
     private final String iconData;
 

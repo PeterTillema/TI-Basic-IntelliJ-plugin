@@ -7,7 +7,7 @@ import java.util.List;
 
 import static nl.petertillema.tibasic.TIBasicPaletteColors.MONOCHROME_PALETTE;
 
-public class DCSMonochrome16ColorPalettePanel extends AbstractDCSColorPalettePanel {
+public final class DCSMonochrome16ColorPalettePanel extends AbstractDCSColorPalettePanel {
 
     public DCSMonochrome16ColorPalettePanel() {
         super(false);

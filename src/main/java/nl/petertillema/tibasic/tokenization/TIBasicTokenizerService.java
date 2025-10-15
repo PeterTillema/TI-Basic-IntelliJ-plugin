@@ -95,7 +95,7 @@ public final class TIBasicTokenizerService {
             TOKEN_KEYS.clear();
             TOKEN_KEYS.addAll(TOKEN_TABLE.keySet());
             TOKEN_KEYS.sort(Comparator.comparingInt(String::length).reversed());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

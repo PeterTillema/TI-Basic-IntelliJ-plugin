@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TIBasicSettingsEditor extends SettingsEditor<TIBasicRunConfiguration> {
+public final class TIBasicSettingsEditor extends SettingsEditor<TIBasicRunConfiguration> {
 
     private final TIBasicSettingsEditorForm form;
 

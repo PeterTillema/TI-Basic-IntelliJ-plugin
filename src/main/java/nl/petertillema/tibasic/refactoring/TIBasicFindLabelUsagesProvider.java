@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TIBasicFindLabelUsagesProvider implements FindUsagesProvider {
+public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider {
 
     @Override
-    public @Nullable WordsScanner getWordsScanner() {
+    public @NotNull WordsScanner getWordsScanner() {
         return new GotoLabelWordScanner();
     }
 

@@ -7,11 +7,10 @@ import com.intellij.openapi.components.BaseState;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class TIBasicConfigurationFactory extends ConfigurationFactory {
+public final class TIBasicConfigurationFactory extends ConfigurationFactory {
 
-    protected TIBasicConfigurationFactory(ConfigurationType type) {
+    TIBasicConfigurationFactory(ConfigurationType type) {
         super(type);
     }
 
@@ -26,7 +25,7 @@ public class TIBasicConfigurationFactory extends ConfigurationFactory {
     }
 
     @Override
-    public @Nullable Class<? extends BaseState> getOptionsClass() {
+    public @NotNull Class<? extends BaseState> getOptionsClass() {
         return TIBasicRunConfigurationOptions.class;
     }
 }

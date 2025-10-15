@@ -8,7 +8,7 @@ import java.util.List;
 
 import static nl.petertillema.tibasic.TIBasicPaletteColors.MONOCHROME_PALETTE;
 
-public class DCSMonochrome16IconEditorPanel extends AbstractDCSIconEditorPanel {
+public final class DCSMonochrome16IconEditorPanel extends AbstractDCSIconEditorPanel {
 
     private final char[] data = new char[64];
 

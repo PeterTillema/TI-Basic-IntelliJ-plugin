@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TIBasicBlock implements ASTBlock {
+public final class TIBasicBlock implements ASTBlock {
 
     private final ASTNode node;
     private final Indent indent;
@@ -38,7 +38,7 @@ public class TIBasicBlock implements ASTBlock {
     }
 
     @Override
-    public @Nullable ASTNode getNode() {
+    public @NotNull ASTNode getNode() {
         return this.node;
     }
 
@@ -82,7 +82,7 @@ public class TIBasicBlock implements ASTBlock {
     }
 
     @Override
-    public @Nullable Indent getIndent() {
+    public @NotNull Indent getIndent() {
         return this.indent;
     }
 

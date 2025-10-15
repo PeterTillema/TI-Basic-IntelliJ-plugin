@@ -35,11 +35,12 @@ sourceSets {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "251"
+            sinceBuild = "240"
         }
 
         changeNotes = """
-            Initial version
+            Created the initial version of the plugin. The plugin contains many extensions
+            used for advanced TI-BASIC code editing. See the description for more information.
         """.trimIndent()
     }
     publishing {
@@ -48,7 +49,6 @@ intellijPlatform {
 }
 
 tasks {
-    // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "21"
         targetCompatibility = "21"

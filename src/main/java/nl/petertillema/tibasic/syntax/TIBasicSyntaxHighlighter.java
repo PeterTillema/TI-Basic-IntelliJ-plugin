@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
-public class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
+public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
 
     public static final TextAttributesKey COMMENT = createTextAttributesKey("TIBASIC_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey STRING = createTextAttributesKey("TIBASIC_STRING", DefaultLanguageHighlighterColors.STRING);

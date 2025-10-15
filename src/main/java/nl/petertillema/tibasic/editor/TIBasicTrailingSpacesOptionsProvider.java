@@ -7,7 +7,7 @@ import nl.petertillema.tibasic.language.TIBasicFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TIBasicTrailingSpacesOptionsProvider implements TrailingSpacesOptionsProvider {
+public final class TIBasicTrailingSpacesOptionsProvider implements TrailingSpacesOptionsProvider {
     @Override
     public @Nullable Options getOptions(@NotNull Project project, @NotNull VirtualFile file) {
         if (!file.getFileType().equals(TIBasicFileType.INSTANCE)) {

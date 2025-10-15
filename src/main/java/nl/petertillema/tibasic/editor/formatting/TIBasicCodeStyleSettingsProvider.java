@@ -10,17 +10,16 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 import nl.petertillema.tibasic.language.TIBasicLanguage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class TIBasicCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
+public final class TIBasicCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
     @Override
-    public @Nullable CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
+    public @NotNull CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
         return new TIBasicCodeStyleSettings(settings);
     }
 
     @Override
-    public @Nullable @NlsContexts.ConfigurableName String getConfigurableDisplayName() {
+    public @NlsContexts.ConfigurableName @NotNull String getConfigurableDisplayName() {
         return "TI-Basic";
     }
 

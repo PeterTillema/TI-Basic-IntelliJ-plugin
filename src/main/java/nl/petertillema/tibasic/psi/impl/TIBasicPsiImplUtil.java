@@ -12,7 +12,7 @@ import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.references.TIBasicLabelReference;
 import nl.petertillema.tibasic.psi.references.TIBasicVariableReference;
 
-public class TIBasicPsiImplUtil {
+public final class TIBasicPsiImplUtil {
 
     public static String getName(TIBasicLblName element) {
         return element.getText();

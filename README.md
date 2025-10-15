@@ -33,4 +33,5 @@ The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/2872
 
 ## Todo
  - Extend inspections to be more advanced and more complete
- - 
+ - Write unit/integration tests to test all behavior
+ - Properly indent when adding a new line within a For loop including "End" but no other statements.

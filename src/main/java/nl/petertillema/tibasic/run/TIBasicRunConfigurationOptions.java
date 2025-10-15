@@ -3,7 +3,7 @@ package nl.petertillema.tibasic.run;
 import com.intellij.execution.configurations.RunConfigurationOptions;
 import com.intellij.openapi.components.StoredProperty;
 
-public class TIBasicRunConfigurationOptions extends RunConfigurationOptions {
+public final class TIBasicRunConfigurationOptions extends RunConfigurationOptions {
 
     private final StoredProperty<String> inputPathField = string("").provideDelegate(this, "inputPathField");
     private final StoredProperty<String> outputPathField = string("").provideDelegate(this, "outputPathField");

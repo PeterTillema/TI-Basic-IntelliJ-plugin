@@ -1,12 +1,13 @@
 package nl.petertillema.tibasic.editor;
 
 import com.intellij.lang.Commenter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TIBasicCommenter implements Commenter {
+public final class TIBasicCommenter implements Commenter {
 
     @Override
-    public @Nullable String getLineCommentPrefix() {
+    public @NotNull String getLineCommentPrefix() {
         return "// ";
     }
 

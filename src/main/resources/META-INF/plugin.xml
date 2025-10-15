@@ -1,13 +1,35 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>nl.petertillema.tibasic</id>
     <name>TI-Basic</name>
-    <vendor url="https://petertillema.nl">Peter Tillema</vendor>
-    <description>Edit your TI-Basic programs with this plugin and make use of advanced inspection to write optimized
-        code
-    </description>
+    <vendor email="petertillema@solcon.nl" url="https://petertillema.nl">Peter Tillema</vendor>
+    <description><![CDATA[
+        <h1>TI-BASIC IntelliJ plugin</h1>
+        <br>
+        <p>This is an IntelliJ plugin for the TI-BASIC language, used for programming the calculator. This plugin
+        adds many functionalities to the editor, including but not limited to syntax highlighting, folding, DCS icon editor
+        and exporting the file to an .8xp file. The full list of specifications:</p>
+        <ul>
+            <li>Syntax checker</li>
+            <li>A bunch of local code inspections</li>
+            <li>Code formatting</li>
+            <li>Folding loops</li>
+            <li>Syntax highlighting</li>
+            <li>SourceCoder3 theme, both dark and light</li>
+            <li>Color scheme editor</li>
+            <li>Code style editor</li>
+            <li>Navigating from/to labels</li>
+            <li>Going to definitions of variables and find references</li>
+            <li>Line commenting</li>
+            <li>TI-OS color gutter provider</li>
+            <li>Highlighting matching braces</li>
+            <li>DCS icon previewer and editor (Cesium-compatible, including monochrome icons)</li>
+            <li>Exporting source to .8xp file with custom settings</li>
+        </ul>
+    ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+
+    <idea-version since-build="213" />
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType

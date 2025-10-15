@@ -6,7 +6,7 @@ import nl.petertillema.tibasic.language.TIBasicFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TIBasicUtil {
+public final class TIBasicUtil {
 
     public static List<TIBasicLblStatement> findLabels(TIBasicFile file, String key) {
         var labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);

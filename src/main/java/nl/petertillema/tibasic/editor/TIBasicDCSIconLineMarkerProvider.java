@@ -23,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 
-public class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDescriptor {
+public final class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDescriptor {
 
     @Override
-    public @Nullable("null means disabled") @GutterName String getName() {
+    public @GutterName @NotNull String getName() {
         return "TI-BASIC icon editor";
     }
 

@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.PsiManager.getInstance;
 
-public class TIBasicRunConfiguration extends RunConfigurationBase<TIBasicRunConfigurationOptions> {
+public final class TIBasicRunConfiguration extends RunConfigurationBase<TIBasicRunConfigurationOptions> {
 
-    protected TIBasicRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory factory, @Nullable String name) {
+    TIBasicRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
     }
 
@@ -36,7 +36,7 @@ public class TIBasicRunConfiguration extends RunConfigurationBase<TIBasicRunConf
     }
 
     @Override
-    public @Nullable RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public @NotNull RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
         return new CommandLineState(environment) {
             @Override
             protected @NotNull ProcessHandler startProcess() {

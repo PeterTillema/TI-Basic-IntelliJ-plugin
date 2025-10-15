@@ -7,7 +7,7 @@ import com.intellij.formatting.FormattingModelProvider;
 import com.intellij.formatting.Indent;
 import org.jetbrains.annotations.NotNull;
 
-public class TIBasicFormattingModelBuilder implements FormattingModelBuilder {
+public final class TIBasicFormattingModelBuilder implements FormattingModelBuilder {
 
     @Override
     public @NotNull FormattingModel createModel(@NotNull FormattingContext formattingContext) {

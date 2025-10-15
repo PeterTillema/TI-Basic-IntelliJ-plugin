@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
-public class TIBasicPaletteColors {
+public final class TIBasicPaletteColors {
 
     public static final JBColor TRANSPARENT = new JBColor(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0));
     public static final JBColor BLUE = new JBColor(new Color(0, 0, 255), new Color(0, 0, 255));

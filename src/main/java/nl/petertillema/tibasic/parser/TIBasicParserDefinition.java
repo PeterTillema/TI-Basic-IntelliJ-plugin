@@ -17,7 +17,7 @@ import nl.petertillema.tibasic.syntax.TIBasicLexerAdapter;
 import nl.petertillema.tibasic.syntax.TIBasicTokenSets;
 import org.jetbrains.annotations.NotNull;
 
-public class TIBasicParserDefinition implements ParserDefinition {
+public final class TIBasicParserDefinition implements ParserDefinition {
 
     public static final IFileElementType FILE = new IFileElementType(TIBasicLanguage.INSTANCE);
 

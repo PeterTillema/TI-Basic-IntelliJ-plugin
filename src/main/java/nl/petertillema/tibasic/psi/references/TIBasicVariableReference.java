@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class TIBasicVariableReference extends PsiPolyVariantReferenceBase<PsiElement> {
+public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<PsiElement> {
 
     public TIBasicVariableReference(@NotNull PsiElement element, TextRange range) {
         super(element, range);

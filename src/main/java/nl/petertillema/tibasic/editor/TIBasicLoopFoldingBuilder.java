@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbAware {
+public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbAware {
     @Override
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         var descriptors = new ArrayList<FoldingDescriptor>();
