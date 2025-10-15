@@ -76,5 +76,8 @@
                 implementation="nl.petertillema.tibasic.editor.formatting.TIBasicEndEnterHandler"/>
         <configurationType
                 implementation="nl.petertillema.tibasic.run.TIBasicConfigurationType"/>
+        <codeInsight.lineMarkerProvider
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.editor.TIBasicDCSIconLineMarkerProvider"/>
     </extensions>
 </idea-plugin>
