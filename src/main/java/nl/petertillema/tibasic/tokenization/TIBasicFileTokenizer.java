@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import nl.petertillema.tibasic.run.TIBasicRunConfigurationOptions;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public final class TIBasicFileTokenizer {
                                 @NotNull PsiFile psiFile,
                                 @NotNull Consumer<String> reporter,
                                 @NotNull Runnable onFinished,
-                                @NotNull File outputFile) {
+                                @NotNull TIBasicRunConfigurationOptions options) {
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Tokenizing TI-Basic file") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
@@ -66,18 +67,33 @@ public final class TIBasicFileTokenizer {
                 byte[] bytes = tokenizeResult.out();
                 var programDataSize = bytes.length + 2;
 
+                // Get some output properties
+                var programName = options.getProgramNameField();
+                programName = programName == null ? "PROGRAM" : programName;
+                programName = programName
+                        .trim()
+                        .replace("theta", "\u005B")
+                        .toUpperCase()
+                        .substring(0, Math.min(programName.length(), 8));
+                var programType = switch (options.getProgramTypeField()) {
+                    case "Protected Program" -> 0x06;
+                    case "AppVar" -> 0x17;
+                    default -> 0x05;
+                };
+                var archived = options.getArchivedField();
+
                 var innerBuffer = ByteBuffer.allocate(bytes.length + 19);
                 innerBuffer.order(ByteOrder.LITTLE_ENDIAN);
-                innerBuffer.putShort((short) 0x0D);   // Header size
-                innerBuffer.putShort((short) programDataSize); // Data size 2
-                innerBuffer.put((byte) 5);   // Program type
-                innerBuffer.put("CLRNOTE".getBytes());   // Program name
-                innerBuffer.put(new byte[]{0x00}); // Program name padding
-                innerBuffer.put((byte) 0);    // Version
-                innerBuffer.put((byte) 0);   // Archived
-                innerBuffer.putShort((short) programDataSize);   // Data size 3
-                innerBuffer.putShort((short) bytes.length);   // Data size 4
-                innerBuffer.put(bytes);  // Main data
+                innerBuffer.putShort((short) 0x0D);                                                         // Header size
+                innerBuffer.putShort((short) programDataSize);                                              // Data size 2
+                innerBuffer.put((byte) programType);                                                        // Program type
+                innerBuffer.put(programName.getBytes());                                                    // Program name
+                innerBuffer.put(new byte[]{0, 0, 0, 0, 0, 0, 0}, 0, 8 - programName.length()); // Program name padding
+                innerBuffer.put((byte) 0);                                                                  // Version
+                innerBuffer.put((byte) (archived ? 0x80 : 0x00));                                           // Archived
+                innerBuffer.putShort((short) programDataSize);                                              // Data size 3
+                innerBuffer.putShort((short) bytes.length);                                                 // Data size 4
+                innerBuffer.put(bytes);                                                                     // Main data
                 var innerBytes = innerBuffer.array();
 
                 var checksum = 0;
@@ -87,27 +103,28 @@ public final class TIBasicFileTokenizer {
 
                 var buffer = ByteBuffer.allocate(bytes.length + 76);
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
-                buffer.put("**TI83F*".getBytes());  // Main header
-                buffer.put(new byte[]{0x1A, 0x0A, 0x00});   // Magic tokens
-                buffer.put("Created by IntelliJ TI-Basic plugin".getBytes());   // Comment
-                buffer.put(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});   // Comment padding
-                buffer.putShort((short) innerBytes.length); // Data size 1
-                buffer.put(innerBytes);
-                buffer.putShort((short) checksum);  // Checksum
+                buffer.put("**TI83F*".getBytes());                                                          // Main header
+                buffer.put(new byte[]{0x1A, 0x0A, 0x00});                                                   // Magic tokens
+                buffer.put("Created by IntelliJ TI-Basic plugin".getBytes());                               // Comment
+                buffer.put(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});                           // Comment padding
+                buffer.putShort((short) innerBytes.length);                                                 // Data size 1
+                buffer.put(innerBytes);                                                                     // Program data
+                buffer.putShort((short) checksum);                                                          // Checksum
+                var bufferBytes = buffer.array();
 
                 // Write the output file
                 try {
+                    var outputFile = new File(options.getOutputPathField());
                     ensureParent(outputFile);
                     try (FileOutputStream out = new FileOutputStream(outputFile)) {
-                        out.write(buffer.array());
+                        out.write(bufferBytes);
                     }
-                    reporter.accept("Wrote " + bytes.length + " bytes to: " + outputFile.getAbsolutePath());
+                    reporter.accept("Wrote " + bufferBytes.length + " bytes to: " + outputFile.getAbsolutePath());
                 } catch (IOException e) {
                     reporter.accept("Failed to write output: " + e.getMessage());
                 }
 
                 // Print a simple hex dump preview (first 512 bytes)
-                reporter.accept(hexPreview(bytes, 512));
                 reporter.accept("Done.");
                 onFinished.run();
             }
@@ -121,16 +138,5 @@ public final class TIBasicFileTokenizer {
                 throw new IOException("Cannot create directory: " + parent);
             }
         }
-    }
-
-    private static String hexPreview(byte[] data, int maxBytes) {
-        StringBuilder sb = new StringBuilder();
-        int n = Math.min(data.length, maxBytes);
-        for (int i = 0; i < n; i++) {
-            if (i % 16 == 0) sb.append(String.format("%n%04X: ", i));
-            sb.append(String.format("%02X ", data[i] & 0xFF));
-        }
-        if (data.length > n) sb.append(String.format("%n... (%d bytes total)", data.length));
-        return sb.toString();
     }
 }

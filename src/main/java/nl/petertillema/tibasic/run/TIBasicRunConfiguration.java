@@ -4,25 +4,22 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsActions;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import nl.petertillema.tibasic.tokenization.TIBasicFileTokenizer;
 import nl.petertillema.tibasic.tokenization.TIBasicTokenizerProcessHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-
 import static com.intellij.psi.PsiManager.getInstance;
 
-public class TIBasicRunConfiguration extends LocatableConfigurationBase<TIBasicRunConfigurationOptions> {
+public class TIBasicRunConfiguration extends RunConfigurationBase<TIBasicRunConfigurationOptions> {
 
     protected TIBasicRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory factory, @Nullable String name) {
         super(project, factory, name);
@@ -33,36 +30,9 @@ public class TIBasicRunConfiguration extends LocatableConfigurationBase<TIBasicR
         return (TIBasicRunConfigurationOptions) super.getOptions();
     }
 
-    public String getInputPathField() {
-        return this.getOptions().getInputPathField();
-    }
-
-    public void setInputPathField(String value) {
-        this.getOptions().setInputPathField(value);
-    }
-
-    public String getOutputPathField() {
-        return this.getOptions().getOutputPathField();
-    }
-
-    public void setOutputPathField(String value) {
-        this.getOptions().setOutputPathField(value);
-    }
-
     @Override
     public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
         return new TIBasicSettingsEditor();
-    }
-
-    @Override
-    public boolean isGeneratedName() {
-        return false;
-    }
-
-    @Override
-    public @Nullable @NlsActions.ActionText String suggestedName() {
-        var path = this.getInputPathField();
-        return new File(path).getName();
     }
 
     @Override
@@ -71,11 +41,12 @@ public class TIBasicRunConfiguration extends LocatableConfigurationBase<TIBasicR
             @Override
             protected @NotNull ProcessHandler startProcess() {
                 var project = getProject();
+                var options = TIBasicRunConfiguration.this.getOptions();
 
                 // We'll manage the process lifecycle manually
-                TIBasicTokenizerProcessHandler handler = new TIBasicTokenizerProcessHandler();
+                var handler = new TIBasicTokenizerProcessHandler();
 
-                String path = TIBasicRunConfiguration.this.getInputPathField();
+                var path = options.getInputPathField();
                 if (path == null || path.isBlank()) {
                     handler.println("No input file configured.");
                     handler.finish(1);
@@ -96,17 +67,15 @@ public class TIBasicRunConfiguration extends LocatableConfigurationBase<TIBasicR
                     return handler;
                 }
 
-                String outPath = TIBasicRunConfiguration.this.getOutputPathField();
+                var outPath = options.getOutputPathField();
                 if (outPath == null || outPath.isBlank()) {
                     handler.println("No output file configured.");
                     handler.finish(1);
                     return handler;
                 }
 
-                File outFile = new File(outPath);
-
                 handler.println("Tokenizing " + vfs.getName() + "...");
-                TIBasicFileTokenizer.tokenize(project, psi, handler::println, () -> handler.finish(0), outFile);
+                TIBasicFileTokenizer.tokenize(project, psi, handler::println, () -> handler.finish(0), options);
 
                 return handler;
             }

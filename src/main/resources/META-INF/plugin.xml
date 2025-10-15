@@ -76,10 +76,5 @@
                 implementation="nl.petertillema.tibasic.editor.formatting.TIBasicEndEnterHandler"/>
         <configurationType
                 implementation="nl.petertillema.tibasic.run.TIBasicConfigurationType"/>
-        <runConfigurationProducer
-                implementation="nl.petertillema.tibasic.run.TIBasicRunConfigurationProvider"/>
-        <runLineMarkerContributor
-                language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.run.TIBasicRunLineMarkerContributor"/>
     </extensions>
 </idea-plugin>
