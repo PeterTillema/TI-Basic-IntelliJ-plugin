@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.petertillema"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -21,9 +21,6 @@ dependencies {
         create("IC", "2025.1.4.1")
         bundledPlugin("com.intellij.java")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
-
-        // Add necessary plugin dependencies for compilation here, example:
-        // bundledPlugin("com.intellij.java")
     }
 }
 
@@ -44,6 +41,9 @@ intellijPlatform {
         changeNotes = """
             Initial version
         """.trimIndent()
+    }
+    publishing {
+        token = providers.environmentVariable("intellijPlatformPublishingToken")
     }
 }
 

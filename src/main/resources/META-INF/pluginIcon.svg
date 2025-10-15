@@ -3,6 +3,7 @@
     <rect width="15" height="21" x="12.5" y="5" rx="1.5" fill="none" stroke="white" />
 
     <rect width="11" height="4" x="14.5" y="7" rx="0.5" fill="none" stroke="white" stroke-width="0.8" />
+    <path d="M16 9 C17.5 7.5,18.5 7.5,20 9 S22.5 10.5,24 9" fill="none" stroke="white" stroke-width="0.2" />
 
     <rect width="2" height="2" x="14.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
     <rect width="2" height="2" x="17.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
