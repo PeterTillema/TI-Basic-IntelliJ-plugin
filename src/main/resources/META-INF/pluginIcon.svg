@@ -1,0 +1,30 @@
+<svg height="40" width="40" xmlns="http://www.w3.org/2000/svg">
+    <rect width="36" height="36" x="2" y="2" rx="10" fill="#1c3345" />
+    <rect width="15" height="21" x="12.5" y="5" rx="1.5" fill="none" stroke="white" />
+
+    <rect width="11" height="4" x="14.5" y="7" rx="0.5" fill="none" stroke="white" stroke-width="0.8" />
+
+    <rect width="2" height="2" x="14.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="17.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="20.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="23.5" y="13" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+
+    <rect width="2" height="2" x="14.5" y="16" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="17.5" y="16" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="20.5" y="16" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="23.5" y="16" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+
+    <rect width="2" height="2" x="14.5" y="19" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="17.5" y="19" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="20.5" y="19" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="5" x="23.5" y="19" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+
+    <rect width="2" height="2" x="14.5" y="22" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="17.5" y="22" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+    <rect width="2" height="2" x="20.5" y="22" rx="0.5" fill="none" stroke="white" stroke-width="0.6" />
+
+    <g aria-label="TI-BASIC">
+      <text x="7" y="33" font-size="6" fill="white" font-family="Montserrat, sans-serif">TI-BASIC</text>
+      <text x="7" y="33" font-size="6" fill="none" font-family="Montserrat, sans-serif" stroke="white" stroke-width="0.2" stroke-linejoin="round">TI-BASIC</text>
+    </g>
+</svg>
