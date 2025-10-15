@@ -6,17 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
-import static nl.petertillema.tibasic.TIBasicPaletteColors.TIBASIC_PALETTE;
+public abstract class AbstractDCSColorPalettePanel extends JPanel {
 
-/**
- * Simple 16-color palette panel used by the DCS icon editor.
- * Renders a horizontal strip of 16 swatches; clicking selects a color index (0..F).
- */
-public class DCSColorPalettePanel extends JPanel {
     private static final int CELL = 14;
     private static final int GAP = 3;
 
+    private final boolean firstIndexIsTransparent;
     private int selected = 1;
 
     public interface SelectionListener {
@@ -25,46 +22,22 @@ public class DCSColorPalettePanel extends JPanel {
 
     private SelectionListener selectionListener;
 
-    public DCSColorPalettePanel() {
+    public AbstractDCSColorPalettePanel(boolean firstIndexIsTransparent) {
+        this.firstIndexIsTransparent = firstIndexIsTransparent;
+
         setOpaque(true);
         setBackground(JBColor.PanelBackground);
-        setPreferredSize(new Dimension(16 * (CELL + GAP) + GAP, CELL + 2 * GAP + 2));
+        setPreferredSize(new Dimension(this.getPalette().size() * (CELL + GAP) + GAP, CELL + 2 * GAP + 2));
 
         MouseAdapter mouse = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 int idx = indexAt(e.getX(), e.getY());
-                if (idx >= 0 && idx < 16) {
-                    setSelectedIndex(idx);
-                    if (selectionListener != null) selectionListener.onSelected(idx);
-                }
+                setSelectedIndex(idx);
+                if (selectionListener != null) selectionListener.onSelected(idx);
             }
         };
         addMouseListener(mouse);
-    }
-
-    public void setSelectionListener(SelectionListener listener) {
-        this.selectionListener = listener;
-    }
-
-    public void setSelectedIndex(int idx) {
-        if (idx < 0) idx = 0;
-        idx &= 0xF;
-        if (selected != idx) {
-            selected = idx;
-            repaint();
-        }
-    }
-
-    private int indexAt(int x, int y) {
-        int gx = x - GAP;
-        if (gx < 0) return -1;
-        int stride = CELL + GAP;
-        int cx = gx / stride;
-        int rx = gx % stride;
-        if (rx >= CELL) return -1; // in the gap
-        if (cx >= 16) return -1;
-        return cx;
     }
 
     @Override
@@ -76,11 +49,13 @@ public class DCSColorPalettePanel extends JPanel {
         g2.setColor(JBColor.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
+        var palette = this.getPalette();
+
         int stride = CELL + GAP;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < palette.size(); i++) {
             int px = GAP + i * stride;
             int py = GAP;
-            if (i == 0) {
+            if (i == 0 && this.firstIndexIsTransparent) {
                 // Transparent swatch: draw checkerboard instead of plain fill
                 int tile = 2;
                 Color light = new JBColor(new Color(240, 240, 240), new Color(70, 70, 70));
@@ -95,14 +70,14 @@ public class DCSColorPalettePanel extends JPanel {
                     }
                 }
             } else {
-                g2.setColor(TIBASIC_PALETTE.get(i));
+                g2.setColor(palette.get(i));
                 g2.fillRect(px, py, CELL, CELL);
             }
             // border
             g2.setColor(JBColor.border());
             g2.drawRect(px, py, CELL, CELL);
             // selection highlight (more explicit)
-            if (i == (selected & 0xF)) {
+            if (i == selected) {
                 // Outer thick border
                 g2.setColor(new JBColor(new Color(0, 0, 0), new Color(255, 255, 255)));
                 g2.drawRect(px - 2, py - 2, CELL + 4, CELL + 4);
@@ -110,4 +85,29 @@ public class DCSColorPalettePanel extends JPanel {
             }
         }
     }
+
+    public void setSelectionListener(SelectionListener listener) {
+        this.selectionListener = listener;
+    }
+
+    public void setSelectedIndex(int idx) {
+        if (selected != idx) {
+            selected = idx;
+            repaint();
+        }
+    }
+
+    protected abstract List<Color> getPalette();
+
+    private int indexAt(int x, int y) {
+        int gx = x - GAP;
+        if (gx < 0) return -1;
+        int stride = CELL + GAP;
+        int cx = gx / stride;
+        int rx = gx % stride;
+        if (rx >= CELL) return -1; // in the gap
+        if (cx >= getPalette().size()) return -1;
+        return cx;
+    }
+
 }

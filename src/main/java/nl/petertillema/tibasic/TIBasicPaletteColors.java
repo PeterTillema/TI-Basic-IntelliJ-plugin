@@ -85,4 +85,9 @@ public class TIBasicPaletteColors {
             DARK_GRAY
     );
 
+    public static final List<Color> MONOCHROME_PALETTE = List.of(
+            new JBColor(new Color(255, 255, 255), new Color(255, 255, 255)),
+            new JBColor(new Color(0x6B, 0x6D, 0x5A), new Color(0x6B, 0x6D, 0x5A))
+    );
+
 }

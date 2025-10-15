@@ -5,6 +5,12 @@ import com.intellij.openapi.components.Service;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSColoredColorPalettePanel;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSColoredIconEditorPanel;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome16ColorPalettePanel;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome16IconEditorPanel;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome8ColorPalettePanel;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome8IconEditorPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +25,16 @@ public final class DCSIconEditorService {
 
     public void showPopup(RelativePoint relativePoint, String iconData, Consumer<String> onSave) {
         // Setup main panels
-        DCSIconEditorPanel editorPanel = new DCSIconEditorPanel(iconData);
-        DCSColorPalettePanel palettePanel = new DCSColorPalettePanel();
+        var editorPanel = switch (iconData.length()) {
+            case 16 -> new DCSMonochrome8IconEditorPanel(iconData);
+            case 64 -> new DCSMonochrome16IconEditorPanel(iconData);
+            default -> new DCSColoredIconEditorPanel(iconData);
+        };
+        var palettePanel = switch (iconData.length()) {
+            case 16 -> new DCSMonochrome8ColorPalettePanel();
+            case 64 -> new DCSMonochrome16ColorPalettePanel();
+            default -> new DCSColoredColorPalettePanel();
+        };
         palettePanel.setSelectedIndex(editorPanel.getSelectedColorIndex());
         palettePanel.setSelectionListener(editorPanel::setSelectedColorIndex);
 

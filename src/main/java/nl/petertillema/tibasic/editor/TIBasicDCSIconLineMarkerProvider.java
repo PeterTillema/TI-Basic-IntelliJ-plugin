@@ -9,8 +9,11 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.FunctionUtil;
-import nl.petertillema.tibasic.editor.dcs.DCSIcon;
+import nl.petertillema.tibasic.editor.dcs.AbstractDCSIcon;
 import nl.petertillema.tibasic.editor.dcs.DCSIconEditorService;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSColoredIcon;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome16Icon;
+import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome8Icon;
 import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicStatement;
@@ -54,15 +57,21 @@ public class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDescript
         var iconData = element.getText().replace("\"", "");
         if (iconData.length() > 256) return null;
 
-        return new DCSLineMarkerInfo(element, iconData);
+        var icon = switch (iconData.length()) {
+            case 16 -> new DCSMonochrome8Icon(iconData);
+            case 64 -> new DCSMonochrome16Icon(iconData);
+            default -> new DCSColoredIcon(iconData);
+        };
+
+        return new DCSLineMarkerInfo(element, icon, iconData);
     }
 
     private static class DCSLineMarkerInfo extends LineMarkerInfo<PsiElement> {
 
-        private DCSLineMarkerInfo(final @NotNull PsiElement element, final @NotNull String data) {
+        private DCSLineMarkerInfo(final @NotNull PsiElement element, AbstractDCSIcon icon, final @NotNull String data) {
             super(element,
                     element.getTextRange(),
-                    new DCSIcon(data),
+                    icon,
                     FunctionUtil.<Object, String>nullConstant(),
                     (e, elt) -> onIconClick(e, elt, data),
                     GutterIconRenderer.Alignment.LEFT,
