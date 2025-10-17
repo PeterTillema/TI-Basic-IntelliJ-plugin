@@ -63,66 +63,78 @@ EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey"
 // Commands, which should be present at the start of the line
 COMMAND_WITH_PARENS = "Text(" | "Line(" | "Pt-On(" | "Pt-Off(" | "Pt-Change(" | "Pxl-On(" | "Pxl-Off(" | "Pxl-Change(" | "Shade(" | "Circle(" | "Tangent(" | "IS>(" | "DS<(" | "Output(" | "Fill(" | "SortA(" | "SortD(" | "Menu(" | "Send(" | "Get(" |
     "Plot1(" | "Plot2(" | "Plot3(" | "GraphColor(" | "TextColor(" | "Matr>list(" | "Matr►list(" | "List>matr(" | "List►matr("
-COMMAND_NO_PARENS = "CubicReg " | "QuartReg " | "Radian" | "Degree" | "Normal" | "Sci" | "Eng" | "Float" | "Fix " | "Horiz" | "FullScreen" | "Full" | "Func" | "Param" | "Polar" | "Seq" | "IndpntAuto" | "IndpntAsk" | "DependAuto" | "DependAsk" | "Trace" |
-    "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "Zoom In" | "Zoom Out" | "ZSquare" | "ZInteger" | "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn " | "FnOff " | "StorePic " | "RecallPic " | "StoreGDB " | "RecallGDB " |
-    "Vertical " | "Horizontal " | "DrawInv " | "DrawF " | "Return" | "Pause " | "Stop" | "Input " | "Prompt " | "Disp " | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn " | "PlotsOff " |
-    "DelVar " | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOn " | "AxesOff" | "GridOn" | "GridDot " | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" |
+COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "Sci" | "Eng" | "Float" | "Fix" | "Horiz" | "FullScreen" | "Full" | "Func" | "Param" | "Polar" | "Seq" | "IndpntAuto" | "IndpntAsk" | "DependAuto" | "DependAsk" | "Trace" |
+    "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" | "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn" | "FnOff" | "StorePic" | "RecallPic" | "StoreGDB" | "RecallGDB" |
+    "Vertical" | "Horizontal" | "DrawInv" | "DrawF" | "Return" | "Pause" | "Stop" | "Input" | "Prompt" | "Disp" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" |
+    "DelVar" | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" |
     "uvAxes" | "vwAxes" | "uwAxes"
 
-OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "Boxplot" | "^^r" | "ʳ" | "^^o" | "°" | "^^-1" | "⁻¹" | "ˉ¹" | "^^2" | "²" | "^^T" | "ᵀ" | "^^3" | "³" | "(" | ")" | " " | "\"" | "“" | "”" | "," |
+// Other tokens with higher priority (must be matched before COMMAND_NO_PARENS to avoid conflicts)
+// These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
+// Note: I don't think "Dot-Thin" is actually used in TI-Basic, but it is included here because it was in the original OTHER_TOKEN list
+OTHER_TOKEN_PRIORITY = "Dot-Thin"
+
+OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "Boxplot" | "^^r" | "ʳ" | "^^o" | "°" | "^^-1" | "⁻¹" | "ˉ¹" | "^^2" | "²" | "^^T" | "ᵀ" | "^^3" | "³" | "(" | ")" | "\"" | """ | """ | "," |
     "[i]" | "𝑖" | "!" | "prgm" | "squareplot" | "□" | "plotsquare" |
-    "crossplot" | "﹢" | "plotcross" | "dotplot" | "plotdot" | "*" | "/" | " nPr " | " nCr " | "pi" | "'" | "\'" | "?" |
+    "crossplot" | "﹢" | "plotcross" | "dotplot" | "plotdot" | "*" | "/" | "nPr" | "nCr" | "pi" | "'" | "\'" | "?" |
     "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV" |
-    ">Rect" | "►Rect" | ">Polar" | "►Polar" | "[e]" | "𝑒" | "SinReg " | "Logistic " | "LinRegTTest " | "ShadeNorm(" | "Shade_t(" | "Shadechi^2(" | "Shadeχ²(" | "Shadeχ^2(" |
-    "Shadechi²(" | "ShadeF(" | "Shade𝙵(" | "Shade𝐅(" | "Z-Test(" | "T-Test " | "2-SampZTest(" | "1-PropZTest(" | "2-PropZTest(" | "chi^2-Test(" | "χ²-Test(" | "χ^2-Test(" | "chi²-Test(" | "ZInterval "
-    | "2-SampZInt(" | "1-PropZInt(" | "2-PropZInt(" | "GraphStyle(" | "2-SampTTest " | "2-SampFTest " | "2-Samp𝙵Test " | "2-Samp𝐅Test " | "TInterval " | "2-SampTInt " | "SetUpEditor " | "Pmt_End" | "Pmt_Bgn" | "Real" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" |
+    ">Rect" | "►Rect" | ">Polar" | "►Polar" | "[e]" | "𝑒" | "SinReg" | "Logistic" | "LinRegTTest" | "ShadeNorm(" | "Shade_t(" | "Shadechi^2(" | "Shadeχ²(" | "Shadeχ^2(" |
+    "Shadechi²(" | "ShadeF(" | "Shade𝙵(" | "Shade𝐅(" | "Z-Test(" | "T-Test" | "2-SampZTest(" | "1-PropZTest(" | "2-PropZTest(" | "chi^2-Test(" | "χ²-Test(" | "χ^2-Test(" | "chi²-Test(" | "ZInterval" |
+    "2-SampZInt(" | "1-PropZInt(" | "2-PropZInt(" | "GraphStyle(" | "2-SampTTest" | "2-SampFTest" | "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" | "SetUpEditor" | "Pmt_End" | "Pmt_Bgn" | "Real" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" |
     "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" | "ExprOn" | "ExprOff" | "ClrAllLists" | "GetCalc(" | "Equ>String(" | "Equ►String(" | "String>Equ(" | "String►Equ(" | "Clear Entries" | "Select(" | "ANOVA(" | "ModBoxplot" | "NormProbPlot" |
-    "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "Archive " | "UnArchive " | "Asm(" | "AsmComp(" | "AsmPrgm" | "Á" | "À" | "Â" | "Ä" | "á" | "à" | "â" | "ä" | "É" | "È" | "Ê" | "Ë" | "é" | "è" | "ê" | "ë" | "Ì" | "Î" | "Ï" | "í" | "ì" | "î" | "ï" |
+    "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "Archive" | "UnArchive" | "Asm(" | "AsmComp(" | "AsmPrgm" | "Á" | "À" | "Â" | "Ä" | "á" | "à" | "â" | "ä" | "É" | "È" | "Ê" | "Ë" | "é" | "è" | "ê" | "ë" | "Ì" | "Î" | "Ï" | "í" | "ì" | "î" | "ï" |
     "Ó" | "Ò" | "Ô" | "Ö" | "ó" | "ò" | "ô" | "ö" | "Ú" | "Ù" | "Û" | "Ü" | "ú" | "ù" | "û" | "ü" | "Ç" | "ç" | "Ñ" | "ñ" | "|'" | "´" | "^^'" | "|`" | "^^`" | "|:" | "¨" | "^^:" | "|?" | "¿" | "|!" | "¡" | "alpha" | "α" | "beta" | "β" | "gamma" | "γ" | "Delta" |
     "Δ" | "delta" | "δ" | "epsilon" | "ε" | "lambda" | "λ" | "mu" | "μ" | "greek_pi" | "|π" | "rho" | "ρ" | "Sigma" | "Σ" | "Phi" | "Φ" | "Omega" | "Ω" | "phat" | "ṗ" | "chi" | "χ" | "|F" | "𝐅" | "|𝐅" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" |
     "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "sigma" | "σ" | "tau" | "τ" | "Í" | "GarbageCollect" | "|~" | "@" | "#" | "$" | "&" | "`" | ";" | "\"" | "|" | "_" | "%" | "..." | "…" | "|<" | "∠" | "sharps" |
     "ß" | "^^x" | "ˣ" | "smallT" | "ᴛ" | "small0" | "₀" | "small1" | "₁" | "small2" | "₂" | "small3" | "₃" | "small4" | "₄" | "small5" | "₅" | "small6" | "₆" | "small7" | "₇" | "small8" | "₈" | "small9" | "₉" | "small10" | "₁₀" | "<|" | "◄" | "|>" | "►" |
     "uparrow" | "↑" | "downarrow" | "↓" | "xmark" | "×" | "integral" | "∫" | "bolduparrow" | "🡁" | "🡅" | "bolddownarrow" | "🠿" | "🡇" | "squareroot" | "invertedequal" | "⌸" | "|L" | "ʟ" | "⌊" | "smallL" | "setDate(" | "setTime(" | "checkTmr(" | "setDtFmt(" |
-    "setTmFmt(" | "timeCnv(" | "dayOfWk(" | "getDtStr(" | "getTmStr(" | "getDate" | "getTime" | "startTmr" | "getDtFmt" | "getTmFmt" | "isClockOn" | "ClockOff" | "ClockOn" | "OpenLib(" | "ExecLib " | "invT(" | "chi^2GOF-Test(" | "χ²GOF-Test(" | "χ^2GOF-Test(" |
-    "chi²GOF-Test(" | "LinRegTInt " | "Manual-Fit " | "ZQuadrant1" | "ZFrac1/2" | "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" | "ZFrac1⁄8" | "ZFrac1/10" | "ZFrac1⁄10" | "mathprintbox" | "⬚" | "n/d" | "⁄" |
+    "setTmFmt(" | "timeCnv(" | "dayOfWk(" | "getDtStr(" | "getTmStr(" | "getDate" | "getTime" | "startTmr" | "getDtFmt" | "getTmFmt" | "isClockOn" | "ClockOff" | "ClockOn" | "OpenLib(" | "ExecLib" | "invT(" | "chi^2GOF-Test(" | "χ²GOF-Test(" | "χ^2GOF-Test(" |
+    "chi²GOF-Test(" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" | "ZFrac1/2" | "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" | "ZFrac1⁄8" | "ZFrac1/10" | "ZFrac1⁄10" | "mathprintbox" | "⬚" | "n/d" | "⁄" |
     "Un/d" | "󸏵" | "ᵤ" | ">n/d<>Un/d" | "►n⁄d◄►Un⁄d" | "►n/d◄►Un/d" | ">n⁄d<>Un⁄d" | ">F<>D" | "►F◄►D" | "Sigma(" | "Σ(" | "logBASE(" | "randIntNoRep(" | "[MATHPRINT]" | "MATHPRINT" | "[CLASSIC]" | "CLASSIC" | "[n/d]" | "n⁄d" | "[Un/d]" | "Un⁄d" |
-    "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" | "FRAC" | "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARD ON" | "[STATWIZARD OFF]" | "STATWIZARD OFF" | "GridLine " | "BackgroundOn " | "BackgroundOff" | "QuickPlot&Fit-EQ" |
-    "Asm84CPrgm" | "DetectAsymOn" | "DetectAsymOff" | "BorderColor " | "plottinydot" | "·" | "Thin" | "Dot-Thin" | "PlySmlt2" | "Asm84CEPrgm" | "Quartiles Setting..." | "Quartiles Setting…" | "u(n-2)" | "u(𝑛-2)" | "u(𝒏-2)" | "v(n-2)" | "v(𝑛-2)" |
+    "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" | "FRAC" | "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARD ON" | "[STATWIZARD OFF]" | "STATWIZARD OFF" | "GridLine" | "BackgroundOn" | "BackgroundOff" | "QuickPlot&Fit-EQ" |
+    "Asm84CPrgm" | "DetectAsymOn" | "DetectAsymOff" | "BorderColor" | "plottinydot" | "·" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" | "Quartiles Setting..." | "Quartiles Setting…" | "u(n-2)" | "u(𝑛-2)" | "u(𝒏-2)" | "v(n-2)" | "v(𝑛-2)" |
     "v(𝒏-2)" | "w(n-2)" | "w(𝑛-2)" | "w(𝒏-2)" | "u(n-1)" | "u(𝑛-1)" | "u(𝒏-1)" | "v(n-1)" | "v(𝑛-1)" | "v(𝒏-1)" | "w(n-1)" | "w(𝑛-1)" | "w(𝒏-1)" | "u(n)" | "u(𝑛)" | "u(𝒏)" | "v(n)" | "v(𝑛)" | "v(𝒏)" | "w(n)" | "w(𝑛)" | "w(𝒏)" | "u(n+1)" | "u(𝑛+1)" | "u(𝒏+1)" |
-    "v(n+1)" | "v(𝑛+1)" | "v(𝒏+1)" | "w(n+1)" | "w(𝑛+1)" | "w(𝒏+1)" | "pieceWise(" | "SEQ(n)" | "SEQ(𝑛)" | "SEQ(𝒏)" | "SEQ(n+1)" | "SEQ(𝑛+1)" | "SEQ(𝒏+1)" | "SEQ(n+2)" | "SEQ(𝑛+2)" | "SEQ(𝒏+2)" | "LEFT" | "CENTER" | "RIGHT" | "invBinom(" | "Wait " | "toString(" |
-    "eval(" | "Execute Program" | "Undo Clear" | "Insert Line Above" | "Cut Line" | "Copy Line" | "Paste Line Below" | "Insert Comment Above" | "Quit Editor" | "piecewise(" | "^" | "xroot" | "ˣ√" | "1-Var Stats " | "2-Var Stats " | "LinReg(a+bx) " | "ExpReg " |
-    "LnReg " | "PwrReg " | "Med-Med " | "QuadReg " | "ClrList " | "ClrTable" | "Histogram" | "xyLine" | "Scatter" | "LinReg(ax+b) "
+    "v(n+1)" | "v(𝑛+1)" | "v(𝒏+1)" | "w(n+1)" | "w(𝑛+1)" | "w(𝒏+1)" | "pieceWise(" | "SEQ(n)" | "SEQ(𝑛)" | "SEQ(𝒏)" | "SEQ(n+1)" | "SEQ(𝑛+1)" | "SEQ(𝒏+1)" | "SEQ(n+2)" | "SEQ(𝑛+2)" | "SEQ(𝒏+2)" | "LEFT" | "CENTER" | "RIGHT" | "invBinom(" | "Wait" | "toString(" |
+    "eval(" | "ExecuteProgram" | "UndoClear" | "InsertLineAbove" | "CutLine" | "CopyLine" | "PasteLineBelow" | "InsertCommentAbove" | "QuitEditor" | "piecewise(" | "^" | "xroot" | "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" |
+    "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "ClrList" | "ClrTable" | "Histogram" | "xyLine" | "Scatter" | "LinReg(ax+b)"
 
 %state STRING
 
 %%
 
 <YYINITIAL> {
+    // Structural tokens (highest priority)
     {EOL}                                                     { return TIBasicTypes.CRLF; }
     ":"                                                       { return TIBasicTypes.COLON; }
-    ^{WHITE_SPACE}+                                           { return TokenType.WHITE_SPACE; }
-    {WHITE_SPACE}+$                                           { return TokenType.WHITE_SPACE; }
+    {WHITE_SPACE}+                                            { return TokenType.WHITE_SPACE; }
     {COMMENT}                                                 { return TIBasicTypes.COMMENT; }
     {NUMBER}                                                  { return TIBasicTypes.NUMBER; }
-    "If "                                                     { return TIBasicTypes.IF; }
+    "\""                                                      { yybegin(STRING); }
+
+    // Control flow keywords (before variables that might conflict)
+    // Note: Match without trailing space to prevent "Lbl" from matching as "L"+"b"+"l"
+    "If"                                                      { return TIBasicTypes.IF; }
     "Then"                                                    { return TIBasicTypes.THEN; }
     "Else"                                                    { return TIBasicTypes.ELSE; }
     "End"                                                     { return TIBasicTypes.END; }
-    "While "                                                  { return TIBasicTypes.WHILE; }
-    "Repeat "                                                 { return TIBasicTypes.REPEAT; }
+    "While"                                                   { return TIBasicTypes.WHILE; }
+    "Repeat"                                                  { return TIBasicTypes.REPEAT; }
     "For("                                                    { return TIBasicTypes.FOR; }
-    "Goto "                                                   { return TIBasicTypes.GOTO; }
-    "Lbl "                                                    { return TIBasicTypes.LBL; }
+    "Goto"                                                    { return TIBasicTypes.GOTO; }
+    "Lbl"                                                     { return TIBasicTypes.LBL; }
+
+    // Operators and punctuation
+    "->"                                                      { return TIBasicTypes.STO; }
     "+"                                                       { return TIBasicTypes.PLUS; }
     "-"                                                       { return TIBasicTypes.MINUS; }
     "*"                                                       { return TIBasicTypes.TIMES; }
     "/"                                                       { return TIBasicTypes.DIVIDE; }
     "="                                                       { return TIBasicTypes.EQ; }
     "!="                                                      { return TIBasicTypes.NE; }
-    ">"                                                       { return TIBasicTypes.GT; }
     ">="                                                      { return TIBasicTypes.GE; }
-    "<"                                                       { return TIBasicTypes.LT; }
     "<="                                                      { return TIBasicTypes.LE; }
+    ">"                                                       { return TIBasicTypes.GT; }
+    "<"                                                       { return TIBasicTypes.LT; }
     "~"                                                       { return TIBasicTypes.NEG; }
     " or "                                                    { return TIBasicTypes.OR; }
     " xor "                                                   { return TIBasicTypes.XOR; }
@@ -134,8 +146,19 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "Box
     "}"                                                       { return TIBasicTypes.RCURLY; }
     "["                                                       { return TIBasicTypes.LBRACKET; }
     "]"                                                       { return TIBasicTypes.RBRACKET; }
-    "->"                                                      { return TIBasicTypes.STO; }
-    "\""                                                      { yybegin(STRING); }
+
+    // High-priority other tokens (must be checked before COMMAND_NO_PARENS to avoid "Dot" matching "Dot-Thin")
+    {OTHER_TOKEN_PRIORITY}                                    { return TIBasicTypes.TOKEN; }
+
+    // Commands and functions (multi-character tokens before single-char variables)
+    {COMMAND_WITH_PARENS}                                     { return TIBasicTypes.COMMAND_WITH_PARENS; }
+    {COMMAND_NO_PARENS}                                       { return TIBasicTypes.COMMAND_NO_PARENS; }
+    {EXPR_FUNCTIONS_WITH_ARGS}                                { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS; }
+    {EXPR_FUNCTIONS_NO_ARGS}                                  { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS; }
+    {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
+    {OTHER_TOKEN}                                             { return TIBasicTypes.TOKEN; }
+
+    // Multi-character variables (before simple variables)
     {ANS_VARIABLE}                                            { return TIBasicTypes.ANS_VARIABLE; }
     {LIST_VARIABLE}                                           { return TIBasicTypes.LIST_VARIABLE; }
     {EQUATION_VARIABLE_1}                                     { return TIBasicTypes.EQUATION_VARIABLE_1; }
@@ -145,17 +168,17 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "Box
     {PICTURE_VARIABLE}                                        { return TIBasicTypes.TOKEN; }
     {GDB_VARIABLE}                                            { return TIBasicTypes.TOKEN; }
     {STRING_VARIABLE}                                         { return TIBasicTypes.STRING_VARIABLE; }
-    {SIMPLE_VARIABLE}                                         { return TIBasicTypes.SIMPLE_VARIABLE; }
     {MATRIX_VARIABLE}                                         { return TIBasicTypes.MATRIX_VARIABLE; }
     {STATISTIC_VARIABLE}                                      { return TIBasicTypes.TOKEN; }
     {COLOR_VARIABLE}                                          { return TIBasicTypes.COLOR_VARIABLE; }
     {IMAGE_VARIABLE}                                          { return TIBasicTypes.TOKEN; }
-    {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
-    {EXPR_FUNCTIONS_WITH_ARGS}                                { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS; }
-    {EXPR_FUNCTIONS_NO_ARGS}                                  { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS; }
-    {COMMAND_WITH_PARENS}                                     { return TIBasicTypes.COMMAND_WITH_PARENS; }
-    {COMMAND_NO_PARENS}                                       { return TIBasicTypes.COMMAND_NO_PARENS; }
-    {OTHER_TOKEN}                                             { return TIBasicTypes.TOKEN; }
+
+    // Single-character variables (LOWEST priority - fallback for A-Z, theta)
+    {SIMPLE_VARIABLE}                                         { return TIBasicTypes.SIMPLE_VARIABLE; }
+
+    // Invalid identifier-like sequences (catch "Abc" as one token instead of "A"+"b"+"c")
+    // This must come AFTER all valid tokens to avoid matching valid multi-char tokens
+    [A-Za-z][A-Za-z0-9]+                                      { return TokenType.BAD_CHARACTER; }
 }
 
 <STRING> {

@@ -37,6 +37,11 @@ public final class TIBasicParserDefinition implements ParserDefinition {
     }
 
     @Override
+    public @NotNull TokenSet getWhitespaceTokens() {
+        return TIBasicTokenSets.WHITESPACE;
+    }
+
+    @Override
     public @NotNull TokenSet getCommentTokens() {
         return TIBasicTokenSets.COMMENTS;
     }
