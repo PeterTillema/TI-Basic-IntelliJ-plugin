@@ -88,6 +88,7 @@ public interface TIBasicTypes {
   IElementType GOTO = new TIBasicTokenType("GOTO");
   IElementType GT = new TIBasicTokenType("GT");
   IElementType IF = new TIBasicTokenType("IF");
+  IElementType INVERSE = new TIBasicTokenType("INVERSE");
   IElementType LBL = new TIBasicTokenType("LBL");
   IElementType LBRACKET = new TIBasicTokenType("LBRACKET");
   IElementType LCURLY = new TIBasicTokenType("LCURLY");
@@ -99,11 +100,16 @@ public interface TIBasicTypes {
   IElementType MATH_VARIABLE = new TIBasicTokenType("MATH_VARIABLE");
   IElementType MATRIX_VARIABLE = new TIBasicTokenType("MATRIX_VARIABLE");
   IElementType MINUS = new TIBasicTokenType("MINUS");
+  IElementType NCR = new TIBasicTokenType("NCR");
   IElementType NE = new TIBasicTokenType("NE");
   IElementType NEG = new TIBasicTokenType("NEG");
+  IElementType NPR = new TIBasicTokenType("NPR");
   IElementType NUMBER = new TIBasicTokenType("NUMBER");
   IElementType OR = new TIBasicTokenType("OR");
   IElementType PLUS = new TIBasicTokenType("PLUS");
+  IElementType POW = new TIBasicTokenType("POW");
+  IElementType POW2 = new TIBasicTokenType("POW2");
+  IElementType POW3 = new TIBasicTokenType("POW3");
   IElementType RBRACKET = new TIBasicTokenType("RBRACKET");
   IElementType RCURLY = new TIBasicTokenType("RCURLY");
   IElementType REPEAT = new TIBasicTokenType("REPEAT");
@@ -115,6 +121,9 @@ public interface TIBasicTypes {
   IElementType THEN = new TIBasicTokenType("THEN");
   IElementType TIMES = new TIBasicTokenType("TIMES");
   IElementType TOKEN = new TIBasicTokenType("TOKEN");
+  IElementType TO_DEGREE = new TIBasicTokenType("TO_DEGREE");
+  IElementType TO_RADIAN = new TIBasicTokenType("TO_RADIAN");
+  IElementType TRANSPOSE = new TIBasicTokenType("TRANSPOSE");
   IElementType WHILE = new TIBasicTokenType("WHILE");
   IElementType WINDOW_TOKENS = new TIBasicTokenType("WINDOW_TOKENS");
   IElementType XOR = new TIBasicTokenType("XOR");

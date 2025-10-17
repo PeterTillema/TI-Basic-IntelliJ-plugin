@@ -1244,15 +1244,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         r = expr(b, l, 5);
         exit_section_(b, l, m, DIV_EXPR, r, true, null);
       }
-      else if (g < 6 && consumeTokenSmart(b, " nPr ")) {
+      else if (g < 6 && consumeTokenSmart(b, NPR)) {
         r = expr(b, l, 6);
         exit_section_(b, l, m, NPR_EXPR, r, true, null);
       }
-      else if (g < 6 && consumeTokenSmart(b, " nCr ")) {
+      else if (g < 6 && consumeTokenSmart(b, NCR)) {
         r = expr(b, l, 6);
         exit_section_(b, l, m, NCR_EXPR, r, true, null);
       }
-      else if (g < 8 && consumeTokenSmart(b, "^")) {
+      else if (g < 8 && consumeTokenSmart(b, POW)) {
         r = expr(b, l, 8);
         exit_section_(b, l, m, POW_EXPR, r, true, null);
       }
@@ -1260,27 +1260,27 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         r = expr(b, l, 8);
         exit_section_(b, l, m, XROOT_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^r")) {
+      else if (g < 9 && consumeTokenSmart(b, TO_RADIAN)) {
         r = true;
         exit_section_(b, l, m, RADIAN_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^o")) {
+      else if (g < 9 && consumeTokenSmart(b, TO_DEGREE)) {
         r = true;
         exit_section_(b, l, m, DEGREE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^-1")) {
+      else if (g < 9 && consumeTokenSmart(b, INVERSE)) {
         r = true;
         exit_section_(b, l, m, INVERSE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^2")) {
+      else if (g < 9 && consumeTokenSmart(b, POW2)) {
         r = true;
         exit_section_(b, l, m, POW_2_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^T")) {
+      else if (g < 9 && consumeTokenSmart(b, TRANSPOSE)) {
         r = true;
         exit_section_(b, l, m, TRANSPOSE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, "^^3")) {
+      else if (g < 9 && consumeTokenSmart(b, POW3)) {
         r = true;
         exit_section_(b, l, m, POW_3_EXPR, r, true, null);
       }
