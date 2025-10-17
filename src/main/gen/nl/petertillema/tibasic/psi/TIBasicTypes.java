@@ -96,6 +96,7 @@ public interface TIBasicTypes {
   IElementType LIST_VARIABLE_NAME = new TIBasicTokenType("LIST_VARIABLE_NAME");
   IElementType LPAREN = new TIBasicTokenType("LPAREN");
   IElementType LT = new TIBasicTokenType("LT");
+  IElementType MATH_VARIABLE = new TIBasicTokenType("MATH_VARIABLE");
   IElementType MATRIX_VARIABLE = new TIBasicTokenType("MATRIX_VARIABLE");
   IElementType MINUS = new TIBasicTokenType("MINUS");
   IElementType NE = new TIBasicTokenType("NE");

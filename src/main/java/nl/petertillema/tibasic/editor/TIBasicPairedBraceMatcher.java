@@ -12,8 +12,6 @@ public final class TIBasicPairedBraceMatcher implements PairedBraceMatcher {
 
     private static final BracePair[] BRACE_PAIRS = new BracePair[]{
             new BracePair(TIBasicTypes.LPAREN, TIBasicTypes.RPAREN, false),
-            new BracePair(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS, TIBasicTypes.RPAREN, false),
-            new BracePair(TIBasicTypes.COMMAND_WITH_PARENS, TIBasicTypes.RPAREN, false),
             new BracePair(TIBasicTypes.LBRACKET, TIBasicTypes.RBRACKET, false),
             new BracePair(TIBasicTypes.LCURLY, TIBasicTypes.RCURLY, false),
     };
