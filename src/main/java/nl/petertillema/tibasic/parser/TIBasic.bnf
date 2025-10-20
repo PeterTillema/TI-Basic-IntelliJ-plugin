@@ -103,6 +103,9 @@ pow3_expr ::= expr POW3
 // Precedence 1
 paren_expr ::= LPAREN expr [RPAREN]
 func_expr ::= EXPR_FUNCTIONS_WITH_ARGS LPAREN expr (COMMA expr)* [RPAREN]
+{
+    methods=[getReferences]
+}
 
 // Base literal
 literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix

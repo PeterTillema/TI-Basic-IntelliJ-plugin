@@ -5,10 +5,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicForIdentifier;
+import nl.petertillema.tibasic.psi.TIBasicFuncExpr;
 import nl.petertillema.tibasic.psi.TIBasicGotoName;
 import nl.petertillema.tibasic.psi.TIBasicLblName;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
+import nl.petertillema.tibasic.psi.references.TIBasicEmptyReference;
 import nl.petertillema.tibasic.psi.references.TIBasicLabelReference;
 import nl.petertillema.tibasic.psi.references.TIBasicVariableReference;
 
@@ -71,6 +73,10 @@ public final class TIBasicPsiImplUtil {
         }
 
         return PsiReference.EMPTY_ARRAY;
+    }
+
+    public static PsiReference[] getReferences(TIBasicFuncExpr element) {
+        return new PsiReference[]{new TIBasicEmptyReference(element.getFirstChild(), TextRange.from(0, element.getFirstChild().getTextLength()))};
     }
 
 }

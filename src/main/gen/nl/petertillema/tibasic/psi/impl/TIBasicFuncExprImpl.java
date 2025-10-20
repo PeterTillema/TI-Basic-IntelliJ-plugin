@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class TIBasicFuncExprImpl extends TIBasicExprImpl implements TIBasicFuncExpr {
 
@@ -31,6 +32,11 @@ public class TIBasicFuncExprImpl extends TIBasicExprImpl implements TIBasicFuncE
   @NotNull
   public List<TIBasicExpr> getExprList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
+  }
+
+  @Override
+  public PsiReference[] getReferences() {
+    return TIBasicPsiImplUtil.getReferences(this);
   }
 
 }
