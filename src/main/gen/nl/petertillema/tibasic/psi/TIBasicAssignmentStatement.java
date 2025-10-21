@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicAssignmentStatement extends PsiElement {
 
-  @NotNull
+  @Nullable
   TIBasicAssignmentTarget getAssignmentTarget();
 
   @NotNull

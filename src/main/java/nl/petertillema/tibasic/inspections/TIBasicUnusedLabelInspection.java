@@ -27,7 +27,9 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
-                gotoLabels.add(o.getGotoName().getText());
+                if (o.getGotoName() != null){
+                    gotoLabels.add(o.getGotoName().getText());
+                }
             }
         });
 
@@ -35,7 +37,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
             @Override
             public void visitLblStatement(@NotNull TIBasicLblStatement o) {
-                if (!gotoLabels.contains(o.getLblName().getText())) {
+                if (o.getLblName() != null && !gotoLabels.contains(o.getLblName().getText())) {
                     holder.registerProblem(o, "Unused label", LIKE_UNUSED_SYMBOL, new RemoveLabelQuickFix());
                 }
             }

@@ -23,7 +23,9 @@ public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionToo
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
             @Override
             public void visitLblStatement(@NotNull TIBasicLblStatement o) {
-                lblLabels.add(o.getLblName().getText());
+                if (o.getLblName() != null) {
+                    lblLabels.add(o.getLblName().getText());
+                }
             }
         });
 
@@ -31,7 +33,7 @@ public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionToo
 
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
-                if (!lblLabels.contains(o.getGotoName().getText())) {
+                if (o.getGotoName() != null && !lblLabels.contains(o.getGotoName().getText())) {
                     holder.registerProblem(o.getGotoName(), "Invalid Goto target", ERROR);
                 }
             }

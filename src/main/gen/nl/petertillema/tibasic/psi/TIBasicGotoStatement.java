@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicGotoStatement extends PsiElement {
 
-  @NotNull
+  @Nullable
   TIBasicGotoName getGotoName();
 
 }

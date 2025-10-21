@@ -12,6 +12,7 @@ public final class TIBasicUtil {
         var labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
 
         return labels.stream()
+                .filter(label -> label.getLblName() != null)
                 .filter(label -> key.equals(label.getLblName().getText()))
                 .toList();
     }
@@ -25,6 +26,7 @@ public final class TIBasicUtil {
         var assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
 
         return assignments.stream()
+                .filter(assignment -> assignment.getAssignmentTarget() != null)
                 .filter(assignment -> assignment.getAssignmentTarget().getText().equals(key))
                 .toList();
     }

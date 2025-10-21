@@ -62,14 +62,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean anonymous_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_list")) return false;
     if (!nextTokenIs(b, LCURLY)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, ANONYMOUS_LIST, null);
     r = consumeToken(b, LCURLY);
-    r = r && expr(b, l + 1, -1);
-    r = r && anonymous_list_2(b, l + 1);
-    r = r && anonymous_list_3(b, l + 1);
-    exit_section_(b, m, ANONYMOUS_LIST, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, anonymous_list_2(b, l + 1)) && r;
+    r = p && anonymous_list_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (COMMA expr)*
@@ -106,14 +107,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean anonymous_matrix(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_matrix")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, ANONYMOUS_MATRIX, null);
     r = consumeToken(b, LBRACKET);
-    r = r && anonymous_matrix_row(b, l + 1);
-    r = r && anonymous_matrix_2(b, l + 1);
-    r = r && anonymous_matrix_3(b, l + 1);
-    exit_section_(b, m, ANONYMOUS_MATRIX, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, anonymous_matrix_row(b, l + 1));
+    r = p && report_error_(b, anonymous_matrix_2(b, l + 1)) && r;
+    r = p && anonymous_matrix_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (COMMA anonymous_matrix_row)*
@@ -150,14 +152,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean anonymous_matrix_row(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_matrix_row")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, ANONYMOUS_MATRIX_ROW, null);
     r = consumeToken(b, LBRACKET);
-    r = r && expr(b, l + 1, -1);
-    r = r && anonymous_matrix_row_2(b, l + 1);
-    r = r && anonymous_matrix_row_3(b, l + 1);
-    exit_section_(b, m, ANONYMOUS_MATRIX_ROW, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, anonymous_matrix_row_2(b, l + 1)) && r;
+    r = p && anonymous_matrix_row_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (COMMA expr)*
@@ -194,14 +197,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   static boolean arguments_command(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "arguments_command")) return false;
     if (!nextTokenIs(b, COMMAND_WITH_PARENS)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, COMMAND_WITH_PARENS, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && arguments_command_3(b, l + 1);
-    r = r && arguments_command_4(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, COMMAND_WITH_PARENS, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, arguments_command_3(b, l + 1)) && r;
+    r = p && arguments_command_4(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (COMMA expr)*
@@ -237,13 +241,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // expr STO assignment_target
   public static boolean assignment_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_statement")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, ASSIGNMENT_STATEMENT, "<assignment statement>");
     r = expr(b, l + 1, -1);
     r = r && consumeToken(b, STO);
+    p = r; // pin = 2
     r = r && assignment_target(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -264,13 +269,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [RPAREN]
   static boolean assignment_target_dim(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_dim")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = consumeToken(b, "dim(");
-    r = r && assignment_target_dim_1(b, l + 1);
-    r = r && assignment_target_dim_2(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, assignment_target_dim_1(b, l + 1));
+    r = p && assignment_target_dim_2(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // LIST_VARIABLE | MATRIX_VARIABLE
@@ -294,13 +300,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   static boolean assignment_target_list_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_list_index")) return false;
     if (!nextTokenIs(b, LIST_VARIABLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, LIST_VARIABLE, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && assignment_target_list_index_3(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, LIST_VARIABLE, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && assignment_target_list_index_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [RPAREN]
@@ -315,15 +322,16 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   static boolean assignment_target_matrix_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_matrix_index")) return false;
     if (!nextTokenIs(b, MATRIX_VARIABLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, MATRIX_VARIABLE, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && assignment_target_matrix_index_5(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, MATRIX_VARIABLE, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && assignment_target_matrix_index_5(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [RPAREN]
@@ -380,12 +388,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement]
   public static boolean delvar_command(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_command")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, DELVAR_COMMAND, "<delvar command>");
     r = delvar_command_0(b, l + 1);
+    p = r; // pin = 1
     r = r && delvar_command_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+
@@ -647,12 +656,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean goto_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "goto_statement")) return false;
     if (!nextTokenIs(b, GOTO)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, GOTO_STATEMENT, null);
     r = consumeToken(b, GOTO);
+    p = r; // pin = 1
     r = r && goto_name(b, l + 1);
-    exit_section_(b, m, GOTO_STATEMENT, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -742,12 +752,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean lbl_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "lbl_statement")) return false;
     if (!nextTokenIs(b, LBL)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LBL_STATEMENT, null);
     r = consumeToken(b, LBL);
+    p = r; // pin = 1
     r = r && lbl_name(b, l + 1);
-    exit_section_(b, m, LBL_STATEMENT, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -755,13 +766,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean list_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "list_index")) return false;
     if (!nextTokenIs(b, LIST_VARIABLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, LIST_VARIABLE, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && list_index_3(b, l + 1);
-    exit_section_(b, m, LIST_INDEX, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LIST_INDEX, null);
+    r = consumeTokens(b, 2, LIST_VARIABLE, LPAREN);
+    p = r; // pin = 2
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && list_index_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [RPAREN]
@@ -776,15 +788,16 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean matrix_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "matrix_index")) return false;
     if (!nextTokenIs(b, MATRIX_VARIABLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, MATRIX_VARIABLE, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && matrix_index_5(b, l + 1);
-    exit_section_(b, m, MATRIX_INDEX, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, MATRIX_INDEX, null);
+    r = consumeTokens(b, 2, MATRIX_VARIABLE, LPAREN);
+    p = r; // pin = 2
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && matrix_index_5(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [RPAREN]
@@ -821,12 +834,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   static boolean simple_command(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "simple_command")) return false;
     if (!nextTokenIs(b, COMMAND_NO_PARENS)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = consumeToken(b, COMMAND_NO_PARENS);
+    p = r; // pin = 1
     r = r && simple_command_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [(expr (COMMA expr)*)]
@@ -872,7 +886,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // small_statement
   static boolean simple_statement(PsiBuilder b, int l) {
-    return small_statement(b, l + 1);
+    if (!recursion_guard_(b, l, "simple_statement")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = small_statement(b, l + 1);
+    exit_section_(b, l, m, r, false, TIBasicParser::statement_recover);
+    return r;
   }
 
   /* ********************************************************** */
@@ -897,6 +916,17 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, STATEMENT, "<statement>");
     r = compound_statement(b, l + 1);
     if (!r) r = simple_statement(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // !NEWLINE
+  static boolean statement_recover(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "statement_recover")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !NEWLINE(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1361,14 +1391,15 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean func_expr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "func_expr")) return false;
     if (!nextTokenIsSmart(b, EXPR_FUNCTIONS_WITH_ARGS)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokensSmart(b, 0, EXPR_FUNCTIONS_WITH_ARGS, LPAREN);
-    r = r && expr(b, l + 1, -1);
-    r = r && func_expr_3(b, l + 1);
-    r = r && func_expr_4(b, l + 1);
-    exit_section_(b, m, FUNC_EXPR, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FUNC_EXPR, null);
+    r = consumeTokensSmart(b, 1, EXPR_FUNCTIONS_WITH_ARGS, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, func_expr_3(b, l + 1)) && r;
+    r = p && func_expr_4(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (COMMA expr)*

@@ -28,9 +28,9 @@ public class TIBasicGotoStatementImpl extends ASTWrapperPsiElement implements TI
   }
 
   @Override
-  @NotNull
+  @Nullable
   public TIBasicGotoName getGotoName() {
-    return findNotNullChildByClass(TIBasicGotoName.class);
+    return findChildByClass(TIBasicGotoName.class);
   }
 
 }

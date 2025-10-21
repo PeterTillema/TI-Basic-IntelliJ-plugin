@@ -28,9 +28,9 @@ public class TIBasicLblStatementImpl extends ASTWrapperPsiElement implements TIB
   }
 
   @Override
-  @NotNull
+  @Nullable
   public TIBasicLblName getLblName() {
-    return findNotNullChildByClass(TIBasicLblName.class);
+    return findChildByClass(TIBasicLblName.class);
   }
 
 }

@@ -24,11 +24,12 @@ private statements ::= statement (NEWLINE+ statement)*
 statement ::= compound_statement | simple_statement
 
 private NEWLINE ::= CRLF | COLON
+private statement_recover ::= !NEWLINE
 
 end_block ::= NEWLINE+ (!"End" (statement NEWLINE*))*
 then_block ::= NEWLINE+ (!"Else" !"End" (statement NEWLINE*))*
 
-private simple_statement ::= small_statement
+private simple_statement ::= small_statement { recoverWhile=statement_recover }
 private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | assignment_statement | expr
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
@@ -102,22 +103,22 @@ transpose_expr ::= expr TRANSPOSE
 pow3_expr ::= expr POW3
 // Precedence 1
 paren_expr ::= LPAREN expr [RPAREN]
-func_expr ::= EXPR_FUNCTIONS_WITH_ARGS LPAREN expr (COMMA expr)* [RPAREN]
+func_expr ::= EXPR_FUNCTIONS_WITH_ARGS LPAREN expr (COMMA expr)* [RPAREN] { pin=1 }
 
 // Base literal
 literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
 {
     methods=[getReferences]
 }
-list_index ::= LIST_VARIABLE LPAREN expr [RPAREN]
-matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN]
-anonymous_list ::= LCURLY expr (COMMA expr)* [RCURLY]
-anonymous_matrix ::= LBRACKET anonymous_matrix_row (COMMA anonymous_matrix_row)* [RBRACKET]
-anonymous_matrix_row ::= LBRACKET expr (COMMA expr)* [RBRACKET]
+list_index ::= LIST_VARIABLE LPAREN expr [RPAREN] { pin=2 }
+matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=2 }
+anonymous_list ::= LCURLY expr (COMMA expr)* [RCURLY] { pin=1 }
+anonymous_matrix ::= LBRACKET anonymous_matrix_row (COMMA anonymous_matrix_row)* [RBRACKET] { pin=1 }
+anonymous_matrix_row ::= LBRACKET expr (COMMA expr)* [RBRACKET] { pin=1 }
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
-assignment_statement ::= expr STO assignment_target
+assignment_statement ::= expr STO assignment_target { pin=2 }
 assignment_target ::= assignment_target_matrix_index | assignment_target_list_index | assignment_target_variable | assignment_target_dim
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
@@ -125,18 +126,18 @@ assignment_target ::= assignment_target_matrix_index | assignment_target_list_in
     methods=[getName setName getNameIdentifier]
 }
 private assignment_target_variable ::= LIST_VARIABLE | LIST_VARIABLE_NAME | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_TOKENS
-private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN]
-private assignment_target_list_index ::= LIST_VARIABLE LPAREN expr [RPAREN]
-private assignment_target_dim ::= "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [RPAREN]
+private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=1 }
+private assignment_target_list_index ::= LIST_VARIABLE LPAREN expr [RPAREN] { pin=1 }
+private assignment_target_dim ::= "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [RPAREN] { pin=1 }
 
-delvar_command ::= ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement]
+delvar_command ::= ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement] { pin=1 }
 
-goto_statement ::= GOTO goto_name
+goto_statement ::= GOTO goto_name { pin=1 }
 goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 {
     methods=[getReferences]
 }
-lbl_statement ::= LBL lbl_name
+lbl_statement ::= LBL lbl_name { pin=1 }
 lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
@@ -145,8 +146,8 @@ lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 }
 
 command_statement ::= simple_command | arguments_command
-private simple_command ::= COMMAND_NO_PARENS [(expr (COMMA expr)*)]
-private arguments_command ::= COMMAND_WITH_PARENS LPAREN expr (COMMA expr)* [RPAREN]
+private simple_command ::= COMMAND_NO_PARENS [(expr (COMMA expr)*)] { pin=1 }
+private arguments_command ::= COMMAND_WITH_PARENS LPAREN expr (COMMA expr)* [RPAREN] { pin=1 }
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 

@@ -60,6 +60,7 @@ public final class TIBasicFileTokenizer {
                 var tokenizeResult = tokenizerService.tokenize(source, indicator);
 
                 if (tokenizeResult.status() == TokenizeStatus.FAIL) {
+                    // todo: count for comments and indentation
                     var lineColumn = StringUtil.offsetToLineColumn(source, tokenizeResult.errorOffset());
                     reporter.accept("Error encountered at line " + (lineColumn.line + 1) + ", column " + lineColumn.column);
                     onFinished.run();

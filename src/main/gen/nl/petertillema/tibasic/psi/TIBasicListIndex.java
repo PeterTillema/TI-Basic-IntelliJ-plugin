@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicListIndex extends PsiElement {
 
-  @NotNull
+  @Nullable
   TIBasicExpr getExpr();
 
 }

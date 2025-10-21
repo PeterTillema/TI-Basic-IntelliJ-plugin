@@ -28,9 +28,9 @@ public class TIBasicListIndexImpl extends ASTWrapperPsiElement implements TIBasi
   }
 
   @Override
-  @NotNull
+  @Nullable
   public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+    return findChildByClass(TIBasicExpr.class);
   }
 
 }

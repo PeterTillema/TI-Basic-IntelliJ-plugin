@@ -28,9 +28,9 @@ public class TIBasicAssignmentStatementImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @NotNull
+  @Nullable
   public TIBasicAssignmentTarget getAssignmentTarget() {
-    return findNotNullChildByClass(TIBasicAssignmentTarget.class);
+    return findChildByClass(TIBasicAssignmentTarget.class);
   }
 
   @Override

@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicLblStatement extends PsiElement {
 
-  @NotNull
+  @Nullable
   TIBasicLblName getLblName();
 
 }
