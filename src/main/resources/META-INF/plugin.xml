@@ -101,7 +101,7 @@
         <codeInsight.lineMarkerProvider
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicDCSIconLineMarkerProvider"/>
-        <platform.backend.documentation.psiTargetProvider
-                implementation="nl.petertillema.tibasic.syntax.documentation.TIBasicDocumentationProvider"/>
+        <platform.backend.documentation.targetProvider
+                implementation="nl.petertillema.tibasic.syntax.documentation.TIBasicDocumentationTargetProvider"/>
     </extensions>
 </idea-plugin>

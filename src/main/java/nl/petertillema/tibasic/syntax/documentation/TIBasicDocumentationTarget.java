@@ -13,20 +13,18 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.SmartPointersKt.createSmartPointer;
 
-public record TIBasicDocumentationTarget(PsiElement element,
-                                         PsiElement originalElement) implements DocumentationTarget {
+public record TIBasicDocumentationTarget(PsiElement element) implements DocumentationTarget {
 
     @Override
     public @NotNull Pointer<? extends DocumentationTarget> createPointer() {
         var elementPointer = createSmartPointer(this.element);
-        var originalElementPointer = this.originalElement == null ? null : createSmartPointer(this.originalElement);
 
         return () -> {
             var element = elementPointer.dereference();
             if (element == null) {
                 return null;
             }
-            return new TIBasicDocumentationTarget(element, originalElementPointer == null ? null : originalElementPointer.dereference());
+            return new TIBasicDocumentationTarget(element);
         };
     }
 
