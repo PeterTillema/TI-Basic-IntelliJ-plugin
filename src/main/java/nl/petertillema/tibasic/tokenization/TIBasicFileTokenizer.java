@@ -6,6 +6,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import nl.petertillema.tibasic.run.TIBasicRunConfigurationOptions;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,8 @@ public final class TIBasicFileTokenizer {
                 var tokenizeResult = tokenizerService.tokenize(source, indicator);
 
                 if (tokenizeResult.status() == TokenizeStatus.FAIL) {
-                    reporter.accept("Error encountered at offset " + tokenizeResult.errorOffset());
+                    var lineColumn = StringUtil.offsetToLineColumn(source, tokenizeResult.errorOffset());
+                    reporter.accept("Error encountered at line " + (lineColumn.line + 1) + ", column " + lineColumn.column);
                     onFinished.run();
                     return;
                 }

@@ -39,9 +39,35 @@ public final class TIBasicTokenizerService {
                 continue;
             }
 
-            // If there is an escape, just go to the next char
+            // If there is an escape, check the upcoming chars
             if (text.charAt(i) == '\\') {
-                i++;
+                // Character escape \xFF or \uFFFF
+                try {
+                    if (i + 1 >= text.length()) {
+                        return new TokenizeResult(TokenizeStatus.FAIL, text.length() - 1, new byte[0]);
+                    }
+                    if (text.charAt(i + 1) == 'x') {
+                        if (i + 3 >= text.length()) {
+                            return new TokenizeResult(TokenizeStatus.FAIL, text.length() - 1, new byte[0]);
+                        }
+                        var b = Integer.parseInt(text.substring(i + 2, i + 4), 16);
+                        output.add(new byte[]{(byte) b});
+                        i += 4;
+                        continue;
+                    } else if (text.charAt(i + 1) == 'u') {
+                        if (i + 5 >= text.length()) {
+                            return new TokenizeResult(TokenizeStatus.FAIL, text.length() - 1, new byte[0]);
+                        }
+                        var b = Integer.parseInt(text.substring(i + 2, i + 6), 16);
+                        output.add(new byte[]{(byte) (b % 256), (byte) (b / 256)});
+                        i += 6;
+                        continue;
+                    } else {
+                        i++;
+                    }
+                } catch (NumberFormatException e) {
+                    return new TokenizeResult(TokenizeStatus.FAIL, i + 2, new byte[0]);
+                }
             }
 
             boolean matched = false;
@@ -73,9 +99,13 @@ public final class TIBasicTokenizerService {
     }
 
     private boolean regionMatches(String text, int offset, String token) {
-        if (offset + token.length() > text.length()) return false;
+        if (offset + token.length() > text.length()) {
+            return false;
+        }
         for (int j = 0; j < token.length(); j++) {
-            if (text.charAt(offset + j) != token.charAt(j)) return false;
+            if (text.charAt(offset + j) != token.charAt(j)) {
+                return false;
+            }
         }
         return true;
     }
@@ -105,7 +135,9 @@ public final class TIBasicTokenizerService {
 
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n.getNodeType() != Node.ELEMENT_NODE) continue;
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
             String name = n.getNodeName();
             if ("token".equals(name)) {
                 String valueAttr = getValueAttribute(n);
@@ -127,13 +159,17 @@ public final class TIBasicTokenizerService {
         NodeList children = tokenNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node verOrLang = children.item(i);
-            if (verOrLang.getNodeType() != Node.ELEMENT_NODE) continue;
+            if (verOrLang.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
             if ("version".equals(verOrLang.getNodeName())) {
                 // dive into version -> lang
                 NodeList vkids = verOrLang.getChildNodes();
                 for (int j = 0; j < vkids.getLength(); j++) {
                     Node maybeLang = vkids.item(j);
-                    if (maybeLang.getNodeType() != Node.ELEMENT_NODE) continue;
+                    if (maybeLang.getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
                     addFromLangNode(keys, maybeLang);
                 }
             } else {
@@ -152,7 +188,9 @@ public final class TIBasicTokenizerService {
             NodeList langKids = maybeLang.getChildNodes();
             for (int k = 0; k < langKids.getLength(); k++) {
                 Node lk = langKids.item(k);
-                if (lk.getNodeType() != Node.ELEMENT_NODE) continue;
+                if (lk.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
                 String nname = lk.getNodeName();
                 if ("accessible".equals(nname) || "variant".equals(nname)) {
                     String txt = lk.getTextContent();
@@ -171,8 +209,12 @@ public final class TIBasicTokenizerService {
     private static byte parseHexByte(String value) {
         if (value == null) return 0;
         String s = value.trim();
-        if (s.startsWith("$")) s = s.substring(1);
-        if (s.startsWith("0x") || s.startsWith("0X")) s = s.substring(2);
+        if (s.startsWith("$")) {
+            s = s.substring(1);
+        }
+        if (s.startsWith("0x") || s.startsWith("0X")) {
+            s = s.substring(2);
+        }
         int v = Integer.parseInt(s, 16) & 0xFF;
         return (byte) v;
     }
