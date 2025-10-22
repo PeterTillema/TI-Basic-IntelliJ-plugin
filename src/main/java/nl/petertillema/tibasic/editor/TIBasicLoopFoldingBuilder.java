@@ -73,7 +73,7 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
             @Override
             public void visitForStatement(@NotNull TIBasicForStatement o) {
                 super.visitForStatement(o);
-                this.addLoopDescriptor(o, o.getExprList().getLast().getTextRangeInParent().getEndOffset());
+                this.addLoopDescriptor(o, o.getForInitializer().getTextRangeInParent().getEndOffset());
             }
 
             private void addLoopDescriptor(PsiElement o, int textOffsetToCollapse) {

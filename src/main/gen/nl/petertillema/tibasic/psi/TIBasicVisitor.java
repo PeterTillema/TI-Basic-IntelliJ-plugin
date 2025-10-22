@@ -71,8 +71,16 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitExprStatement(@NotNull TIBasicExprStatement o) {
+    visitPsiElement(o);
+  }
+
   public void visitForIdentifier(@NotNull TIBasicForIdentifier o) {
     visitNamedElement(o);
+  }
+
+  public void visitForInitializer(@NotNull TIBasicForInitializer o) {
+    visitPsiElement(o);
   }
 
   public void visitForStatement(@NotNull TIBasicForStatement o) {

@@ -24,7 +24,9 @@ public interface TIBasicTypes {
   IElementType END_BLOCK = new TIBasicElementType("END_BLOCK");
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
+  IElementType EXPR_STATEMENT = new TIBasicElementType("EXPR_STATEMENT");
   IElementType FOR_IDENTIFIER = new TIBasicElementType("FOR_IDENTIFIER");
+  IElementType FOR_INITIALIZER = new TIBasicElementType("FOR_INITIALIZER");
   IElementType FOR_STATEMENT = new TIBasicElementType("FOR_STATEMENT");
   IElementType FRAC_EXPR = new TIBasicElementType("FRAC_EXPR");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
@@ -176,8 +178,14 @@ public interface TIBasicTypes {
       else if (type == EQ_EXPR) {
         return new TIBasicEqExprImpl(node);
       }
+      else if (type == EXPR_STATEMENT) {
+        return new TIBasicExprStatementImpl(node);
+      }
       else if (type == FOR_IDENTIFIER) {
         return new TIBasicForIdentifierImpl(node);
+      }
+      else if (type == FOR_INITIALIZER) {
+        return new TIBasicForInitializerImpl(node);
       }
       else if (type == FOR_STATEMENT) {
         return new TIBasicForStatementImpl(node);

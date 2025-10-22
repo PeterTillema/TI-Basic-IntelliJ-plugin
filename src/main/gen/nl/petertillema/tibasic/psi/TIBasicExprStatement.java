@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicForStatement extends PsiElement {
+public interface TIBasicExprStatement extends PsiElement {
 
   @NotNull
-  TIBasicEndBlock getEndBlock();
-
-  @NotNull
-  TIBasicForInitializer getForInitializer();
+  TIBasicExpr getExpr();
 
 }

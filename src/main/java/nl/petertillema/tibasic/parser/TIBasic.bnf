@@ -30,7 +30,7 @@ end_block ::= NEWLINE+ (!"End" (statement NEWLINE*))*
 then_block ::= NEWLINE+ (!"Else" !"End" (statement NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | assignment_statement | expr
+private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | assignment_statement | expr_statement
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
 private unused_ ::= TOKEN
@@ -118,6 +118,7 @@ anonymous_matrix_row ::= LBRACKET expr (COMMA expr)* [RBRACKET] { pin=1 }
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
+expr_statement ::= expr
 assignment_statement ::= expr STO assignment_target { pin=2 }
 assignment_target ::= assignment_target_matrix_index | assignment_target_list_index | assignment_target_variable | assignment_target_dim
 {
@@ -160,7 +161,8 @@ while_statement ::= WHILE expr end_block [END]
 
 repeat_statement ::= REPEAT expr end_block [END]
 
-for_statement ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN] end_block [END]
+for_statement ::= for_initializer end_block [END]
+for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN]
 for_identifier ::= SIMPLE_VARIABLE
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"

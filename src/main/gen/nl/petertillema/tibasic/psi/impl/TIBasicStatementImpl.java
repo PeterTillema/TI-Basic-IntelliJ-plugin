@@ -47,8 +47,8 @@ public class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasi
 
   @Override
   @Nullable
-  public TIBasicExpr getExpr() {
-    return findChildByClass(TIBasicExpr.class);
+  public TIBasicExprStatement getExprStatement() {
+    return findChildByClass(TIBasicExprStatement.class);
   }
 
   @Override

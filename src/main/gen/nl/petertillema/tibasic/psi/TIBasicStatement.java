@@ -17,7 +17,7 @@ public interface TIBasicStatement extends PsiElement {
   TIBasicDelvarCommand getDelvarCommand();
 
   @Nullable
-  TIBasicExpr getExpr();
+  TIBasicExprStatement getExprStatement();
 
   @Nullable
   TIBasicForStatement getForStatement();

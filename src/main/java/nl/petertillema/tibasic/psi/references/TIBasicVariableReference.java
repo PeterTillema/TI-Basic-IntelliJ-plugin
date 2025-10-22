@@ -44,12 +44,14 @@ public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<
         var variants = new ArrayList<LookupElement>();
 
         for (var assignment : assignments) {
-            variants.add(LookupElementBuilder.create(assignment.getAssignmentTarget()).withTypeText(assignment.getText()));
+            if (assignment.getAssignmentTarget() != null) {
+                variants.add(LookupElementBuilder.create(assignment.getAssignmentTarget()).withTypeText(assignment.getText()));
+            }
         }
         for (var forLoop : forLoops) {
-            var endOffset = forLoop.getExprList().getLast().getTextRangeInParent().getEndOffset();
+            var endOffset = forLoop.getForInitializer().getTextRangeInParent().getEndOffset();
             var text = forLoop.getText().substring(0, endOffset);
-            variants.add(LookupElementBuilder.create(forLoop.getForIdentifier()).withTypeText(text));
+            variants.add(LookupElementBuilder.create(forLoop.getForInitializer().getForIdentifier()).withTypeText(text));
         }
 
         return variants.toArray();

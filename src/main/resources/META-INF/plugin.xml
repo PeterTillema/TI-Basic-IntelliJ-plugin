@@ -29,7 +29,7 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <idea-version since-build="213" />
+    <idea-version since-build="213"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType
@@ -103,5 +103,9 @@
                 implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"
                 key="inspection.TIBasic.unknown.goto.target.display.name"
                 bundle="messages.TIBasicBundle"/>
+        <annotator
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnnecessaryParenthesisAnnotator"/>
     </extensions>
+    <resource-bundle>messages.TIBasicBundle</resource-bundle>
 </idea-plugin>
