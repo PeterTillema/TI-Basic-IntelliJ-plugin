@@ -153,8 +153,9 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN expr (COMMA expr)* [RPA
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
-if_statement ::= IF expr NEWLINE (then_statement | statement)
-then_statement ::= THEN then_block [else_statement | END]
+if_statement ::= IF expr NEWLINE if_body
+private if_body ::= (then_statement [else_statement | END]) | statement
+then_statement ::= THEN then_block
 else_statement ::= ELSE end_block [END]
 
 while_statement ::= WHILE expr end_block [END]

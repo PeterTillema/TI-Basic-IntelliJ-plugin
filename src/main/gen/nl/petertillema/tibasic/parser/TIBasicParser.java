@@ -689,7 +689,46 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF expr NEWLINE (then_statement | statement)
+  // (then_statement [else_statement | END]) | statement
+  static boolean if_body(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_body")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = if_body_0(b, l + 1);
+    if (!r) r = statement(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // then_statement [else_statement | END]
+  private static boolean if_body_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_body_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = then_statement(b, l + 1);
+    r = r && if_body_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [else_statement | END]
+  private static boolean if_body_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_body_0_1")) return false;
+    if_body_0_1_0(b, l + 1);
+    return true;
+  }
+
+  // else_statement | END
+  private static boolean if_body_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_body_0_1_0")) return false;
+    boolean r;
+    r = else_statement(b, l + 1);
+    if (!r) r = consumeToken(b, END);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // IF expr NEWLINE if_body
   public static boolean if_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_statement")) return false;
     if (!nextTokenIs(b, IF)) return false;
@@ -698,17 +737,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, IF);
     r = r && expr(b, l + 1, -1);
     r = r && NEWLINE(b, l + 1);
-    r = r && if_statement_3(b, l + 1);
+    r = r && if_body(b, l + 1);
     exit_section_(b, m, IF_STATEMENT, r);
-    return r;
-  }
-
-  // then_statement | statement
-  private static boolean if_statement_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "if_statement_3")) return false;
-    boolean r;
-    r = then_statement(b, l + 1);
-    if (!r) r = statement(b, l + 1);
     return r;
   }
 
@@ -1097,7 +1127,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // THEN then_block [else_statement | END]
+  // THEN then_block
   public static boolean then_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "then_statement")) return false;
     if (!nextTokenIs(b, THEN)) return false;
@@ -1105,24 +1135,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeToken(b, THEN);
     r = r && then_block(b, l + 1);
-    r = r && then_statement_2(b, l + 1);
     exit_section_(b, m, THEN_STATEMENT, r);
-    return r;
-  }
-
-  // [else_statement | END]
-  private static boolean then_statement_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "then_statement_2")) return false;
-    then_statement_2_0(b, l + 1);
-    return true;
-  }
-
-  // else_statement | END
-  private static boolean then_statement_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "then_statement_2_0")) return false;
-    boolean r;
-    r = else_statement(b, l + 1);
-    if (!r) r = consumeToken(b, END);
     return r;
   }
 

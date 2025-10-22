@@ -49,11 +49,14 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
         if (o.getThenStatement() != null) {
             this.visitThenStatement(o.getThenStatement());
         }
+        if (o.getElseStatement() != null) {
+            this.visitElseStatement(o.getElseStatement());
+        }
     }
 
     @Override
     public void visitThenStatement(@NotNull TIBasicThenStatement o) {
-        o.acceptChildren(this);
+        this.visitThenBlock(o.getThenBlock());
     }
 
     @Override

@@ -28,12 +28,6 @@ public class TIBasicThenStatementImpl extends ASTWrapperPsiElement implements TI
   }
 
   @Override
-  @Nullable
-  public TIBasicElseStatement getElseStatement() {
-    return findChildByClass(TIBasicElseStatement.class);
-  }
-
-  @Override
   @NotNull
   public TIBasicThenBlock getThenBlock() {
     return findNotNullChildByClass(TIBasicThenBlock.class);

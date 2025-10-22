@@ -30,15 +30,11 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                 super.visitIfStatement(o);
 
                 if (o.getThenStatement() != null) {
-                    o.getThenStatement().acceptChildren(this);
-
-                    if (o.getThenStatement().getElseStatement() != null) {
-                        o.getThenStatement().getElseStatement().acceptChildren(this);
-
+                    if (o.getElseStatement() != null) {
                         // Add for "If" + "Then"
                         var ifStartOffset = o.getTextRange().getStartOffset();
-                        var ifThenLength = o.getThenStatement().getElseStatement().getTextRange().getStartOffset() - o.getTextRange().getStartOffset() - 1;
-                        var ifText = o.getText().substring(0, o.getThenStatement().getTextRangeInParent().getStartOffset());
+                        var ifThenLength = o.getThenStatement().getTextRangeInParent().getEndOffset() - 1;
+                        var ifText = o.getText().substring(0, o.getExpr().getTextRangeInParent().getEndOffset());
 
                         var descriptor = new FoldingDescriptor(
                                 o.getNode(),
@@ -51,8 +47,9 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                         descriptors.add(descriptor);
 
                         // Add for "Else"
-                        this.addLoopDescriptor(o.getThenStatement().getElseStatement(), 4);
+                        this.addLoopDescriptor(o.getElseStatement(), 4);
                     } else {
+                        // Only add for "If" + "Then"
                         this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
                     }
                 }

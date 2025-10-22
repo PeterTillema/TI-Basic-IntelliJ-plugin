@@ -7,6 +7,9 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicIfStatement extends PsiElement {
 
+  @Nullable
+  TIBasicElseStatement getElseStatement();
+
   @NotNull
   TIBasicExpr getExpr();
 

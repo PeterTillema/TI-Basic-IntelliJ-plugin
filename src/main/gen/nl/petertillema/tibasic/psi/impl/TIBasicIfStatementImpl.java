@@ -28,6 +28,12 @@ public class TIBasicIfStatementImpl extends ASTWrapperPsiElement implements TIBa
   }
 
   @Override
+  @Nullable
+  public TIBasicElseStatement getElseStatement() {
+    return findChildByClass(TIBasicElseStatement.class);
+  }
+
+  @Override
   @NotNull
   public TIBasicExpr getExpr() {
     return findNotNullChildByClass(TIBasicExpr.class);
