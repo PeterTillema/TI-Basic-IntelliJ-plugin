@@ -302,8 +302,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!nextTokenIs(b, LIST_VARIABLE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 1, LIST_VARIABLE, LPAREN);
-    p = r; // pin = 1
+    r = consumeTokens(b, 2, LIST_VARIABLE, LPAREN);
+    p = r; // pin = 2
     r = r && report_error_(b, expr(b, l + 1, -1));
     r = p && assignment_target_list_index_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -324,8 +324,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!nextTokenIs(b, MATRIX_VARIABLE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeTokens(b, 1, MATRIX_VARIABLE, LPAREN);
-    p = r; // pin = 1
+    r = consumeTokens(b, 2, MATRIX_VARIABLE, LPAREN);
+    p = r; // pin = 2
     r = r && report_error_(b, expr(b, l + 1, -1));
     r = p && report_error_(b, consumeToken(b, COMMA)) && r;
     r = p && report_error_(b, expr(b, l + 1, -1)) && r;

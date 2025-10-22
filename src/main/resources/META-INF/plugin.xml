@@ -64,20 +64,6 @@
         <lang.findUsagesProvider
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.refactoring.TIBasicFindLabelUsagesProvider"/>
-        <localInspection
-                enabledByDefault="true"
-                language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
-                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnusedLabelInspection"
-                key="inspection.TIBasic.unused.label.display.name"
-                bundle="messages.TIBasicBundle"/>
-        <localInspection
-                enabledByDefault="true"
-                language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
-                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"
-                key="inspection.TIBasic.unknown.goto.target.display.name"
-                bundle="messages.TIBasicBundle"/>
         <bundledColorScheme
                 order="after Light"
                 id="TIBasicSourceCoder3Light"
@@ -103,5 +89,19 @@
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicDCSIconLineMarkerProvider"/>
         <platform.backend.documentation.targetProvider
                 implementation="nl.petertillema.tibasic.syntax.documentation.TIBasicDocumentationTargetProvider"/>
+        <localInspection
+                enabledByDefault="true"
+                language="TIBasic"
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnusedLabelInspection"
+                key="inspection.TIBasic.unused.label.display.name"
+                bundle="messages.TIBasicBundle"/>
+        <localInspection
+                enabledByDefault="true"
+                language="TIBasic"
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"
+                key="inspection.TIBasic.unknown.goto.target.display.name"
+                bundle="messages.TIBasicBundle"/>
     </extensions>
 </idea-plugin>

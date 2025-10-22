@@ -6,6 +6,7 @@ import com.intellij.formatting.Block;
 import com.intellij.formatting.ChildAttributes;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
+import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -30,11 +31,13 @@ public final class TIBasicBlock implements ASTBlock {
 
     private final ASTNode node;
     private final Indent indent;
+    private final SpacingBuilder spacingBuilder;
     private List<TIBasicBlock> subBlocks = null;
 
-    public TIBasicBlock(@NotNull ASTNode node, @NotNull Indent indent) {
+    public TIBasicBlock(@NotNull ASTNode node, @NotNull Indent indent, SpacingBuilder spacingBuilder) {
         this.node = node;
         this.indent = indent;
+        this.spacingBuilder = spacingBuilder;
     }
 
     @Override
@@ -68,7 +71,7 @@ public final class TIBasicBlock implements ASTBlock {
                     childIndent = Indent.getNormalIndent();
                 }
 
-                var newBlock = new TIBasicBlock(child, childIndent);
+                var newBlock = new TIBasicBlock(child, childIndent, this.spacingBuilder);
                 childBlocks.add(newBlock);
             }
         }
@@ -93,7 +96,7 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
-        return null;
+        return this.spacingBuilder.getSpacing(this, child1, child2);
     }
 
     @Override

@@ -128,11 +128,11 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "prgm" | "tvm_Pmt" |
     ">"                                                       { return TIBasicTypes.GT; }
     "<"                                                       { return TIBasicTypes.LT; }
     "~"                                                       { return TIBasicTypes.NEG; }
-    " or "                                                    { return TIBasicTypes.OR; }
-    " xor "                                                   { return TIBasicTypes.XOR; }
-    " and "                                                   { return TIBasicTypes.AND; }
-    " nPr "                                                   { return TIBasicTypes.NPR; }
-    " nCr "                                                   { return TIBasicTypes.NCR; }
+    "or"                                                      { return TIBasicTypes.OR; }
+    "xor"                                                     { return TIBasicTypes.XOR; }
+    "and"                                                     { return TIBasicTypes.AND; }
+    "nPr"                                                     { return TIBasicTypes.NPR; }
+    "nCr"                                                     { return TIBasicTypes.NCR; }
     ","                                                       { return TIBasicTypes.COMMA; }
     "("                                                       { return TIBasicTypes.LPAREN; }
     ")"                                                       { return TIBasicTypes.RPAREN; }
