@@ -1,4 +1,4 @@
-package nl.petertillema.tibasic.inspections;
+package nl.petertillema.tibasic.annotator;
 
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.codeInspection.ProblemHighlightType;
