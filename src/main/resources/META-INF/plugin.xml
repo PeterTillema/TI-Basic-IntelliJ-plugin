@@ -89,6 +89,9 @@
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicDCSIconLineMarkerProvider"/>
         <platform.backend.documentation.targetProvider
                 implementation="nl.petertillema.tibasic.syntax.documentation.TIBasicDocumentationTargetProvider"/>
+        <annotator
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
@@ -103,9 +106,13 @@
                 implementationClass="nl.petertillema.tibasic.inspections.TIBasicUnknownGotoTargetInspection"
                 key="inspection.TIBasic.unknown.goto.target.display.name"
                 bundle="messages.TIBasicBundle"/>
-        <annotator
+        <localInspection
+                enabledByDefault="true"
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicIncompatibleOperatorOperandsInspection"
+                key="inspection.TIBasic.incompatible.operands.display.name"
+                bundle="messages.TIBasicBundle"/>
     </extensions>
     <resource-bundle>messages.TIBasicBundle</resource-bundle>
 </idea-plugin>

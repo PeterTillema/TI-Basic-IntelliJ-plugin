@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
+public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
     private static final List<Character> CLOSING_PARENTHESIS = List.of(')', ']', '}');
     private static final List<Character> WHITE_SPACE = List.of(' ', '\t', '\f');
