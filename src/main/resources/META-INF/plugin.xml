@@ -31,6 +31,15 @@
 
     <idea-version since-build="213"/>
 
+    <actions>
+        <action
+                id="nl.petertillema.tibasic.ide.TIBasic8xpDetokenizerAction"
+                class="nl.petertillema.tibasic.ide.TIBasic8xpDetokenizerAction"
+        >
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="TI-Basic file"

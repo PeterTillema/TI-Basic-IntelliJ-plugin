@@ -19,7 +19,8 @@ import java.util.Set;
 @Service
 public final class TIBasicTokenizerService {
 
-    private static final Map<String, byte[]> TOKEN_TABLE = new HashMap<>();
+    private static final Map<String, TokenBytes> TOKEN_TABLE = new HashMap<>();
+    private static final Map<TokenBytes, String> TOKEN_TABLE_REVERSED = new HashMap<>();
     private static final List<String> TOKEN_KEYS = new ArrayList<>();
 
     public TIBasicTokenizerService() {
@@ -75,7 +76,7 @@ public final class TIBasicTokenizerService {
             // as the longest match is first encountered.
             for (String k : TOKEN_KEYS) {
                 if (regionMatches(text, i, k)) {
-                    output.add(TOKEN_TABLE.get(k));
+                    output.add(TOKEN_TABLE.get(k).bytes());
                     i += k.length();
                     matched = true;
                     break;
@@ -96,6 +97,32 @@ public final class TIBasicTokenizerService {
         }
 
         return new TokenizeResult(TokenizeStatus.OK, -1, bytes);
+    }
+
+    public String detokenize(byte[] bytes) {
+        if (bytes.length < 76) {
+            throw new RuntimeException("Not enough input data");
+        }
+
+        var i = 17 + 55 + 2;
+        var out = new StringBuilder();
+        var currBytes = new byte[0];
+
+        while (i < bytes.length - 2) {
+            currBytes = appendByte(currBytes, bytes[i]);
+            i++;
+            var foundToken = TOKEN_TABLE_REVERSED.get(new TokenBytes(currBytes));
+            if (foundToken == null) {
+                if (currBytes.length >= 3) {
+                    throw new RuntimeException("Invalid bytes encountered");
+                }
+            } else {
+                out.append(foundToken);
+                currBytes = new byte[0];
+            }
+        }
+
+        return out.toString();
     }
 
     private boolean regionMatches(String text, int offset, String token) {
@@ -177,8 +204,10 @@ public final class TIBasicTokenizerService {
             }
         }
 
+        var tokenBytes = new TokenBytes(bytes);
         for (String key : keys) {
-            TOKEN_TABLE.putIfAbsent(key, bytes);
+            TOKEN_TABLE.putIfAbsent(key, tokenBytes);
+            TOKEN_TABLE_REVERSED.putIfAbsent(tokenBytes, key);
         }
     }
 
