@@ -1,12 +1,19 @@
 package nl.petertillema.tibasic.psi;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.language.TIBasicFile;
+import nl.petertillema.tibasic.language.TIBasicFileType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class TIBasicUtil {
+
+    public static TIBasicFile createFromText(Project project, String text) {
+        return (TIBasicFile) PsiFileFactory.getInstance(project).createFileFromText("dummy.basic", TIBasicFileType.INSTANCE, text);
+    }
 
     public static List<TIBasicLblStatement> findLabels(TIBasicFile file, String key) {
         var labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
