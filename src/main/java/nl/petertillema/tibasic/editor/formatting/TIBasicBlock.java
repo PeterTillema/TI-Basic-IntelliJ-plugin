@@ -11,14 +11,7 @@ import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
-import nl.petertillema.tibasic.psi.TIBasicElseStatement;
-import nl.petertillema.tibasic.psi.TIBasicEndBlock;
-import nl.petertillema.tibasic.psi.TIBasicForStatement;
-import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicThenBlock;
-import nl.petertillema.tibasic.psi.TIBasicThenStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
-import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -52,26 +45,25 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull @Unmodifiable List<Block> getSubBlocks() {
-        if (this.subBlocks == null) {
-            this.subBlocks = this.buildSubBlocks();
+        if (subBlocks == null) {
+            subBlocks = this.buildSubBlocks();
         }
 
-        return Collections.unmodifiableList(this.subBlocks);
+        return Collections.unmodifiableList(subBlocks);
     }
 
     private List<TIBasicBlock> buildSubBlocks() {
         var childBlocks = new ArrayList<TIBasicBlock>();
-        var children = this.node.getChildren(null);
-        var psi = this.node.getPsi();
+        var children = node.getChildren(null);
 
         for (var child : children) {
             if (child.getElementType() != TokenType.WHITE_SPACE && child.getElementType() != TIBasicTypes.CRLF) {
                 var childIndent = Indent.getNoneIndent();
-                if (psi instanceof TIBasicThenBlock || psi instanceof TIBasicEndBlock) {
+                if (node.getElementType() == TIBasicTypes.END_BLOCK || node.getElementType() == TIBasicTypes.THEN_BLOCK) {
                     childIndent = Indent.getNormalIndent();
                 }
 
-                var newBlock = new TIBasicBlock(child, childIndent, this.spacingBuilder);
+                var newBlock = new TIBasicBlock(child, childIndent, spacingBuilder);
                 childBlocks.add(newBlock);
             }
         }
@@ -96,49 +88,62 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
-        return this.spacingBuilder.getSpacing(this, child1, child2);
+        return spacingBuilder.getSpacing(this, child1, child2);
     }
 
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
-        var psi = this.node.getPsi();
-        var childIndent = Indent.getNoneIndent();
-
-        if (psi instanceof TIBasicForStatement ||
-                psi instanceof TIBasicWhileStatement ||
-                psi instanceof TIBasicRepeatStatement ||
-                psi instanceof TIBasicThenStatement ||
-                psi instanceof TIBasicElseStatement) {
-            childIndent = Indent.getNormalIndent();
+        var elementTypesToIndent = List.of(
+                TIBasicTypes.END_BLOCK,
+                TIBasicTypes.THEN_BLOCK,
+                TIBasicTypes.WHILE_STATEMENT,
+                TIBasicTypes.REPEAT_STATEMENT,
+                TIBasicTypes.IF_STATEMENT,
+                TIBasicTypes.FOR_STATEMENT,
+                TIBasicTypes.THEN_STATEMENT,
+                TIBasicTypes.ELSE_STATEMENT
+        );
+        if (elementTypesToIndent.contains(node.getElementType())) {
+            return new ChildAttributes(Indent.getNormalIndent(), null);
         }
-        return new ChildAttributes(childIndent, null);
+
+        return new ChildAttributes(Indent.getNoneIndent(), null);
     }
 
     @Override
     public boolean isIncomplete() {
-        var psi = this.node.getPsi();
-        if (psi instanceof TIBasicWhileStatement ||
-                psi instanceof TIBasicRepeatStatement ||
-                psi instanceof TIBasicForStatement ||
-                psi instanceof TIBasicElseStatement) {
-            return !psi.getText().endsWith("End");
-        }
-        if (psi instanceof TIBasicThenStatement) {
-            return !(psi.getText().endsWith("End") || psi.getText().endsWith("Else"));
-        }
+        System.out.println("isIncomplete: " + node);
 
-        return this.isIncomplete(this.node);
+        if (node.getElementType() == TIBasicTypes.WHILE_STATEMENT) {
+            return node.getLastChildNode().getElementType() != TIBasicTypes.END;
+        }
+        if (node.getElementType() == TIBasicTypes.END_BLOCK) {
+            return true;
+        }
+        return false;
+//        var psi = this.node.getPsi();
+//        if (psi instanceof TIBasicWhileStatement ||
+//                psi instanceof TIBasicRepeatStatement ||
+//                psi instanceof TIBasicForStatement ||
+//                psi instanceof TIBasicElseStatement) {
+//            return !psi.getText().endsWith("End");
+//        }
+//        if (psi instanceof TIBasicThenStatement) {
+//            return !(psi.getText().endsWith("End") || psi.getText().endsWith("Else"));
+//        }
+//
+//        return this.isIncomplete(this.node);
     }
 
-    private boolean isIncomplete(ASTNode node) {
-        ASTNode lastChild = node == null ? null : node.getLastChildNode();
-        while (lastChild != null && (lastChild.getElementType() == TIBasicTypes.CRLF || lastChild.getElementType() == TokenType.WHITE_SPACE)) {
-            lastChild = lastChild.getTreePrev();
-        }
-        if (lastChild == null) return false;
-        if (lastChild.getElementType() == TokenType.ERROR_ELEMENT) return true;
-        return isIncomplete(lastChild);
-    }
+//    private boolean isIncomplete(ASTNode node) {
+//        ASTNode lastChild = node == null ? null : node.getLastChildNode();
+//        while (lastChild != null && (lastChild.getElementType() == TIBasicTypes.CRLF || lastChild.getElementType() == TokenType.WHITE_SPACE)) {
+//            lastChild = lastChild.getTreePrev();
+//        }
+//        if (lastChild == null) return false;
+//        if (lastChild.getElementType() == TokenType.ERROR_ELEMENT) return true;
+//        return isIncomplete(lastChild);
+//    }
 
     @Override
     public boolean isLeaf() {
