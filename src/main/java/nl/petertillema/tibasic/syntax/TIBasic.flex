@@ -173,7 +173,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "prgm" | "tvm_Pmt" |
 
     // Invalid identifier-like sequences (catch "Abc" as one token instead of "A"+"b"+"c")
     // This must come AFTER all valid tokens to avoid matching valid multi-char tokens
-    [A-Za-z][A-Za-z0-9]+                                      { return TokenType.BAD_CHARACTER; }
+    [A-Za-z][a-z0-9]+                                         { return TokenType.BAD_CHARACTER; }
 }
 
 <STRING> {

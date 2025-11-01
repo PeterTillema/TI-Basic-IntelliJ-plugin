@@ -35,8 +35,6 @@ The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/2872
  - After a loop without any statements, the related "End" is indented but should not be
  - Adding a new statement within a loop without other statements, and including an "End", the new line is not
     indented, while it should be indented.
- - A Goto/Lbl with two characters gives a syntax error, and formatting adds a space in between the Goto/Lbl and the label
-    each time.
 
 ## Todo
  - Extend inspections to be more advanced and more complete
