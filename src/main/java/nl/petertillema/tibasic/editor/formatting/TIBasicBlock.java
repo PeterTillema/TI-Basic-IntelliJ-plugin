@@ -12,10 +12,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
 import nl.petertillema.tibasic.psi.TIBasicElseStatement;
-import nl.petertillema.tibasic.psi.TIBasicEndBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicThenStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
@@ -24,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class TIBasicBlock implements ASTBlock {
@@ -32,7 +29,7 @@ public final class TIBasicBlock implements ASTBlock {
     private final ASTNode node;
     private final Indent indent;
     private final SpacingBuilder spacingBuilder;
-    private List<TIBasicBlock> subBlocks = null;
+    private List<Block> subBlocks = null;
 
     public TIBasicBlock(@NotNull ASTNode node, @NotNull Indent indent, SpacingBuilder spacingBuilder) {
         this.node = node;
@@ -42,38 +39,37 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull ASTNode getNode() {
-        return this.node;
+        return node;
     }
 
     @Override
     public @NotNull TextRange getTextRange() {
-        return this.node.getTextRange();
+        return node.getTextRange();
     }
 
     @Override
     public @NotNull @Unmodifiable List<Block> getSubBlocks() {
-        if (this.subBlocks == null) {
-            this.subBlocks = this.buildSubBlocks();
+        if (subBlocks == null) {
+            subBlocks = this.buildSubBlocks();
         }
-
-        return Collections.unmodifiableList(this.subBlocks);
+        return subBlocks;
     }
 
-    private List<TIBasicBlock> buildSubBlocks() {
-        var childBlocks = new ArrayList<TIBasicBlock>();
+    private List<Block> buildSubBlocks() {
+        var childBlocks = new ArrayList<Block>();
         var children = this.node.getChildren(null);
-        var psi = this.node.getPsi();
 
         for (var child : children) {
-            if (child.getElementType() != TokenType.WHITE_SPACE && child.getElementType() != TIBasicTypes.CRLF) {
-                var childIndent = Indent.getNoneIndent();
-                if (psi instanceof TIBasicThenBlock || psi instanceof TIBasicEndBlock) {
-                    childIndent = Indent.getNormalIndent();
-                }
+            if (child.getElementType() == TokenType.WHITE_SPACE || child.getElementType() == TIBasicTypes.CRLF)
+                continue;
 
-                var newBlock = new TIBasicBlock(child, childIndent, this.spacingBuilder);
-                childBlocks.add(newBlock);
+            var childIndent = Indent.getNoneIndent();
+            if (child.getElementType() == TIBasicTypes.END_BLOCK || child.getElementType() == TIBasicTypes.THEN_BLOCK) {
+                childIndent = Indent.getNormalIndent();
             }
+
+            var newBlock = new TIBasicBlock(child, childIndent, this.spacingBuilder);
+            childBlocks.add(newBlock);
         }
 
         return childBlocks;
@@ -86,7 +82,7 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull Indent getIndent() {
-        return this.indent;
+        return indent;
     }
 
     @Override
@@ -96,22 +92,25 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
-        return this.spacingBuilder.getSpacing(this, child1, child2);
+        return spacingBuilder.getSpacing(this, child1, child2);
     }
 
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
-        var psi = this.node.getPsi();
-        var childIndent = Indent.getNoneIndent();
+        var elementTypesToIndent = List.of(
+                TIBasicTypes.END_BLOCK,
+                TIBasicTypes.THEN_BLOCK,
+                TIBasicTypes.FOR_STATEMENT,
+                TIBasicTypes.REPEAT_STATEMENT,
+                TIBasicTypes.WHILE_STATEMENT,
+                TIBasicTypes.THEN_STATEMENT,
+                TIBasicTypes.ELSE_STATEMENT
+        );
 
-        if (psi instanceof TIBasicForStatement ||
-                psi instanceof TIBasicWhileStatement ||
-                psi instanceof TIBasicRepeatStatement ||
-                psi instanceof TIBasicThenStatement ||
-                psi instanceof TIBasicElseStatement) {
-            childIndent = Indent.getNormalIndent();
+        if (elementTypesToIndent.contains(node.getElementType())) {
+            return new ChildAttributes(Indent.getNormalIndent(), null);
         }
-        return new ChildAttributes(childIndent, null);
+        return new ChildAttributes(Indent.getNoneIndent(), null);
     }
 
     @Override
