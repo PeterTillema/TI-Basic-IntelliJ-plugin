@@ -1,0 +1,11 @@
+0->A
+For(B,1,A+10
+	TextColor(ORANGE)
+	Text(1,B,"DISP STRING
+	TextColor(BLACK
+	Text(1,B+5,"COLOR
+End<caret>
+
+
+
+

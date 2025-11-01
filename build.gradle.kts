@@ -17,6 +17,8 @@ repositories {
 // Configure IntelliJ Platform Gradle Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
+    testImplementation("junit:junit:4.13.2")
+
     intellijPlatform {
         create("IC", "2025.1.4.1")
         bundledPlugin("com.intellij.java")

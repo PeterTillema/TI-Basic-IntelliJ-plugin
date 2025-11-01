@@ -1,0 +1,5 @@
+If A=1
+Then
+	2->A
+	Disp "Test
+	Else<caret>

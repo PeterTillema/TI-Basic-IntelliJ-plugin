@@ -1,0 +1,12 @@
+This is some sample TI-Basic code
+// Ans->B
+// Radian
+{1,2,B+3-<caret>>L1
+"Hello World->Str0
+Lbl DE
+For(A,1,20,3
+	Pt-On(sin(7*A-B),40
+	Output(A,1,"TEST"
+End
+If A>3
+Goto DE

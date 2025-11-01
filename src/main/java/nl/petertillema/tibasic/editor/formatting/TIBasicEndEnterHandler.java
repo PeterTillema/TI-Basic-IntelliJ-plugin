@@ -40,7 +40,10 @@ public final class TIBasicEndEnterHandler implements EnterHandlerDelegate {
         var previousLineText = doc.getText(new TextRange(previousLineStart, previousLineEnd)).trim();
 
         if (previousLineText.matches("End|Else")) {
-            Runnable action = () -> CodeStyleManager.getInstance(project).adjustLineIndent(file, previousLineStart);
+            Runnable action = () -> {
+                CodeStyleManager.getInstance(project).adjustLineIndent(file, previousLineStart);
+                CodeStyleManager.getInstance(project).adjustLineIndent(file, doc.getLineStartOffset(line));
+            };
 
             WriteCommandAction.runWriteCommandAction(project, action);
         }

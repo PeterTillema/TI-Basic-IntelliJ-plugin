@@ -1,0 +1,15 @@
+3  -> B
+Lbl   A
+If   A =  1 +  sin (  { 2 ,  3 ,  4
+Then
+	While   B - 3 > 2
+	    Disp min ( A
+	End
+Else
+	Repeat   ( C = 1  )    and    B ^^2 > 10
+		If   C = 2
+		Goto   A
+		Output (  1 ,2 ,  "Test
+		[ [   1 , 2, 3 ], [4 , 5 ,6 ] ,[ 7, 8 ,9 ->  [A]
+	End
+End

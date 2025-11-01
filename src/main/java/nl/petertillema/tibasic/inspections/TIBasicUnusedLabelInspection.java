@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
+import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,13 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            descriptor.getPsiElement().delete();
+            var element = descriptor.getPsiElement().getParent();
+
+            // Eventually also delete the next newline
+            if (element.getNextSibling() != null && element.getNextSibling().getNode().getElementType() == TIBasicTypes.CRLF) {
+                element.getNextSibling().delete();
+            }
+            element.delete();
         }
     }
 

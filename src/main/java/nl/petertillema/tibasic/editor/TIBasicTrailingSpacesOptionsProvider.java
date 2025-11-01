@@ -27,7 +27,7 @@ public final class TIBasicTrailingSpacesOptionsProvider implements TrailingSpace
 
             @Override
             public @NotNull Boolean getRemoveTrailingBlankLines() {
-                return false;
+                return true;
             }
 
             @Override

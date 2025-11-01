@@ -1,0 +1,4 @@
+While A=1
+	2->A
+	<caret>
+End
