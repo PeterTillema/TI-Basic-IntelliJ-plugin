@@ -59,6 +59,11 @@
                 <option name="FOREGROUND" value="dd1111" />
             </value>
         </option>
+        <option name="TIBASIC_LIST_IDENTIFIER">
+            <value>
+                <option name="FOREGROUND" value="ac13b9" />
+            </value>
+        </option>
         <option name="TIBASIC_WINDOW_IDENTIFIER">
             <value>
                 <option name="FOREGROUND" value="dd1111" />
