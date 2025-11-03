@@ -19,7 +19,8 @@ import nl.petertillema.tibasic.psi.TIBasicTypes;
 EOL = "\r"|"\n"|"\r\n"
 WHITE_SPACE = [\ \t\f]
 COMMENT = \/\/[^\r\n]*
-NUMBER = ((\~?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+))(\|E(\~?[0-9]+))?) | "[i]"
+EXPONENT = \|E \~?[0-9]+
+NUMBER = ((\~?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)){EXPONENT}?) | "[i]" | {EXPONENT}
 
 // All kind of variables
 ANS_VARIABLE = "Ans"
