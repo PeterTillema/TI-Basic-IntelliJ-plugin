@@ -125,6 +125,13 @@
                 implementationClass="nl.petertillema.tibasic.inspections.TIBasicIncompatibleOperatorOperandsInspection"
                 key="inspection.TIBasic.incompatible.operands.display.name"
                 bundle="messages.TIBasicBundle"/>
+        <localInspection
+                enabledByDefault="true"
+                language="TIBasic"
+                groupKey="inspection.TIBasic.group.name"
+                implementationClass="nl.petertillema.tibasic.inspections.TIBasicEmptyLoopInspection"
+                key="inspection.TIBasic.empty.loop.display.name"
+                bundle="messages.TIBasicBundle"/>
     </extensions>
     <resource-bundle>messages.TIBasicBundle</resource-bundle>
 </idea-plugin>

@@ -138,7 +138,7 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
                 if ((type1 == TIBasicTypes.STRING || type1 == TIBasicTypes.STRING_VARIABLE) &&
                         (type2 == TIBasicTypes.STRING || type2 == TIBasicTypes.STRING_VARIABLE)) return;
 
-                // Doing something with equations is never allowed
+                // Doing something with equations and strings is never allowed
                 var invalidOperandTypes = List.of(
                         TIBasicTypes.EQUATION_VARIABLE_1,
                         TIBasicTypes.EQUATION_VARIABLE_2,
