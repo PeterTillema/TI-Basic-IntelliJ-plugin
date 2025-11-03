@@ -134,6 +134,9 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
                 var type1 = getLiteralType(l1);
                 var type2 = getLiteralType(l2);
 
+                // Anything with "Ans" is not checked
+                if (type1 == TIBasicTypes.ANS_VARIABLE || type2 == TIBasicTypes.ANS_VARIABLE) return;
+
                 // String concatenation is allowed
                 if ((type1 == TIBasicTypes.STRING || type1 == TIBasicTypes.STRING_VARIABLE) &&
                         (type2 == TIBasicTypes.STRING || type2 == TIBasicTypes.STRING_VARIABLE)) return;
