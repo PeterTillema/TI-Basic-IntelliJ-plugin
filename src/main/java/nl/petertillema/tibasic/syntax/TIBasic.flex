@@ -171,9 +171,9 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "prgm" | "tvm_Pmt" |
     // Single-character variables (LOWEST priority - fallback for A-Z, theta)
     {SIMPLE_VARIABLE}                                         { return TIBasicTypes.SIMPLE_VARIABLE; }
 
-    // Invalid identifier-like sequences (catch "Abc" as one token instead of "A"+"b"+"c")
+    // Invalid identifier-like sequences (catch "abc" as one token instead of "a"+"b"+"c")
     // This must come AFTER all valid tokens to avoid matching valid multi-char tokens
-    [A-Za-z][a-z0-9]+                                         { return TokenType.BAD_CHARACTER; }
+    [a-z][A-Za-z0-9]+                                         { return TokenType.BAD_CHARACTER; }
 }
 
 <STRING> {
