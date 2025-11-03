@@ -23,6 +23,7 @@ public final class TIBasicColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Braces and Operators//Brackets", TIBasicSyntaxHighlighter.BRACKETS),
             new AttributesDescriptor("Braces and Operators//Comma", TIBasicSyntaxHighlighter.COMMA),
             new AttributesDescriptor("Command", TIBasicSyntaxHighlighter.COMMAND),
+            new AttributesDescriptor("Command//Program call", TIBasicSyntaxHighlighter.PRGM_CALL),
             new AttributesDescriptor("Comments//Line comment", TIBasicSyntaxHighlighter.COMMENT),
             new AttributesDescriptor("Functions", TIBasicSyntaxHighlighter.FUNCTION),
             new AttributesDescriptor("Number", TIBasicSyntaxHighlighter.NUMBER),

@@ -27,6 +27,7 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey PARENTHESES = createTextAttributesKey("TIBASIC_PARENTHESIS", DefaultLanguageHighlighterColors.PARENTHESES);
     public static final TextAttributesKey BRACKETS = createTextAttributesKey("TIBASIC_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
     public static final TextAttributesKey BRACES = createTextAttributesKey("TIBASIC_BRACES", DefaultLanguageHighlighterColors.BRACES);
+    public static final TextAttributesKey PRGM_CALL = createTextAttributesKey("TIBASIC_PRGM_CALL");
     public static final TextAttributesKey ANS_IDENTIFIER = createTextAttributesKey("TIBASIC_ANS_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey LIST_IDENTIFIER = createTextAttributesKey("TIBASIC_LIST_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey EQUATION_IDENTIFIER = createTextAttributesKey("TIBASIC_EQUATION_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
@@ -62,6 +63,7 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
 
         // Commands and functions
         fillMap(keys, TIBasicTokenSets.COMMANDS, COMMAND);
+        keys.put(TIBasicTypes.PRGM_CALL, PRGM_CALL);
         keys.put(TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS, FUNCTION);
         keys.put(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS, FUNCTION);
 

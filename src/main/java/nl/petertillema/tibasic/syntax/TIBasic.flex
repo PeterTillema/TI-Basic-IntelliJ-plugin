@@ -186,6 +186,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
 <STRING> {
     "\""                                                      { yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "->"                                                      { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
+    "//"                                                      { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "\r\n"                                                    { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "\r"|"\n"                                                 { yypushback(1); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     <<EOF>>                                                   { yybegin(YYINITIAL); return TIBasicTypes.STRING; }

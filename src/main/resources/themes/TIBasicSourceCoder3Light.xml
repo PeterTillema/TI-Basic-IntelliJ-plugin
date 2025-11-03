@@ -48,6 +48,12 @@
                 <option name="FOREGROUND" value="dd1111" />
             </value>
         </option>
+        <option name="TIBASIC_PRGM_CALL">
+            <value>
+                <option name="FOREGROUND" value="00aaaa" />
+                <option name="FONT_TYPE" value="1"/>
+            </value>
+        </option>
         <option name="TIBASIC_STRING_IDENTIFIER">
             <value>
                 <option name="FOREGROUND" value="dd1111" />
