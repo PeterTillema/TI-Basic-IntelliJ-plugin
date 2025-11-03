@@ -131,7 +131,8 @@ private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA exp
 private assignment_target_list_index ::= LIST_VARIABLE LPAREN expr [RPAREN] { pin=2 }
 private assignment_target_dim ::= "dim(" (LIST_VARIABLE | MATRIX_VARIABLE) [RPAREN] { pin=1 }
 
-delvar_command ::= ("DelVar " (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE))+ [statement] { pin=1 }
+delvar_command ::= delvar_variable+ [statement]
+private delvar_variable ::= "DelVar" (LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
 goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
