@@ -55,6 +55,7 @@ public interface TIBasicTypes {
   IElementType POW_2_EXPR = new TIBasicElementType("POW_2_EXPR");
   IElementType POW_3_EXPR = new TIBasicElementType("POW_3_EXPR");
   IElementType POW_EXPR = new TIBasicElementType("POW_EXPR");
+  IElementType PRGM_STATEMENT = new TIBasicElementType("PRGM_STATEMENT");
   IElementType RADIAN_EXPR = new TIBasicElementType("RADIAN_EXPR");
   IElementType REPEAT_STATEMENT = new TIBasicElementType("REPEAT_STATEMENT");
   IElementType STATEMENT = new TIBasicElementType("STATEMENT");
@@ -110,6 +111,7 @@ public interface TIBasicTypes {
   IElementType POW = new TIBasicTokenType("POW");
   IElementType POW2 = new TIBasicTokenType("POW2");
   IElementType POW3 = new TIBasicTokenType("POW3");
+  IElementType PRGM_CALL = new TIBasicTokenType("PRGM_CALL");
   IElementType RBRACKET = new TIBasicTokenType("RBRACKET");
   IElementType RCURLY = new TIBasicTokenType("RCURLY");
   IElementType REPEAT = new TIBasicTokenType("REPEAT");
@@ -268,6 +270,9 @@ public interface TIBasicTypes {
       }
       else if (type == POW_EXPR) {
         return new TIBasicPowExprImpl(node);
+      }
+      else if (type == PRGM_STATEMENT) {
+        return new TIBasicPrgmStatementImpl(node);
       }
       else if (type == RADIAN_EXPR) {
         return new TIBasicRadianExprImpl(node);

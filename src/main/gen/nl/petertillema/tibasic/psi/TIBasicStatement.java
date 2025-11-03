@@ -32,6 +32,9 @@ public interface TIBasicStatement extends PsiElement {
   TIBasicLblStatement getLblStatement();
 
   @Nullable
+  TIBasicPrgmStatement getPrgmStatement();
+
+  @Nullable
   TIBasicRepeatStatement getRepeatStatement();
 
   @Nullable

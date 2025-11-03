@@ -30,7 +30,7 @@ private end_block ::= NEWLINE+ (!"End" (statement NEWLINE*))*
 private then_block ::= NEWLINE+ (!"Else" !"End" (statement NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | assignment_statement | expr_statement
+private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
 private unused_ ::= TOKEN
@@ -85,7 +85,7 @@ minus_expr ::= expr MINUS expr
 mul_expr ::= expr TIMES expr
 div_expr ::= expr DIVIDE expr
 implied_mul_expr ::= implied_mul_arg implied_mul_arg+
-private implied_mul_arg ::= NUMBER | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
+private implied_mul_arg ::= NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
 // Precedence 4
 npr_expr ::= expr NPR expr
 ncr_expr ::= expr NCR expr
@@ -146,6 +146,8 @@ lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
     implements="nl.petertillema.tibasic.psi.TIBasicNamedElement"
     methods=[getName setName getNameIdentifier]
 }
+
+prgm_statement ::= PRGM_CALL
 
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [(expr (COMMA expr)*)] { pin=1 }

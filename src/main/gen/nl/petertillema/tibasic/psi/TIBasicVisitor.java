@@ -195,6 +195,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
+  public void visitPrgmStatement(@NotNull TIBasicPrgmStatement o) {
+    visitPsiElement(o);
+  }
+
   public void visitRadianExpr(@NotNull TIBasicRadianExpr o) {
     visitExpr(o);
   }

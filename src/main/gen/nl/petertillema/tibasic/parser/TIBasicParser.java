@@ -744,11 +744,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NUMBER | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
+  // NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | EQUATION_VARIABLE_1 | EQUATION_VARIABLE_2 | EQUATION_VARIABLE_3 | EQUATION_VARIABLE_4 | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
   static boolean implied_mul_arg(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "implied_mul_arg")) return false;
     boolean r;
     r = consumeToken(b, NUMBER);
+    if (!r) r = consumeToken(b, MATH_VARIABLE);
     if (!r) r = consumeToken(b, EXPR_FUNCTIONS_NO_ARGS);
     if (!r) r = consumeToken(b, ANS_VARIABLE);
     if (!r) r = consumeToken(b, LIST_VARIABLE);
@@ -862,6 +863,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // PRGM_CALL
+  public static boolean prgm_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "prgm_statement")) return false;
+    if (!nextTokenIs(b, PRGM_CALL)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, PRGM_CALL);
+    exit_section_(b, m, PRGM_STATEMENT, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // REPEAT expr end_block [END]
   public static boolean repeat_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "repeat_statement")) return false;
@@ -949,7 +962,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // delvar_command | goto_statement | lbl_statement | command_statement | assignment_statement | expr_statement
+  // delvar_command | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
   static boolean small_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "small_statement")) return false;
     boolean r;
@@ -957,6 +970,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = goto_statement(b, l + 1);
     if (!r) r = lbl_statement(b, l + 1);
     if (!r) r = command_statement(b, l + 1);
+    if (!r) r = prgm_statement(b, l + 1);
     if (!r) r = assignment_statement(b, l + 1);
     if (!r) r = expr_statement(b, l + 1);
     return r;

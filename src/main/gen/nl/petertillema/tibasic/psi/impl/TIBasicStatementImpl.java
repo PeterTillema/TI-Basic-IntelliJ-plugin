@@ -77,6 +77,12 @@ public class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasi
 
   @Override
   @Nullable
+  public TIBasicPrgmStatement getPrgmStatement() {
+    return findChildByClass(TIBasicPrgmStatement.class);
+  }
+
+  @Override
+  @Nullable
   public TIBasicRepeatStatement getRepeatStatement() {
     return findChildByClass(TIBasicRepeatStatement.class);
   }
