@@ -12,43 +12,50 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
 import nl.petertillema.tibasic.psi.TIBasicForInitializer;
+import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static com.intellij.psi.util.PsiTreeUtil.getDeepestLast;
+import static com.intellij.psi.util.PsiTreeUtil.nextLeaf;
+import static com.intellij.psi.util.PsiTreeUtil.prevLeaf;
+
 public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
-    private static final List<Character> CLOSING_PARENTHESIS = List.of(')', ']', '}');
-    private static final List<Character> WHITE_SPACE = List.of(' ', '\t', '\f');
+    private static final List<IElementType> CLOSING_PARENTHESIS_TYPES = List.of(
+            TIBasicTypes.RPAREN,
+            TIBasicTypes.RBRACKET,
+            TIBasicTypes.RCURLY
+    );
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         var elementToCheck = getMainElementToCheck(element);
         if (elementToCheck == null) return;
 
-        var text = elementToCheck.getText();
-        var endIndex = text.length() - 1;
-        var startEndIndex = endIndex;
-
-        while (endIndex >= 0 && (CLOSING_PARENTHESIS.contains(text.charAt(endIndex)) || WHITE_SPACE.contains(text.charAt(endIndex)))) {
-            endIndex--;
+        var lastChild = getDeepestLast(elementToCheck);
+        var originalLastChild = lastChild;
+        var firstToDelete = lastChild;
+        while (lastChild != null && CLOSING_PARENTHESIS_TYPES.contains(lastChild.getNode().getElementType())) {
+            firstToDelete = lastChild;
+            lastChild = prevLeaf(lastChild);
         }
 
-        if (endIndex != startEndIndex) {
-            var startOffset = elementToCheck.getTextRange().getStartOffset();
-
+        if (firstToDelete != originalLastChild) {
+            var startOffset = firstToDelete.getTextRange().getStartOffset();
             holder.newAnnotation(HighlightSeverity.INFORMATION, "Unnecessary closing parenthesis")
-                    .range(TextRange.from(startOffset + endIndex + 1, startEndIndex - endIndex))
+                    .range(TextRange.from(startOffset, originalLastChild.getTextRange().getEndOffset() - startOffset))
                     .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
-                    .withFix(new RemoveUnnecessaryParenthesisQuickFix(startOffset + endIndex + 1, startOffset + startEndIndex))
+                    .withFix(new RemoveUnnecessaryParenthesisQuickFix(firstToDelete, originalLastChild))
                     .create();
         }
     }
@@ -64,12 +71,12 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
     private static class RemoveUnnecessaryParenthesisQuickFix extends BaseIntentionAction {
 
-        private final int startOffset;
-        private final int endOffset;
+        private final @NotNull PsiElement firstToDelete;
+        private final @NotNull PsiElement lastToDelete;
 
-        private RemoveUnnecessaryParenthesisQuickFix(int startOffset, int endOffset) {
-            this.startOffset = startOffset;
-            this.endOffset = endOffset;
+        private RemoveUnnecessaryParenthesisQuickFix(@NotNull PsiElement firstToDelete, @NotNull PsiElement lastToDelete) {
+            this.firstToDelete = firstToDelete;
+            this.lastToDelete = lastToDelete;
         }
 
         @Override
@@ -79,14 +86,9 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
         @Override
         public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-            var start = file.findElementAt(this.startOffset);
-            var end = file.findElementAt(this.endOffset);
-
-            if (start == null || end == null) return;
-
-            var current = start;
-            while (current != null && current.getTextRange().getStartOffset() <= end.getTextRange().getStartOffset()) {
-                var next = PsiTreeUtil.nextLeaf(current);
+            var current = firstToDelete;
+            while (current != null && current.getTextRange().getStartOffset() <= lastToDelete.getTextRange().getStartOffset()) {
+                var next = nextLeaf(current);
                 current.delete();
                 current = next;
             }
