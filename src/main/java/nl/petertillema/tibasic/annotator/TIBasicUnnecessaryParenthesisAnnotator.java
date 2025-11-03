@@ -50,7 +50,7 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
             lastChild = prevLeaf(lastChild);
         }
 
-        if (firstToDelete != originalLastChild) {
+        if (lastChild != originalLastChild) {
             var startOffset = firstToDelete.getTextRange().getStartOffset();
             holder.newAnnotation(HighlightSeverity.INFORMATION, "Unnecessary closing parenthesis")
                     .range(TextRange.from(startOffset, originalLastChild.getTextRange().getEndOffset() - startOffset))

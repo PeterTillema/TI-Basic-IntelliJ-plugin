@@ -1,0 +1,2 @@
+max({1,2,3<info descr="Unnecessary closing parenthesis">})</info>->[A](1,2<info>)</info>
+max({1,dim([[1,2],[3,4<info descr="Unnecessary closing parenthesis">]])})</info>->L1(4<info>)</info>
