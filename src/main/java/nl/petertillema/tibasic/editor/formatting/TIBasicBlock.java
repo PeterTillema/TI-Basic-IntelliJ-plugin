@@ -11,18 +11,17 @@ import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
-import nl.petertillema.tibasic.psi.TIBasicElseStatement;
-import nl.petertillema.tibasic.psi.TIBasicForStatement;
-import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicThenStatement;
+import com.intellij.psi.formatter.FormatterUtil;
+import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
-import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static nl.petertillema.tibasic.syntax.TIBasicTokenSets.LOOPS;
 
 public final class TIBasicBlock implements ASTBlock {
 
@@ -50,29 +49,27 @@ public final class TIBasicBlock implements ASTBlock {
     @Override
     public @NotNull @Unmodifiable List<Block> getSubBlocks() {
         if (subBlocks == null) {
-            subBlocks = this.buildSubBlocks();
+            var children = node.getChildren(null);
+            subBlocks = new ArrayList<>(children.length);
+            for (var child : children) {
+                if (isWhitespaceOrEmpty(child)) continue;
+                subBlocks.add(makeSubBlock(child));
+            }
         }
         return subBlocks;
     }
 
-    private List<Block> buildSubBlocks() {
-        var childBlocks = new ArrayList<Block>();
-        var children = this.node.getChildren(null);
+    private Block makeSubBlock(ASTNode childNode) {
+        var childIndent = Indent.getNoneIndent();
 
-        for (var child : children) {
-            if (child.getElementType() == TokenType.WHITE_SPACE || child.getElementType() == TIBasicTypes.CRLF)
-                continue;
-
-            var childIndent = Indent.getNoneIndent();
-            if (child.getElementType() == TIBasicTypes.END_BLOCK || child.getElementType() == TIBasicTypes.THEN_BLOCK) {
-                childIndent = Indent.getNormalIndent();
-            }
-
-            var newBlock = new TIBasicBlock(child, childIndent, this.spacingBuilder);
-            childBlocks.add(newBlock);
+        // The second check is necessary to only match children which belong to the actual statements in the loop,
+        // and not the normal nodes. For example, "WHILE" is a child node from the "WHILE_STATEMENT", but should
+        // logically not be indented. A JsonBlock works kinda the same but only needs to check against the opening
+        // and closing braces/brackets.
+        if (LOOPS.contains(node.getElementType()) && childNode.getPsi() instanceof TIBasicStatement) {
+            childIndent = Indent.getNormalIndent();
         }
-
-        return childBlocks;
+        return new TIBasicBlock(childNode, childIndent, spacingBuilder);
     }
 
     @Override
@@ -97,17 +94,7 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
-        var elementTypesToIndent = List.of(
-                TIBasicTypes.END_BLOCK,
-                TIBasicTypes.THEN_BLOCK,
-                TIBasicTypes.FOR_STATEMENT,
-                TIBasicTypes.REPEAT_STATEMENT,
-                TIBasicTypes.WHILE_STATEMENT,
-                TIBasicTypes.THEN_STATEMENT,
-                TIBasicTypes.ELSE_STATEMENT
-        );
-
-        if (elementTypesToIndent.contains(node.getElementType())) {
+        if (LOOPS.contains(node.getElementType())) {
             return new ChildAttributes(Indent.getNormalIndent(), null);
         }
         return new ChildAttributes(Indent.getNoneIndent(), null);
@@ -115,32 +102,24 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public boolean isIncomplete() {
-        var psi = this.node.getPsi();
-        if (psi instanceof TIBasicWhileStatement ||
-                psi instanceof TIBasicRepeatStatement ||
-                psi instanceof TIBasicForStatement ||
-                psi instanceof TIBasicElseStatement) {
-            return !psi.getText().endsWith("End");
-        }
-        if (psi instanceof TIBasicThenStatement) {
-            return !(psi.getText().endsWith("End") || psi.getText().endsWith("Else"));
+        if (node.getElementType() == TIBasicTypes.THEN_STATEMENT) {
+            var lastChildElementType = node.getLastChildNode().getElementType();
+            return lastChildElementType != TIBasicTypes.ELSE && lastChildElementType != TIBasicTypes.END;
         }
 
-        return this.isIncomplete(this.node);
-    }
-
-    private boolean isIncomplete(ASTNode node) {
-        ASTNode lastChild = node == null ? null : node.getLastChildNode();
-        while (lastChild != null && (lastChild.getElementType() == TIBasicTypes.CRLF || lastChild.getElementType() == TokenType.WHITE_SPACE)) {
-            lastChild = lastChild.getTreePrev();
+        if (LOOPS.contains(node.getElementType())) {
+            return node.getLastChildNode().getElementType() != TIBasicTypes.END;
         }
-        if (lastChild == null) return false;
-        if (lastChild.getElementType() == TokenType.ERROR_ELEMENT) return true;
-        return isIncomplete(lastChild);
+
+        return FormatterUtil.isIncomplete(node);
     }
 
     @Override
     public boolean isLeaf() {
-        return this.node.getFirstChildNode() == null;
+        return node.getFirstChildNode() == null;
+    }
+
+    private static boolean isWhitespaceOrEmpty(ASTNode node) {
+        return node.getElementType() == TokenType.WHITE_SPACE || node.getElementType() == TIBasicTypes.CRLF || node.getTextLength() == 0;
     }
 }

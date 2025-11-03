@@ -32,9 +32,6 @@ The source code can be found here: https://github.com/PeterTillema/TI-Basic-Inte
 The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/28722-ti-basic.
 
 ## Known issues
- - After a loop without any statements, the related "End" is indented but should not be
- - Adding a new statement within a loop without other statements, and including an "End", the new line is not
-    indented, while it should be indented.
 
 ## Todo
  - Extend inspections to be more advanced and more complete

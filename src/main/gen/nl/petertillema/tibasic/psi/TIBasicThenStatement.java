@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicThenStatement extends PsiElement {
 
   @NotNull
-  TIBasicThenBlock getThenBlock();
+  List<TIBasicStatement> getStatementList();
 
 }

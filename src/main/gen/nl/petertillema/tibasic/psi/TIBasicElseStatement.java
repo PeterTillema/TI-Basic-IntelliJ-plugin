@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicElseStatement extends PsiElement {
 
   @NotNull
-  TIBasicEndBlock getEndBlock();
+  List<TIBasicStatement> getStatementList();
 
 }

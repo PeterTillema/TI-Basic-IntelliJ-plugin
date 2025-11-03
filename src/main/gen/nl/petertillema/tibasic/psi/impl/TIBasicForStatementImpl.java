@@ -29,14 +29,14 @@ public class TIBasicForStatementImpl extends ASTWrapperPsiElement implements TIB
 
   @Override
   @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public TIBasicForInitializer getForInitializer() {
+    return findNotNullChildByClass(TIBasicForInitializer.class);
   }
 
   @Override
   @NotNull
-  public TIBasicForInitializer getForInitializer() {
-    return findNotNullChildByClass(TIBasicForInitializer.class);
+  public List<TIBasicStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
   }
 
 }

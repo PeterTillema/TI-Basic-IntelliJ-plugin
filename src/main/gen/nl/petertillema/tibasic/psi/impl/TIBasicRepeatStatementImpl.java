@@ -29,14 +29,14 @@ public class TIBasicRepeatStatementImpl extends ASTWrapperPsiElement implements 
 
   @Override
   @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public TIBasicExpr getExpr() {
+    return findNotNullChildByClass(TIBasicExpr.class);
   }
 
   @Override
   @NotNull
-  public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+  public List<TIBasicStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
   }
 
 }

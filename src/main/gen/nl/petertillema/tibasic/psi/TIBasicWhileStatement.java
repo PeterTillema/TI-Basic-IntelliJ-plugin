@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicWhileStatement extends PsiElement {
 
   @NotNull
-  TIBasicEndBlock getEndBlock();
+  TIBasicExpr getExpr();
 
   @NotNull
-  TIBasicExpr getExpr();
+  List<TIBasicStatement> getStatementList();
 
 }

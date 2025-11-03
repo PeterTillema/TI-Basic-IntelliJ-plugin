@@ -29,14 +29,14 @@ public class TIBasicWhileStatementImpl extends ASTWrapperPsiElement implements T
 
   @Override
   @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public TIBasicExpr getExpr() {
+    return findNotNullChildByClass(TIBasicExpr.class);
   }
 
   @Override
   @NotNull
-  public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+  public List<TIBasicStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
   }
 
 }

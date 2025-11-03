@@ -29,8 +29,8 @@ public class TIBasicThenStatementImpl extends ASTWrapperPsiElement implements TI
 
   @Override
   @NotNull
-  public TIBasicThenBlock getThenBlock() {
-    return findNotNullChildByClass(TIBasicThenBlock.class);
+  public List<TIBasicStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
   }
 
 }

@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicRepeatStatement extends PsiElement {
 
   @NotNull
-  TIBasicEndBlock getEndBlock();
+  TIBasicExpr getExpr();
 
   @NotNull
-  TIBasicExpr getExpr();
+  List<TIBasicStatement> getStatementList();
 
 }

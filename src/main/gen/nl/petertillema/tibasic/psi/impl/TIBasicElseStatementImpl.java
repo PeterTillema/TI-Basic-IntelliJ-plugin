@@ -29,8 +29,8 @@ public class TIBasicElseStatementImpl extends ASTWrapperPsiElement implements TI
 
   @Override
   @NotNull
-  public TIBasicEndBlock getEndBlock() {
-    return findNotNullChildByClass(TIBasicEndBlock.class);
+  public List<TIBasicStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
   }
 
 }

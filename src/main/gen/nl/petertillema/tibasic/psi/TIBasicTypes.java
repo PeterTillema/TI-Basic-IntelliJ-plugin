@@ -21,7 +21,6 @@ public interface TIBasicTypes {
   IElementType DIV_EXPR = new TIBasicElementType("DIV_EXPR");
   IElementType DMS_EXPR = new TIBasicElementType("DMS_EXPR");
   IElementType ELSE_STATEMENT = new TIBasicElementType("ELSE_STATEMENT");
-  IElementType END_BLOCK = new TIBasicElementType("END_BLOCK");
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
   IElementType EXPR_STATEMENT = new TIBasicElementType("EXPR_STATEMENT");
@@ -59,7 +58,6 @@ public interface TIBasicTypes {
   IElementType RADIAN_EXPR = new TIBasicElementType("RADIAN_EXPR");
   IElementType REPEAT_STATEMENT = new TIBasicElementType("REPEAT_STATEMENT");
   IElementType STATEMENT = new TIBasicElementType("STATEMENT");
-  IElementType THEN_BLOCK = new TIBasicElementType("THEN_BLOCK");
   IElementType THEN_STATEMENT = new TIBasicElementType("THEN_STATEMENT");
   IElementType TRANSPOSE_EXPR = new TIBasicElementType("TRANSPOSE_EXPR");
   IElementType WHILE_STATEMENT = new TIBasicElementType("WHILE_STATEMENT");
@@ -172,9 +170,6 @@ public interface TIBasicTypes {
       else if (type == ELSE_STATEMENT) {
         return new TIBasicElseStatementImpl(node);
       }
-      else if (type == END_BLOCK) {
-        return new TIBasicEndBlockImpl(node);
-      }
       else if (type == EQ_EXPR) {
         return new TIBasicEqExprImpl(node);
       }
@@ -282,9 +277,6 @@ public interface TIBasicTypes {
       }
       else if (type == STATEMENT) {
         return new TIBasicStatementImpl(node);
-      }
-      else if (type == THEN_BLOCK) {
-        return new TIBasicThenBlockImpl(node);
       }
       else if (type == THEN_STATEMENT) {
         return new TIBasicThenStatementImpl(node);

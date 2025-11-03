@@ -468,14 +468,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // NEWLINE+ (!"End" (statement NEWLINE*))*
-  public static boolean end_block(PsiBuilder b, int l) {
+  static boolean end_block(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "end_block")) return false;
-    if (!nextTokenIs(b, "<end block>", COLON, CRLF)) return false;
+    if (!nextTokenIs(b, "", COLON, CRLF)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, END_BLOCK, "<end block>");
+    Marker m = enter_section_(b);
     r = end_block_0(b, l + 1);
     r = r && end_block_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1035,14 +1035,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // NEWLINE+ (!"Else" !"End" (statement NEWLINE*))*
-  public static boolean then_block(PsiBuilder b, int l) {
+  static boolean then_block(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "then_block")) return false;
-    if (!nextTokenIs(b, "<then block>", COLON, CRLF)) return false;
+    if (!nextTokenIs(b, "", COLON, CRLF)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, THEN_BLOCK, "<then block>");
+    Marker m = enter_section_(b);
     r = then_block_0(b, l + 1);
     r = r && then_block_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, null, r);
     return r;
   }
 

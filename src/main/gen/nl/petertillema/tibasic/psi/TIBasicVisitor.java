@@ -59,10 +59,6 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitEndBlock(@NotNull TIBasicEndBlock o) {
-    visitPsiElement(o);
-  }
-
   public void visitEqExpr(@NotNull TIBasicEqExpr o) {
     visitExpr(o);
   }
@@ -208,10 +204,6 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitStatement(@NotNull TIBasicStatement o) {
-    visitPsiElement(o);
-  }
-
-  public void visitThenBlock(@NotNull TIBasicThenBlock o) {
     visitPsiElement(o);
   }
 
