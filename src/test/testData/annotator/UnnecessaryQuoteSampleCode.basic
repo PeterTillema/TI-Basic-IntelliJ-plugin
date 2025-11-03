@@ -1,1 +1,3 @@
-"TEST"+"ABC <info descr="Unnecessary closing quote">"</info>->Str0
+"TEST"+"ABC <info>"</info>->Str0
+"TEST"// Test
+"TEST"     // Test

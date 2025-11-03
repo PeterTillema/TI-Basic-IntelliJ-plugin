@@ -20,9 +20,12 @@ import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
 import nl.petertillema.tibasic.psi.TIBasicForInitializer;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
+import nl.petertillema.tibasic.psi.TIBasicStatement;
+import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static nl.petertillema.tibasic.psi.TIBasicUtil.createFromText;
 
 public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
@@ -34,6 +37,10 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
         var text = elementToCheck.getText();
         if (text.charAt(text.length() - 1) == '"') {
+            // Check if the statement has whitespace and a comment attached
+            var statement = getParentOfType(elementToCheck, TIBasicStatement.class);
+            if (hasCommentSiblingAtSameLine(statement)) return;
+
             var endOffset = elementToCheck.getTextRange().getEndOffset();
 
             holder.newAnnotation(HighlightSeverity.INFORMATION, "Unnecessary closing quote")
@@ -42,6 +49,15 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
                     .withFix(new RemoveUnnecessaryQuoteQuickFix(endOffset - 1))
                     .create();
         }
+    }
+
+    private boolean hasCommentSiblingAtSameLine(PsiElement element) {
+        while (element != null) {
+            if (element.getNode().getElementType() == TIBasicTypes.CRLF) return false;
+            if (element.getNode().getElementType() == TIBasicTypes.COMMENT) return true;
+            element = element.getNextSibling();
+        }
+        return false;
     }
 
     private @Nullable PsiElement getMainElementToCheck(PsiElement element) {

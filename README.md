@@ -34,7 +34,6 @@ The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/2872
 ## Known issues
  - Allow empty Repeat/While loops when the condition contains a function call to getKey
  - Allow chained DelVar with custom list names
- - Don't remove the closing quote when the rest of the line contains a comment (and whitespace in between)
 
 ## Todo
  - Extend inspections to be more advanced and more complete
