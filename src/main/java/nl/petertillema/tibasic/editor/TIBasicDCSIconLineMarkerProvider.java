@@ -15,6 +15,7 @@ import nl.petertillema.tibasic.editor.dcs.impl.DCSColoredIcon;
 import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome16Icon;
 import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome8Icon;
 import nl.petertillema.tibasic.language.TIBasicFile;
+import nl.petertillema.tibasic.psi.TIBasicExprStatement;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
@@ -36,20 +37,16 @@ public final class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDe
         if (!element.getContainingFile().getText().startsWith(":DCS")) {
             return null;
         }
-        // Element should be a String
+
+        // Element should be a string, with the proper parents
         if (element.getNode().getElementType() != TIBasicTypes.STRING) return null;
-
-        // Element should be part of a LiteralExpr, which is the only part of a Statement
-        var literalExpression = element.getParent();
-        if (!(literalExpression instanceof TIBasicLiteralExpr)) return null;
-
-        // Element should be the only part of a Statement
-        var statement = literalExpression.getParent();
-        if (!(statement instanceof TIBasicStatement) || statement.getChildren().length != 1) return null;
+        if (!(element.getParent() instanceof TIBasicLiteralExpr literalExpr)) return null;
+        if (!(literalExpr.getParent() instanceof TIBasicExprStatement exprStatement)) return null;
+        if (!(exprStatement.getParent() instanceof TIBasicStatement statement)) return null;
+        if (!(statement.getParent() instanceof TIBasicFile file)) return null;
 
         // Statement should be the second child of the main file
-        if (!(statement.getParent() instanceof TIBasicFile)) return null;
-        var children = statement.getParent().getChildren();
+        var children = file.getChildren();
         if (children.length < 4) return null;
         if (children[2].getNode().getElementType() != TIBasicTypes.CRLF || children[3] != statement) return null;
 
