@@ -107,6 +107,7 @@ public interface TIBasicTypes {
   IElementType NPR = new TIBasicTokenType("NPR");
   IElementType NUMBER = new TIBasicTokenType("NUMBER");
   IElementType OR = new TIBasicTokenType("OR");
+  IElementType PICTURE_VARIABLE = new TIBasicTokenType("PICTURE_VARIABLE");
   IElementType PLUS = new TIBasicTokenType("PLUS");
   IElementType POW = new TIBasicTokenType("POW");
   IElementType POW2 = new TIBasicTokenType("POW2");

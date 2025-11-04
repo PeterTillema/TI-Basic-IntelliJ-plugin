@@ -167,7 +167,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     {EQUATION_VARIABLE_2}                                     { return TIBasicTypes.EQUATION_VARIABLE_2; }
     {EQUATION_VARIABLE_3}                                     { return TIBasicTypes.EQUATION_VARIABLE_3; }
     {EQUATION_VARIABLE_4}                                     { return TIBasicTypes.EQUATION_VARIABLE_4; }
-    {PICTURE_VARIABLE}                                        { return TIBasicTypes.TOKEN; }
+    {PICTURE_VARIABLE}                                        { return TIBasicTypes.PICTURE_VARIABLE; }
     {GDB_VARIABLE}                                            { return TIBasicTypes.TOKEN; }
     {STRING_VARIABLE}                                         { return TIBasicTypes.STRING_VARIABLE; }
     {MATRIX_VARIABLE}                                         { return TIBasicTypes.MATRIX_VARIABLE; }
