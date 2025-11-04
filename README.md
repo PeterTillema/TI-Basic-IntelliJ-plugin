@@ -32,8 +32,8 @@ The source code can be found here: https://github.com/PeterTillema/TI-Basic-Inte
 The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/28722-ti-basic.
 
 ## Known issues
- - Allow empty Repeat/While loops when the condition contains a function call to getKey
  - Allow chained DelVar with custom list names
+ - Typing a "]" after typing the start of a matrix name first (i.e. "[A") inserts another right bracket.
 
 ## Todo
  - Extend inspections to be more advanced and more complete

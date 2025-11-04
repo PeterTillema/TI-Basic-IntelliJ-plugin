@@ -7,38 +7,47 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
+import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+
+import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
+
 public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
+
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.TIBasic.empty.loop.display.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new TIBasicVisitor() {
             @Override
             public void visitWhileStatement(@NotNull TIBasicWhileStatement o) {
-                if (o.getStatementList().isEmpty()) {
-                    holder.registerProblem(o, "Empty body", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
+                if (containsNoneExprFunctionCall(o.getExpr()) && o.getStatementList().isEmpty()) {
+                    holder.registerProblem(o.getFirstChild(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
             }
 
             @Override
             public void visitRepeatStatement(@NotNull TIBasicRepeatStatement o) {
-                if (o.getStatementList().isEmpty()) {
-                    holder.registerProblem(o, "Empty body", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
+                if (containsNoneExprFunctionCall(o.getExpr()) && o.getStatementList().isEmpty()) {
+                    holder.registerProblem(o.getFirstChild(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
             }
 
             @Override
             public void visitForStatement(@NotNull TIBasicForStatement o) {
                 if (o.getStatementList().isEmpty()) {
-                    holder.registerProblem(o, "Empty body", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
+                    holder.registerProblem(o.getFirstChild(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
             }
 
@@ -60,6 +69,17 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
                 //  a number, a simple "If not(Ans" would be sufficient. And this is only for "Ans", but in reality the check might be
                 //  more complex. For example, an EQ_EXPR might be replaced by a NE_EXPR etc. Leave it out for now, maybe in the future
                 //  with advanced checks it might be possible to do that.
+            }
+
+            private boolean containsNoneExprFunctionCall(PsiElement element) {
+                Predicate<PsiElement> isExprFunction = el -> el.getNode().getElementType() == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS;
+
+                if (isExprFunction.test(element.getFirstChild())) return false;
+
+                var literalExprs = findChildrenOfType(element, TIBasicLiteralExpr.class);
+                return literalExprs.stream()
+                        .map(PsiElement::getFirstChild)
+                        .noneMatch(isExprFunction);
             }
         };
     }
