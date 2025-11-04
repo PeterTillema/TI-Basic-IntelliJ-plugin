@@ -25,6 +25,7 @@ NUMBER = ((\~?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)){EXPONENT}?) | "[i]" | {EXPONEN
 // All kind of variables
 ANS_VARIABLE = "Ans"
 LIST_VARIABLE_NAME = ([A-Zθ]|theta)([0-9A-Zθ]|theta){0,4}
+LIST_VARIABLE_NAME2 = ([A-Zθ]|theta)([0-9A-Zθ]|theta){1,4}
 LIST_VARIABLE = ("L" [1-6]) | ("|L" {LIST_VARIABLE_NAME})
 EQUATION_VARIABLE_1 = "{Y" \d "}"
 EQUATION_VARIABLE_2 = "{" [XY] [1-6] "T}"
@@ -87,7 +88,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "STATWIZARD OFF" | "GridLine" | "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "DetectAsymOn" | "DetectAsymOff" | "BorderColor" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" | "pieceWise(" | "xroot" |
     "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" | "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "ClrList" | "ClrTable" | "Histogram" | "xyLine" | "Scatter" | "LinReg(ax+b)"
 
-%state STRING
+%state STRING, CUSTOM_LIST_WITHOUT_L
 
 %%
 
@@ -113,7 +114,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "Lbl"                                                     { return TIBasicTypes.LBL; }
 
     // Operators and punctuation
-    "->"                                                      { return TIBasicTypes.STO; }
+    "->"                                                      { yybegin(CUSTOM_LIST_WITHOUT_L); return TIBasicTypes.STO; }
     "^^2"                                                     { return TIBasicTypes.POW2; }
     "^^3"                                                     { return TIBasicTypes.POW3; }
     "^^T"                                                     { return TIBasicTypes.TRANSPOSE; }
@@ -191,6 +192,21 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "\r"|"\n"                                                 { yypushback(1); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     <<EOF>>                                                   { yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     [^]                                                       { }
+}
+
+<CUSTOM_LIST_WITHOUT_L> {
+    {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
+    {EQUATION_VARIABLE_1}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_1; }
+    {EQUATION_VARIABLE_2}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_2; }
+    {EQUATION_VARIABLE_3}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_3; }
+    {EQUATION_VARIABLE_4}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_4; }
+    {PICTURE_VARIABLE}                                        { yybegin(YYINITIAL); return TIBasicTypes.PICTURE_VARIABLE; }
+    {GDB_VARIABLE}                                            { yybegin(YYINITIAL); return TIBasicTypes.TOKEN; }
+    {STRING_VARIABLE}                                         { yybegin(YYINITIAL); return TIBasicTypes.STRING_VARIABLE; }
+    {STATISTIC_VARIABLE}                                      { yybegin(YYINITIAL); return TIBasicTypes.TOKEN; }
+    {LIST_VARIABLE_NAME2}                                     { yybegin(YYINITIAL); return TIBasicTypes.LIST_VARIABLE; }
+    {SIMPLE_VARIABLE}                                         { yybegin(YYINITIAL); return TIBasicTypes.SIMPLE_VARIABLE; }
+    [^]                                                       { yypushback(1); yybegin(YYINITIAL); }
 }
 
 [^]                                                           { return TokenType.BAD_CHARACTER; }
