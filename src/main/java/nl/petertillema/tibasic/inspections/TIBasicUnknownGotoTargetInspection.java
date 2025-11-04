@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import static com.intellij.codeInspection.ProblemHighlightType.ERROR;
+import static com.intellij.codeInspection.ProblemHighlightType.GENERIC_ERROR;
 
 public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionTool {
 
@@ -34,7 +34,7 @@ public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionToo
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
                 if (o.getGotoName() != null && !lblLabels.contains(o.getGotoName().getText())) {
-                    holder.registerProblem(o.getGotoName(), "Invalid Goto target", ERROR);
+                    holder.registerProblem(o.getGotoName(), "Invalid Goto target", GENERIC_ERROR);
                 }
             }
         };
