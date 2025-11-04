@@ -33,6 +33,7 @@ public final class TIBasicColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Variables//Equation", TIBasicSyntaxHighlighter.EQUATION_IDENTIFIER),
             new AttributesDescriptor("Variables//String", TIBasicSyntaxHighlighter.STRING_IDENTIFIER),
             new AttributesDescriptor("Variables//Normal", TIBasicSyntaxHighlighter.SIMPLE_IDENTIFIER),
+            new AttributesDescriptor("Variables//Picture", TIBasicSyntaxHighlighter.PICTURE_IDENTIFIER),
             new AttributesDescriptor("Variables//Matrix", TIBasicSyntaxHighlighter. MATRIX_IDENTIFIER),
     };
 
