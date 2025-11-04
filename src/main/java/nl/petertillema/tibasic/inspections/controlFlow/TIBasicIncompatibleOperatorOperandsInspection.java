@@ -1,4 +1,4 @@
-package nl.petertillema.tibasic.inspections;
+package nl.petertillema.tibasic.inspections.controlFlow;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;
