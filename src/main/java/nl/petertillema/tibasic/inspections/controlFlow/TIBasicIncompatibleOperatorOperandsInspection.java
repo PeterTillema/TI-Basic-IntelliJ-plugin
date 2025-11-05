@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicDivExpr;
 import nl.petertillema.tibasic.psi.TIBasicEqExpr;
@@ -152,7 +153,8 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
                 );
                 if (!invalidOperandTypes.contains(type1) && !invalidOperandTypes.contains(type2)) return;
 
-                holder.registerProblem(element, "Invalid operands for '" + operator + "' operator", GENERIC_ERROR);
+                var message = TIBasicMessageBundle.message("inspection.incompatible.operands.description", operator);
+                holder.registerProblem(element, message, GENERIC_ERROR);
             }
 
             private IElementType getLiteralType(TIBasicLiteralExpr literalExpr) {

@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
@@ -43,7 +44,7 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
             var endOffset = elementToCheck.getTextRange().getEndOffset();
 
-            holder.newAnnotation(HighlightSeverity.INFORMATION, "Unnecessary closing quote")
+            holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.quote.description"))
                     .range(TextRange.from(endOffset - 1, 1))
                     .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
                     .withFix(new RemoveUnnecessaryQuoteQuickFix(endOffset - 1))
@@ -98,12 +99,12 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
         @Override
         public @NotNull @IntentionName String getText() {
-            return "Remove unnecessary quote";
+            return TIBasicMessageBundle.message("annotator.unnecessary.quote.fix.text");
         }
 
         @Override
         public @NotNull @IntentionFamilyName String getFamilyName() {
-            return "Remove unnecessary quote";
+            return TIBasicMessageBundle.message("annotator.unnecessary.quote.fix.family.name");
         }
     }
 

@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
@@ -52,7 +53,7 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
         if (lastChild != originalLastChild) {
             var startOffset = firstToDelete.getTextRange().getStartOffset();
-            holder.newAnnotation(HighlightSeverity.INFORMATION, "Unnecessary closing parenthesis")
+            holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.parenthesis.description"))
                     .range(TextRange.from(startOffset, originalLastChild.getTextRange().getEndOffset() - startOffset))
                     .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
                     .withFix(new RemoveUnnecessaryParenthesisQuickFix(firstToDelete, originalLastChild))
@@ -96,12 +97,12 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
         @Override
         public @NotNull @IntentionName String getText() {
-            return "Remove unnecessary parenthesis";
+            return TIBasicMessageBundle.message("annotator.unnecessary.parenthesis.fix.text");
         }
 
         @Override
         public @NotNull @IntentionFamilyName String getFamilyName() {
-            return "Remove unnecessary parenthesis";
+            return TIBasicMessageBundle.message("annotator.unnecessary.parenthesis.fix.family.name");
         }
     }
 

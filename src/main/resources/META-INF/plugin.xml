@@ -107,44 +107,44 @@
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicUnusedLabelInspection"
-                key="inspection.TIBasic.unused.label.display.name"
+                key="inspection.unused.label.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicUnknownGotoTargetInspection"
-                key="inspection.TIBasic.unknown.goto.target.display.name"
+                key="inspection.unknown.goto.target.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicIncompatibleOperatorOperandsInspection"
-                key="inspection.TIBasic.incompatible.operands.display.name"
+                key="inspection.incompatible.operands.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.codeStyle.TIBasicEmptyLoopInspection"
-                key="inspection.TIBasic.empty.loop.display.name"
+                key="inspection.empty.loop.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicTooMuchListArgumentsInspection"
-                key="inspection.TIBasic.too.much.arguments.display.name"
+                key="inspection.too.much.arguments.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
-                groupKey="inspection.TIBasic.group.name"
+                groupKey="inspection.group.name"
                 implementationClass="nl.petertillema.tibasic.inspections.codeStyle.TIBasicConstantExpressionInspection"
-                key="inspection.TIBasic.constant.expression.display.name"
+                key="inspection.constant.expression.display.name"
                 bundle="messages.TIBasicBundle"/>
     </extensions>
     <resource-bundle>messages.TIBasicBundle</resource-bundle>

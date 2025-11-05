@@ -25,7 +25,7 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
 public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
-    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.TIBasic.empty.loop.display.description");
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.empty.loop.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -55,12 +55,12 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
             public void visitIfStatement(@NotNull TIBasicIfStatement o) {
                 // "Then" without a body, and no "Else"
                 if (o.getThenStatement() != null && o.getThenStatement().getStatementList().isEmpty() && o.getElseStatement() == null) {
-                    holder.registerProblem(o, "Empty body", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
+                    holder.registerProblem(o, ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
 
                 // "Else" without a body
                 if (o.getThenStatement() != null && o.getElseStatement() != null && o.getElseStatement().getStatementList().isEmpty()) {
-                    holder.registerProblem(o.getElseStatement(), "Empty body", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElseStatementQuickFix());
+                    holder.registerProblem(o.getElseStatement(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElseStatementQuickFix());
                 }
 
                 // todo: "Then" without a body but "Else" with a body. That means the "Then" can be removed, but the condition of the
@@ -88,7 +88,7 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return "Remove loop";
+            return TIBasicMessageBundle.message("inspection.empty.loop.fix.family.name");
         }
 
         @Override
@@ -107,7 +107,7 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return "Remove loop";
+            return TIBasicMessageBundle.message("inspection.empty.loop.fix.family.name");
         }
 
         @Override

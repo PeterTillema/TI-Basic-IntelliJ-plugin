@@ -37,7 +37,7 @@ import static nl.petertillema.tibasic.psi.TIBasicUtil.createFromText;
 
 public final class TIBasicConstantExpressionInspection extends LocalInspectionTool {
 
-    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.TIBasic.constant.expression.display.description");
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.constant.expression.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -156,7 +156,7 @@ public final class TIBasicConstantExpressionInspection extends LocalInspectionTo
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return "Replace with result";
+            return TIBasicMessageBundle.message("inspection.constant.expression.fix.family.name");
         }
 
         @Override

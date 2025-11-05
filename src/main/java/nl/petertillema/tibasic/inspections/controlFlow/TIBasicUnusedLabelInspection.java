@@ -7,6 +7,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
+import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import static com.intellij.codeInspection.ProblemHighlightType.LIKE_UNUSED_SYMBOL;
 
 public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
+
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.unused.label.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -39,7 +42,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
             @Override
             public void visitLblStatement(@NotNull TIBasicLblStatement o) {
                 if (o.getLblName() != null && !gotoLabels.contains(o.getLblName().getText())) {
-                    holder.registerProblem(o, "Unused label", LIKE_UNUSED_SYMBOL, new RemoveLabelQuickFix());
+                    holder.registerProblem(o, ERROR_MESSAGE, LIKE_UNUSED_SYMBOL, new RemoveLabelQuickFix());
                 }
             }
         };
@@ -49,7 +52,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return "Remove label";
+            return TIBasicMessageBundle.message("inspection.unused.label.fix.family-name");
         }
 
         @Override

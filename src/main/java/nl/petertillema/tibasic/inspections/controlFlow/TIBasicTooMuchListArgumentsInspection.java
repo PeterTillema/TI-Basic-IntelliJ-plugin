@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class TIBasicTooMuchListArgumentsInspection extends LocalInspectionTool {
 
-    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.TIBasic.too.much.arguments.display.description");
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.too.much.arguments.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
