@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class TIBasicCodeStyleSettings extends CustomCodeStyleSettings {
 
-    public TIBasicCodeStyleSettings( @NotNull CodeStyleSettings container) {
+    public TIBasicCodeStyleSettings(@NotNull CodeStyleSettings container) {
         super("TIBasicCodeStyleSettings", container);
     }
 

@@ -31,7 +31,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
-                if (o.getGotoName() != null){
+                if (o.getGotoName() != null) {
                     gotoLabels.add(o.getGotoName().getText());
                 }
             }

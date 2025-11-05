@@ -106,7 +106,7 @@ public abstract class AbstractDCSIconEditorPanel extends JPanel {
     public static char toHex(int v) {
         return Integer.toHexString(v & 0xF).toUpperCase().charAt(0);
     }
-    
+
     protected abstract int getGridSize();
 
     protected abstract String getIconData();

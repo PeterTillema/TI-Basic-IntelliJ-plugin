@@ -59,7 +59,7 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
                 // Transparent swatch: draw checkerboard instead of plain fill
                 int tile = 2;
                 Color light = new JBColor(new Color(240, 240, 240), new Color(70, 70, 70));
-                Color dark  = new JBColor(new Color(220, 220, 220), new Color(90, 90, 90));
+                Color dark = new JBColor(new Color(220, 220, 220), new Color(90, 90, 90));
                 for (int yy = 0; yy < CELL; yy += tile) {
                     for (int xx = 0; xx < CELL; xx += tile) {
                         boolean isLight = (((xx / tile) + (yy / tile)) & 1) == 0;
