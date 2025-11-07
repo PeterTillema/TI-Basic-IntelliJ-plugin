@@ -102,6 +102,9 @@
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryQuoteAnnotator"/>
+        <annotator
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.annotator.TIBasicCustomListAnnotator"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
