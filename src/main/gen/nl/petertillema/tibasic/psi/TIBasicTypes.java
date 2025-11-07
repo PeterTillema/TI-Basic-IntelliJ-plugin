@@ -78,10 +78,7 @@ public interface TIBasicTypes {
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");
   IElementType EQ = new TIBasicTokenType("EQ");
-  IElementType EQUATION_VARIABLE_1 = new TIBasicTokenType("EQUATION_VARIABLE_1");
-  IElementType EQUATION_VARIABLE_2 = new TIBasicTokenType("EQUATION_VARIABLE_2");
-  IElementType EQUATION_VARIABLE_3 = new TIBasicTokenType("EQUATION_VARIABLE_3");
-  IElementType EQUATION_VARIABLE_4 = new TIBasicTokenType("EQUATION_VARIABLE_4");
+  IElementType EQUATION_VARIABLE = new TIBasicTokenType("EQUATION_VARIABLE");
   IElementType EXPR_FUNCTIONS_NO_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_NO_ARGS");
   IElementType EXPR_FUNCTIONS_WITH_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_WITH_ARGS");
   IElementType FOR = new TIBasicTokenType("FOR");

@@ -31,6 +31,7 @@ EQUATION_VARIABLE_1 = "{Y" \d "}"
 EQUATION_VARIABLE_2 = "{" [XY] [1-6] "T}"
 EQUATION_VARIABLE_3 = "{r" [1-6] "}"
 EQUATION_VARIABLE_4 = "|u" | "|v" | "|w"
+EQUATION_VARIABLE = {EQUATION_VARIABLE_1} | {EQUATION_VARIABLE_2} | {EQUATION_VARIABLE_3} | {EQUATION_VARIABLE_4}
 PICTURE_VARIABLE = "Pic" \d
 GDB_VARIABLE = "GDB" \d
 STRING_VARIABLE = "Str" \d
@@ -164,10 +165,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     {MATH_VARIABLE}                                           { return TIBasicTypes.MATH_VARIABLE; }
     {ANS_VARIABLE}                                            { return TIBasicTypes.ANS_VARIABLE; }
     {LIST_VARIABLE}                                           { return TIBasicTypes.LIST_VARIABLE; }
-    {EQUATION_VARIABLE_1}                                     { return TIBasicTypes.EQUATION_VARIABLE_1; }
-    {EQUATION_VARIABLE_2}                                     { return TIBasicTypes.EQUATION_VARIABLE_2; }
-    {EQUATION_VARIABLE_3}                                     { return TIBasicTypes.EQUATION_VARIABLE_3; }
-    {EQUATION_VARIABLE_4}                                     { return TIBasicTypes.EQUATION_VARIABLE_4; }
+    {EQUATION_VARIABLE}                                       { return TIBasicTypes.EQUATION_VARIABLE; }
     {PICTURE_VARIABLE}                                        { return TIBasicTypes.PICTURE_VARIABLE; }
     {GDB_VARIABLE}                                            { return TIBasicTypes.TOKEN; }
     {STRING_VARIABLE}                                         { return TIBasicTypes.STRING_VARIABLE; }
@@ -196,10 +194,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
 
 <CUSTOM_LIST_WITHOUT_L> {
     {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
-    {EQUATION_VARIABLE_1}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_1; }
-    {EQUATION_VARIABLE_2}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_2; }
-    {EQUATION_VARIABLE_3}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_3; }
-    {EQUATION_VARIABLE_4}                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE_4; }
+    {EQUATION_VARIABLE  }                                     { yybegin(YYINITIAL); return TIBasicTypes.EQUATION_VARIABLE; }
     {PICTURE_VARIABLE}                                        { yybegin(YYINITIAL); return TIBasicTypes.PICTURE_VARIABLE; }
     {GDB_VARIABLE}                                            { yybegin(YYINITIAL); return TIBasicTypes.TOKEN; }
     {STRING_VARIABLE}                                         { yybegin(YYINITIAL); return TIBasicTypes.STRING_VARIABLE; }

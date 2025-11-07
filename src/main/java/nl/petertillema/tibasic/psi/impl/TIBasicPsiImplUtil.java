@@ -60,10 +60,7 @@ public final class TIBasicPsiImplUtil {
         if (type == TIBasicTypes.SIMPLE_VARIABLE ||
                 type == TIBasicTypes.ANS_VARIABLE ||
                 type == TIBasicTypes.LIST_VARIABLE ||
-                type == TIBasicTypes.EQUATION_VARIABLE_1 ||
-                type == TIBasicTypes.EQUATION_VARIABLE_2 ||
-                type == TIBasicTypes.EQUATION_VARIABLE_3 ||
-                type == TIBasicTypes.EQUATION_VARIABLE_4 ||
+                type == TIBasicTypes.EQUATION_VARIABLE ||
                 type == TIBasicTypes.STRING_VARIABLE ||
                 type == TIBasicTypes.MATRIX_VARIABLE
         ) {

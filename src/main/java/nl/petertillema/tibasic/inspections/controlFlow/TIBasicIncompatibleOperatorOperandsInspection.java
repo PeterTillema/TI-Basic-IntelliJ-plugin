@@ -144,10 +144,7 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
 
                 // Doing something with equations and strings is never allowed
                 var invalidOperandTypes = List.of(
-                        TIBasicTypes.EQUATION_VARIABLE_1,
-                        TIBasicTypes.EQUATION_VARIABLE_2,
-                        TIBasicTypes.EQUATION_VARIABLE_3,
-                        TIBasicTypes.EQUATION_VARIABLE_4,
+                        TIBasicTypes.EQUATION_VARIABLE,
                         TIBasicTypes.STRING,
                         TIBasicTypes.STRING_VARIABLE
                 );

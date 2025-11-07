@@ -70,10 +70,7 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
         // Variables
         keys.put(TIBasicTypes.ANS_VARIABLE, ANS_IDENTIFIER);
         keys.put(TIBasicTypes.LIST_VARIABLE, LIST_IDENTIFIER);
-        keys.put(TIBasicTypes.EQUATION_VARIABLE_1, EQUATION_IDENTIFIER);
-        keys.put(TIBasicTypes.EQUATION_VARIABLE_2, EQUATION_IDENTIFIER);
-        keys.put(TIBasicTypes.EQUATION_VARIABLE_3, EQUATION_IDENTIFIER);
-        keys.put(TIBasicTypes.EQUATION_VARIABLE_4, EQUATION_IDENTIFIER);
+        keys.put(TIBasicTypes.EQUATION_VARIABLE, EQUATION_IDENTIFIER);
         keys.put(TIBasicTypes.PICTURE_VARIABLE, PICTURE_IDENTIFIER);
         keys.put(TIBasicTypes.STRING_VARIABLE, STRING_IDENTIFIER);
         keys.put(TIBasicTypes.SIMPLE_VARIABLE, SIMPLE_IDENTIFIER);
