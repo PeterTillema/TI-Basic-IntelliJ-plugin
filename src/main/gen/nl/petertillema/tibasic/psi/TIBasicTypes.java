@@ -74,6 +74,7 @@ public interface TIBasicTypes {
   IElementType COMMAND_WITH_PARENS = new TIBasicTokenType("COMMAND_WITH_PARENS");
   IElementType COMMENT = new TIBasicTokenType("COMMENT");
   IElementType CRLF = new TIBasicTokenType("CRLF");
+  IElementType CUSTOM_LIST_L = new TIBasicTokenType("CUSTOM_LIST_L");
   IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");
@@ -92,7 +93,6 @@ public interface TIBasicTypes {
   IElementType LCURLY = new TIBasicTokenType("LCURLY");
   IElementType LE = new TIBasicTokenType("LE");
   IElementType LIST_VARIABLE = new TIBasicTokenType("LIST_VARIABLE");
-  IElementType LIST_VARIABLE_NAME = new TIBasicTokenType("LIST_VARIABLE_NAME");
   IElementType LPAREN = new TIBasicTokenType("LPAREN");
   IElementType LT = new TIBasicTokenType("LT");
   IElementType MATH_VARIABLE = new TIBasicTokenType("MATH_VARIABLE");
