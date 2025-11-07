@@ -28,8 +28,8 @@ private meta list ::= <<p>> (COMMA <<p>>)*
 private NEWLINE ::= CRLF | COLON
 private statement_recover ::= !NEWLINE
 
-private end_block ::= NEWLINE+ (!"End" (statement NEWLINE*))*
-private then_block ::= NEWLINE+ (!"Else" !"End" (statement NEWLINE*))*
+private end_block ::= NEWLINE+ (!END (statement NEWLINE*))*
+private then_block ::= NEWLINE+ (!ELSE !END (statement NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
 private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
