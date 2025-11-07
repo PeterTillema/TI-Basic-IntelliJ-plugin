@@ -20,7 +20,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     intellijPlatform {
-        create("IC", "2025.1.4.1")
+        create("IC", "2025.2.4")
         bundledPlugin("com.intellij.java")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
@@ -37,7 +37,7 @@ sourceSets {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "240"
+            sinceBuild = "252"
         }
 
         changeNotes = """

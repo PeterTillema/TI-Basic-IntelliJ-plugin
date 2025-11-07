@@ -29,8 +29,6 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <idea-version since-build="213"/>
-
     <actions>
         <action
                 id="nl.petertillema.tibasic.ide.TIBasic8xpDetokenizerAction"
