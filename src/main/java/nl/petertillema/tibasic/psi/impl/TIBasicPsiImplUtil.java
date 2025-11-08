@@ -1,16 +1,30 @@
 package nl.petertillema.tibasic.psi.impl;
 
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.NlsSafe;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
+import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForIdentifier;
+import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicGotoName;
+import nl.petertillema.tibasic.psi.TIBasicIfStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblName;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
+import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
+import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
+import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import nl.petertillema.tibasic.psi.references.TIBasicLabelReference;
 import nl.petertillema.tibasic.psi.references.TIBasicVariableReference;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+
+import static nl.petertillema.tibasic.psi.TIBasicUtil.getTextUntilNewline;
 
 public final class TIBasicPsiImplUtil {
 
@@ -68,6 +82,90 @@ public final class TIBasicPsiImplUtil {
         }
 
         return PsiReference.EMPTY_ARRAY;
+    }
+
+    public static ItemPresentation getPresentation(TIBasicWhileStatement statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return getTextUntilNewline(statement);
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(TIBasicRepeatStatement statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return getTextUntilNewline(statement);
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(TIBasicForStatement statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return getTextUntilNewline(statement);
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(TIBasicIfStatement statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return getTextUntilNewline(statement);
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(TIBasicThenBlock statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return "Then";
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(TIBasicElseBlock statement) {
+        return new ItemPresentation() {
+            @Override
+            public @NlsSafe @NotNull String getPresentableText() {
+                return "Else";
+            }
+
+            @Override
+            public @Nullable Icon getIcon(boolean unused) {
+                return null;
+            }
+        };
     }
 
 }

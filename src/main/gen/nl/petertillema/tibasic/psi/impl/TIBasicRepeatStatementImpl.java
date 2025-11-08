@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class TIBasicRepeatStatementImpl extends TIBasicStatementImpl implements TIBasicRepeatStatement {
 
@@ -37,6 +38,11 @@ public class TIBasicRepeatStatementImpl extends TIBasicStatementImpl implements 
   @NotNull
   public List<TIBasicStatement> getStatementList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
+  }
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return TIBasicPsiImplUtil.getPresentation(this);
   }
 
 }

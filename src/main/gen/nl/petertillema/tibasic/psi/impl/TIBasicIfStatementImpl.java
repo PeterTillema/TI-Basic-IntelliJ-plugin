@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class TIBasicIfStatementImpl extends TIBasicStatementImpl implements TIBasicIfStatement {
 
@@ -49,6 +50,11 @@ public class TIBasicIfStatementImpl extends TIBasicStatementImpl implements TIBa
   @Nullable
   public TIBasicThenBlock getThenBlock() {
     return findChildByClass(TIBasicThenBlock.class);
+  }
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return TIBasicPsiImplUtil.getPresentation(this);
   }
 
 }

@@ -142,10 +142,7 @@ delvar_statement ::= delvar_variable+ [statement]
 private delvar_variable ::= "DelVar" (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
-goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
-{
-    methods=[getReferences]
-}
+goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER] { methods=[getReferences] }
 lbl_statement ::= LBL lbl_name { pin=1 }
 lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 {
@@ -163,16 +160,16 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> [RPAREN] 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
-if_statement ::= IF expr NEWLINE if_body
+if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] }
 private if_body ::= (then_block [else_block | END]) | statement
-then_block ::= THEN then_block_
-else_block ::= ELSE end_block_ [END]
+then_block ::= THEN then_block_ { methods=[getPresentation] }
+else_block ::= ELSE end_block_ [END] { methods=[getPresentation] }
 
-while_statement ::= WHILE expr end_block_ [END]
+while_statement ::= WHILE expr end_block_ [END] { methods=[getPresentation] }
 
-repeat_statement ::= REPEAT expr end_block_ [END]
+repeat_statement ::= REPEAT expr end_block_ [END] { methods=[getPresentation] }
 
-for_statement ::= for_initializer end_block_ [END]
+for_statement ::= for_initializer end_block_ [END] { methods=[getPresentation] }
 for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN]
 for_identifier ::= SIMPLE_VARIABLE
 {

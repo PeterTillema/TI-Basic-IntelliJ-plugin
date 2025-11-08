@@ -96,6 +96,11 @@
                 implementationClass="nl.petertillema.tibasic.editor.TIBasicDCSIconLineMarkerProvider"/>
         <platform.backend.documentation.targetProvider
                 implementation="nl.petertillema.tibasic.syntax.documentation.TIBasicDocumentationTargetProvider"/>
+        <navbar
+                implementation="nl.petertillema.tibasic.structure.TIBasicStructureAwareNavbar"/>
+        <lang.psiStructureViewFactory
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.structure.TIBasicStructureViewFactory"/>
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>

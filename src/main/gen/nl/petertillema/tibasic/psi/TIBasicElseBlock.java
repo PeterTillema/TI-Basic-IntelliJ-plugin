@@ -4,10 +4,13 @@ package nl.petertillema.tibasic.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.navigation.ItemPresentation;
 
 public interface TIBasicElseBlock extends PsiElement {
 
   @NotNull
   List<TIBasicStatement> getStatementList();
+
+  ItemPresentation getPresentation();
 
 }

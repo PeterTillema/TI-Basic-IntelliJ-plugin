@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class TIBasicThenBlockImpl extends ASTWrapperPsiElement implements TIBasicThenBlock {
 
@@ -31,6 +32,11 @@ public class TIBasicThenBlockImpl extends ASTWrapperPsiElement implements TIBasi
   @NotNull
   public List<TIBasicStatement> getStatementList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicStatement.class);
+  }
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return TIBasicPsiImplUtil.getPresentation(this);
   }
 
 }

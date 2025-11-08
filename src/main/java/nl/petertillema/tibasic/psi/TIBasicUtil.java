@@ -1,6 +1,7 @@
 package nl.petertillema.tibasic.psi;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.language.TIBasicFile;
@@ -56,6 +57,22 @@ public final class TIBasicUtil {
         var forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
 
         return new ArrayList<>(forLoops);
+    }
+
+    public static String getTextUntilNewline(PsiElement element) {
+        StringBuilder sb = new StringBuilder();
+        var node = element.getNode();
+        if (node == null) return "";
+
+        var current = node.getFirstChildNode();
+        while (current != null) {
+            var type = current.getElementType();
+            if (type.equals(TIBasicTypes.COLON) || type.equals(TIBasicTypes.CRLF)) break;
+            sb.append(current.getText());
+            current = current.getTreeNext();
+        }
+
+        return sb.toString();
     }
 
 }
