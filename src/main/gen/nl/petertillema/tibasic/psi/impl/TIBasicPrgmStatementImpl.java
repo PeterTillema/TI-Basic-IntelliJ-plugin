@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicPrgmStatementImpl extends ASTWrapperPsiElement implements TIBasicPrgmStatement {
+public class TIBasicPrgmStatementImpl extends TIBasicStatementImpl implements TIBasicPrgmStatement {
 
   public TIBasicPrgmStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
     visitor.visitPrgmStatement(this);
   }

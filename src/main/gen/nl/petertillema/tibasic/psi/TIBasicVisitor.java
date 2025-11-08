@@ -24,7 +24,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitAssignmentStatement(@NotNull TIBasicAssignmentStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitAssignmentTarget(@NotNull TIBasicAssignmentTarget o) {
@@ -32,7 +32,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitCommandStatement(@NotNull TIBasicCommandStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitDecExpr(@NotNull TIBasicDecExpr o) {
@@ -43,8 +43,8 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
-  public void visitDelvarCommand(@NotNull TIBasicDelvarCommand o) {
-    visitPsiElement(o);
+  public void visitDelvarStatement(@NotNull TIBasicDelvarStatement o) {
+    visitStatement(o);
   }
 
   public void visitDivExpr(@NotNull TIBasicDivExpr o) {
@@ -55,7 +55,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
-  public void visitElseStatement(@NotNull TIBasicElseStatement o) {
+  public void visitElseBlock(@NotNull TIBasicElseBlock o) {
     visitPsiElement(o);
   }
 
@@ -68,7 +68,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitExprStatement(@NotNull TIBasicExprStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitForIdentifier(@NotNull TIBasicForIdentifier o) {
@@ -80,7 +80,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitForStatement(@NotNull TIBasicForStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitFracExpr(@NotNull TIBasicFracExpr o) {
@@ -100,7 +100,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitGtExpr(@NotNull TIBasicGtExpr o) {
@@ -108,7 +108,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitIfStatement(@NotNull TIBasicIfStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitImpliedMulExpr(@NotNull TIBasicImpliedMulExpr o) {
@@ -124,7 +124,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitLblStatement(@NotNull TIBasicLblStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitLeExpr(@NotNull TIBasicLeExpr o) {
@@ -196,7 +196,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitPrgmStatement(@NotNull TIBasicPrgmStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitRadianExpr(@NotNull TIBasicRadianExpr o) {
@@ -204,14 +204,14 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitRepeatStatement(@NotNull TIBasicRepeatStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitStatement(@NotNull TIBasicStatement o) {
     visitPsiElement(o);
   }
 
-  public void visitThenStatement(@NotNull TIBasicThenStatement o) {
+  public void visitThenBlock(@NotNull TIBasicThenBlock o) {
     visitPsiElement(o);
   }
 
@@ -220,7 +220,7 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitWhileStatement(@NotNull TIBasicWhileStatement o) {
-    visitPsiElement(o);
+    visitStatement(o);
   }
 
   public void visitXorExpr(@NotNull TIBasicXorExpr o) {

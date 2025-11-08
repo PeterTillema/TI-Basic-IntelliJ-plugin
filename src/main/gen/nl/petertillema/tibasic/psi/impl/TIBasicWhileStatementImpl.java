@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicWhileStatementImpl extends ASTWrapperPsiElement implements TIBasicWhileStatement {
+public class TIBasicWhileStatementImpl extends TIBasicStatementImpl implements TIBasicWhileStatement {
 
   public TIBasicWhileStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
     visitor.visitWhileStatement(this);
   }

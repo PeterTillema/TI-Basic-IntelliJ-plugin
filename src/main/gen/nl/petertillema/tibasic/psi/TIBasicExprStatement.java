@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicExprStatement extends PsiElement {
+public interface TIBasicExprStatement extends TIBasicStatement {
 
   @NotNull
   TIBasicExpr getExpr();

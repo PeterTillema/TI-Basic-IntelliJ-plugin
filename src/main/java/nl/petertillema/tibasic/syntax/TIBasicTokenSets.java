@@ -38,7 +38,7 @@ public interface TIBasicTokenSets {
             TIBasicTypes.FOR_STATEMENT,
             TIBasicTypes.REPEAT_STATEMENT,
             TIBasicTypes.WHILE_STATEMENT,
-            TIBasicTypes.THEN_STATEMENT,
-            TIBasicTypes.ELSE_STATEMENT
+            TIBasicTypes.THEN_BLOCK,
+            TIBasicTypes.ELSE_BLOCK
     );
 }

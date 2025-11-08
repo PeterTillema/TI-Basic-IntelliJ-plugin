@@ -54,13 +54,13 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
             @Override
             public void visitIfStatement(@NotNull TIBasicIfStatement o) {
                 // "Then" without a body, and no "Else"
-                if (o.getThenStatement() != null && o.getThenStatement().getStatementList().isEmpty() && o.getElseStatement() == null) {
+                if (o.getThenBlock() != null && o.getThenBlock().getStatementList().isEmpty() && o.getElseBlock() == null) {
                     holder.registerProblem(o, ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
 
                 // "Else" without a body
-                if (o.getThenStatement() != null && o.getElseStatement() != null && o.getElseStatement().getStatementList().isEmpty()) {
-                    holder.registerProblem(o.getElseStatement(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElseStatementQuickFix());
+                if (o.getThenBlock() != null && o.getElseBlock() != null && o.getElseBlock().getStatementList().isEmpty()) {
+                    holder.registerProblem(o.getElseBlock(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElseStatementQuickFix());
                 }
 
                 // todo: "Then" without a body but "Else" with a body. That means the "Then" can be removed, but the condition of the

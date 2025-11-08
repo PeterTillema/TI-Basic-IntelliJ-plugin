@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicIfStatementImpl extends ASTWrapperPsiElement implements TIBasicIfStatement {
+public class TIBasicIfStatementImpl extends TIBasicStatementImpl implements TIBasicIfStatement {
 
   public TIBasicIfStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
     visitor.visitIfStatement(this);
   }
@@ -29,8 +29,8 @@ public class TIBasicIfStatementImpl extends ASTWrapperPsiElement implements TIBa
 
   @Override
   @Nullable
-  public TIBasicElseStatement getElseStatement() {
-    return findChildByClass(TIBasicElseStatement.class);
+  public TIBasicElseBlock getElseBlock() {
+    return findChildByClass(TIBasicElseBlock.class);
   }
 
   @Override
@@ -47,8 +47,8 @@ public class TIBasicIfStatementImpl extends ASTWrapperPsiElement implements TIBa
 
   @Override
   @Nullable
-  public TIBasicThenStatement getThenStatement() {
-    return findChildByClass(TIBasicThenStatement.class);
+  public TIBasicThenBlock getThenBlock() {
+    return findChildByClass(TIBasicThenBlock.class);
   }
 
 }

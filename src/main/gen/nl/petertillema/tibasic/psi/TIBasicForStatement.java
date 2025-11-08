@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicForStatement extends PsiElement {
+public interface TIBasicForStatement extends TIBasicStatement {
 
   @NotNull
   TIBasicForInitializer getForInitializer();

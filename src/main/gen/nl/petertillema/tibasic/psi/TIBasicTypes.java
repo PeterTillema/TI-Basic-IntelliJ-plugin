@@ -17,10 +17,10 @@ public interface TIBasicTypes {
   IElementType COMMAND_STATEMENT = new TIBasicElementType("COMMAND_STATEMENT");
   IElementType DEC_EXPR = new TIBasicElementType("DEC_EXPR");
   IElementType DEGREE_EXPR = new TIBasicElementType("DEGREE_EXPR");
-  IElementType DELVAR_COMMAND = new TIBasicElementType("DELVAR_COMMAND");
+  IElementType DELVAR_STATEMENT = new TIBasicElementType("DELVAR_STATEMENT");
   IElementType DIV_EXPR = new TIBasicElementType("DIV_EXPR");
   IElementType DMS_EXPR = new TIBasicElementType("DMS_EXPR");
-  IElementType ELSE_STATEMENT = new TIBasicElementType("ELSE_STATEMENT");
+  IElementType ELSE_BLOCK = new TIBasicElementType("ELSE_BLOCK");
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
   IElementType EXPR_STATEMENT = new TIBasicElementType("EXPR_STATEMENT");
@@ -59,7 +59,7 @@ public interface TIBasicTypes {
   IElementType RADIAN_EXPR = new TIBasicElementType("RADIAN_EXPR");
   IElementType REPEAT_STATEMENT = new TIBasicElementType("REPEAT_STATEMENT");
   IElementType STATEMENT = new TIBasicElementType("STATEMENT");
-  IElementType THEN_STATEMENT = new TIBasicElementType("THEN_STATEMENT");
+  IElementType THEN_BLOCK = new TIBasicElementType("THEN_BLOCK");
   IElementType TRANSPOSE_EXPR = new TIBasicElementType("TRANSPOSE_EXPR");
   IElementType WHILE_STATEMENT = new TIBasicElementType("WHILE_STATEMENT");
   IElementType XOR_EXPR = new TIBasicElementType("XOR_EXPR");
@@ -158,8 +158,8 @@ public interface TIBasicTypes {
       else if (type == DEGREE_EXPR) {
         return new TIBasicDegreeExprImpl(node);
       }
-      else if (type == DELVAR_COMMAND) {
-        return new TIBasicDelvarCommandImpl(node);
+      else if (type == DELVAR_STATEMENT) {
+        return new TIBasicDelvarStatementImpl(node);
       }
       else if (type == DIV_EXPR) {
         return new TIBasicDivExprImpl(node);
@@ -167,8 +167,8 @@ public interface TIBasicTypes {
       else if (type == DMS_EXPR) {
         return new TIBasicDmsExprImpl(node);
       }
-      else if (type == ELSE_STATEMENT) {
-        return new TIBasicElseStatementImpl(node);
+      else if (type == ELSE_BLOCK) {
+        return new TIBasicElseBlockImpl(node);
       }
       else if (type == EQ_EXPR) {
         return new TIBasicEqExprImpl(node);
@@ -278,11 +278,8 @@ public interface TIBasicTypes {
       else if (type == REPEAT_STATEMENT) {
         return new TIBasicRepeatStatementImpl(node);
       }
-      else if (type == STATEMENT) {
-        return new TIBasicStatementImpl(node);
-      }
-      else if (type == THEN_STATEMENT) {
-        return new TIBasicThenStatementImpl(node);
+      else if (type == THEN_BLOCK) {
+        return new TIBasicThenBlockImpl(node);
       }
       else if (type == TRANSPOSE_EXPR) {
         return new TIBasicTransposeExprImpl(node);

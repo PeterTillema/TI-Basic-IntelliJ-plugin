@@ -102,7 +102,7 @@ public final class TIBasicBlock implements ASTBlock {
 
     @Override
     public boolean isIncomplete() {
-        if (node.getElementType() == TIBasicTypes.THEN_STATEMENT) {
+        if (node.getElementType() == TIBasicTypes.THEN_BLOCK) {
             var lastChildElementType = node.getLastChildNode().getElementType();
             return lastChildElementType != TIBasicTypes.ELSE && lastChildElementType != TIBasicTypes.END;
         }

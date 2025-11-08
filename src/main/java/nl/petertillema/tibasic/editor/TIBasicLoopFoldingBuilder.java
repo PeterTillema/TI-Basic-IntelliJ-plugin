@@ -29,11 +29,11 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
             public void visitIfStatement(@NotNull TIBasicIfStatement o) {
                 super.visitIfStatement(o);
 
-                if (o.getThenStatement() != null) {
-                    if (o.getElseStatement() != null) {
+                if (o.getThenBlock() != null) {
+                    if (o.getElseBlock() != null) {
                         // Add for "If" + "Then"
                         var ifStartOffset = o.getTextRange().getStartOffset();
-                        var ifThenLength = o.getThenStatement().getTextRangeInParent().getEndOffset() - 1;
+                        var ifThenLength = o.getThenBlock().getTextRangeInParent().getEndOffset() - 1;
                         var ifText = o.getText().substring(0, o.getExpr().getTextRangeInParent().getEndOffset());
 
                         var descriptor = new FoldingDescriptor(
@@ -43,11 +43,11 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                                 Collections.emptySet(),
                                 false,
                                 ifText + "...",
-                                false);
+                                Boolean.FALSE);
                         descriptors.add(descriptor);
 
                         // Add for "Else"
-                        this.addLoopDescriptor(o.getElseStatement(), 4);
+                        this.addLoopDescriptor(o.getElseBlock(), 4);
                     } else {
                         // Only add for "If" + "Then"
                         this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
@@ -85,7 +85,7 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                         Collections.emptySet(),
                         false,
                         textToDisplay + "...",
-                        false);
+                        Boolean.FALSE);
                 descriptors.add(descriptor);
             }
 

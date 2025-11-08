@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicDelvarCommandImpl extends ASTWrapperPsiElement implements TIBasicDelvarCommand {
+public class TIBasicDelvarStatementImpl extends TIBasicStatementImpl implements TIBasicDelvarStatement {
 
-  public TIBasicDelvarCommandImpl(@NotNull ASTNode node) {
+  public TIBasicDelvarStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitDelvarCommand(this);
+    visitor.visitDelvarStatement(this);
   }
 
   @Override

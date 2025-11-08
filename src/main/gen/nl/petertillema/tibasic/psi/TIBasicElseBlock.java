@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface TIBasicElseStatement extends PsiElement {
+public interface TIBasicElseBlock extends PsiElement {
 
   @NotNull
   List<TIBasicStatement> getStatementList();

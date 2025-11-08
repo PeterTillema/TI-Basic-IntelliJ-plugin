@@ -11,7 +11,7 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasicStatement {
+public abstract class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasicStatement {
 
   public TIBasicStatementImpl(@NotNull ASTNode node) {
     super(node);
@@ -25,72 +25,6 @@ public class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasi
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof TIBasicVisitor) accept((TIBasicVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicAssignmentStatement getAssignmentStatement() {
-    return findChildByClass(TIBasicAssignmentStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicCommandStatement getCommandStatement() {
-    return findChildByClass(TIBasicCommandStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicDelvarCommand getDelvarCommand() {
-    return findChildByClass(TIBasicDelvarCommand.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicExprStatement getExprStatement() {
-    return findChildByClass(TIBasicExprStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicForStatement getForStatement() {
-    return findChildByClass(TIBasicForStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicGotoStatement getGotoStatement() {
-    return findChildByClass(TIBasicGotoStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicIfStatement getIfStatement() {
-    return findChildByClass(TIBasicIfStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicLblStatement getLblStatement() {
-    return findChildByClass(TIBasicLblStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicPrgmStatement getPrgmStatement() {
-    return findChildByClass(TIBasicPrgmStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicRepeatStatement getRepeatStatement() {
-    return findChildByClass(TIBasicRepeatStatement.class);
-  }
-
-  @Override
-  @Nullable
-  public TIBasicWhileStatement getWhileStatement() {
-    return findChildByClass(TIBasicWhileStatement.class);
   }
 
 }

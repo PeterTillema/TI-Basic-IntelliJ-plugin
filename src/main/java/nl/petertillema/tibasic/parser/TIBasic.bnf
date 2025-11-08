@@ -14,6 +14,7 @@
   tokenTypeClass="nl.petertillema.tibasic.psi.TIBasicTokenType"
 
   extends(".*expr")=expr
+  extends(".*_statement")=statement
   tokens=[
     COMMENT = "regexp://[^\r\n]*"
   ]
@@ -28,11 +29,11 @@ private meta list ::= <<p>> (COMMA <<p>>)*
 private NEWLINE ::= CRLF | COLON
 private statement_recover ::= !NEWLINE
 
-private end_block ::= NEWLINE+ (!END (statement NEWLINE*))*
-private then_block ::= NEWLINE+ (!ELSE !END (statement NEWLINE*))*
+private end_block_ ::= NEWLINE+ (!END (statement NEWLINE*))*
+private then_block_ ::= NEWLINE+ (!ELSE !END (statement NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_command | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
+private small_statement ::= delvar_statement | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
 private unused_ ::= TOKEN
@@ -137,7 +138,7 @@ private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name
 private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_char] [custom_list_char] [custom_list_char]
 private custom_list_char ::= SIMPLE_VARIABLE | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-delvar_command ::= delvar_variable+ [statement]
+delvar_statement ::= delvar_variable+ [statement]
 private delvar_variable ::= "DelVar" (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
@@ -163,15 +164,15 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> [RPAREN] 
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
 if_statement ::= IF expr NEWLINE if_body
-private if_body ::= (then_statement [else_statement | END]) | statement
-then_statement ::= THEN then_block
-else_statement ::= ELSE end_block [END]
+private if_body ::= (then_block [else_block | END]) | statement
+then_block ::= THEN then_block_
+else_block ::= ELSE end_block_ [END]
 
-while_statement ::= WHILE expr end_block [END]
+while_statement ::= WHILE expr end_block_ [END]
 
-repeat_statement ::= REPEAT expr end_block [END]
+repeat_statement ::= REPEAT expr end_block_ [END]
 
-for_statement ::= for_initializer end_block [END]
+for_statement ::= for_initializer end_block_ [END]
 for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN]
 for_identifier ::= SIMPLE_VARIABLE
 {

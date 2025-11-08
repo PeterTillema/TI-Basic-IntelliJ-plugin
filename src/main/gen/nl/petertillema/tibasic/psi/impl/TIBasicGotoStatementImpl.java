@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicGotoStatementImpl extends ASTWrapperPsiElement implements TIBasicGotoStatement {
+public class TIBasicGotoStatementImpl extends TIBasicStatementImpl implements TIBasicGotoStatement {
 
   public TIBasicGotoStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
     visitor.visitGotoStatement(this);
   }

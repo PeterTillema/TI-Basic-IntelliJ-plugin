@@ -11,14 +11,14 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicThenStatementImpl extends ASTWrapperPsiElement implements TIBasicThenStatement {
+public class TIBasicElseBlockImpl extends ASTWrapperPsiElement implements TIBasicElseBlock {
 
-  public TIBasicThenStatementImpl(@NotNull ASTNode node) {
+  public TIBasicElseBlockImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitThenStatement(this);
+    visitor.visitElseBlock(this);
   }
 
   @Override
