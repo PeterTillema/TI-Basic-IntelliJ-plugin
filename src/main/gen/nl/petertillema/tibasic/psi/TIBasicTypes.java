@@ -58,7 +58,6 @@ public interface TIBasicTypes {
   IElementType PRGM_STATEMENT = new TIBasicElementType("PRGM_STATEMENT");
   IElementType RADIAN_EXPR = new TIBasicElementType("RADIAN_EXPR");
   IElementType REPEAT_STATEMENT = new TIBasicElementType("REPEAT_STATEMENT");
-  IElementType STATEMENT = new TIBasicElementType("STATEMENT");
   IElementType THEN_BLOCK = new TIBasicElementType("THEN_BLOCK");
   IElementType TRANSPOSE_EXPR = new TIBasicElementType("TRANSPOSE_EXPR");
   IElementType WHILE_STATEMENT = new TIBasicElementType("WHILE_STATEMENT");

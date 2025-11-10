@@ -21,16 +21,17 @@
 }
 
 tibasicFile ::= NEWLINE* [statements] NEWLINE*
-private statements ::= statement (NEWLINE+ statement)*
-statement ::= compound_statement | simple_statement
+private statements ::= statement_internal (NEWLINE+ statement_internal)*
+private statement_internal ::= compound_statement | simple_statement
+fake statement ::=
 
 private meta list ::= <<p>> (COMMA <<p>>)*
 
 private NEWLINE ::= CRLF | COLON
 private statement_recover ::= !NEWLINE
 
-private end_block_ ::= NEWLINE+ (!END (statement NEWLINE*))*
-private then_block_ ::= NEWLINE+ (!ELSE !END (statement NEWLINE*))*
+private end_block_ ::= NEWLINE+ (!END (statement_internal NEWLINE*))*
+private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
 private small_statement ::= delvar_statement | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
@@ -138,7 +139,7 @@ private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name
 private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_char] [custom_list_char] [custom_list_char]
 private custom_list_char ::= SIMPLE_VARIABLE | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-delvar_statement ::= delvar_variable+ [statement]
+delvar_statement ::= delvar_variable+ [statement_internal]
 private delvar_variable ::= "DelVar" (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
@@ -161,7 +162,7 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> [RPAREN] 
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
 if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] }
-private if_body ::= (then_block [else_block | END]) | statement
+private if_body ::= (then_block [else_block | END]) | statement_internal
 then_block ::= THEN then_block_ { methods=[getPresentation] }
 else_block ::= ELSE end_block_ [END] { methods=[getPresentation] }
 

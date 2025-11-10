@@ -11,7 +11,7 @@ import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import nl.petertillema.tibasic.psi.*;
 
-public abstract class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasicStatement {
+public class TIBasicStatementImpl extends ASTWrapperPsiElement implements TIBasicStatement {
 
   public TIBasicStatementImpl(@NotNull ASTNode node) {
     super(node);
