@@ -57,7 +57,7 @@ PRGM_CALL = "prgm" ([A-Zθ]|theta)([0-9A-Zθ]|theta){0,7}
 // Functions to be used in expressions
 EXPR_FUNCTIONS_WITH_ARGS = "round" | "pxl-Test" | "augment" | "rowSwap" | "row+" | "*row" | "*row+" | "max" | "min" | "R>Pr" | "R>Ptheta" | "R>Pθ" | "P>Rx" | "P>Ry" | "median" | "randM" | "mean" | "solve" |
     "seq" | "fnInt" | "nDeriv" | "fMin" | "fMax" | "sqrt" | "cuberoot" | "ln" | "e^^" | "log" | "10^^" | "sin" | "sin^-1" | "arcsin" | "asin" | "cos" | "cos^-1" | "arccos" | "acos" | "tan" | "tan^-1" |
-    "arctan" | "atan" | "sinh" | "sinh^-1" | "arcsinh" | "asinh" | "cosh" | "cosh^-1" | "arccosh" | "acosh" | "tanh" | "tanh^-1" |  "arctanh" | "atanh" | "int" | "abs" | "det" | "identity" | "dim" | "sum" | "prod" | "not" |
+    "arctan" | "atan" | "sinh" | "sinh^-1" | "arcsinh" | "asinh" | "cosh" | "cosh^-1" | "arccosh" | "acosh" | "tanh" | "tanh^-1" |  "arctanh" | "atanh" | "int" | "abs" | "det" | "identity" | "sum" | "prod" | "not" |
     "iPart" | "fPart" | "npv" | "irr" | "bal" | "SigmaPrn" | "SigmaInt" | ">Nom" | ">Eff" | "dbd" | "lcm" | "gcd" | "randInt" | "randBin" | "sub" | "stdDev" | "variance" | "inString" | "normalcdf" | "invNorm" | "tcdf" |
     "chi^2cdf" | "χ^2cdf" | "Fcdf" | "binompdf" | "binomcdf" | "poissonpdf" | "poissoncdf" | "geometpdf" | "geometcdf" | "normalpdf" | "tpdf" | "chi^2pdf" | "χ^2pdf" | "Fpdf" |
     "randNorm" | "conj" | "real" | "imag" | "angle" | "cumSum" | "expr" | "length" | "DeltaList" | "ΔList" | "ref" | "rref" | "remainder" | "checkTmr" | "timeCnv" | "dayOfWk" | "getDtStr" | "getTmStr" | "invT" | "eval" | "randIntNoRep" | "logBASE" | piecewise |
@@ -112,6 +112,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "Goto"                                                    { return TIBasicTypes.GOTO; }
     "Lbl"                                                     { return TIBasicTypes.LBL; }
     "DelVar"                                                  { return TIBasicTypes.DELVAR; }
+    "dim"                                                     { return TIBasicTypes.DIM; }
 
     // Operators and punctuation
     "->"                                                      { return TIBasicTypes.STO; }
@@ -133,6 +134,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     ">"                                                       { return TIBasicTypes.GT; }
     "<"                                                       { return TIBasicTypes.LT; }
     "~"                                                       { return TIBasicTypes.NEG; }
+    "×√"                                                      { return TIBasicTypes.XROOT; }
     "or"                                                      { return TIBasicTypes.OR; }
     "xor"                                                     { return TIBasicTypes.XOR; }
     "and"                                                     { return TIBasicTypes.AND; }

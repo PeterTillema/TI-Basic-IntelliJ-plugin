@@ -35,6 +35,11 @@ public interface TIBasicTokenSets {
             TIBasicTypes.COMMAND_NO_PARENS,
             TIBasicTypes.COMMAND_WITH_PARENS
     );
+    TokenSet FUNCTIONS = TokenSet.create(
+            TIBasicTypes.DIM,
+            TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS,
+            TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS
+    );
     TokenSet LOOPS = TokenSet.create(
             TIBasicTypes.FOR_STATEMENT,
             TIBasicTypes.REPEAT_STATEMENT,

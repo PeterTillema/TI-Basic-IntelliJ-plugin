@@ -62,10 +62,9 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
         keys.put(TIBasicTypes.RCURLY, BRACES);
 
         // Commands and functions
-        fillMap(keys, TIBasicTokenSets.COMMANDS, COMMAND);
         keys.put(TIBasicTypes.PRGM_CALL, PRGM_CALL);
-        keys.put(TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS, FUNCTION);
-        keys.put(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS, FUNCTION);
+        fillMap(keys, TIBasicTokenSets.COMMANDS, COMMAND);
+        fillMap(keys, TIBasicTokenSets.FUNCTIONS, FUNCTION);
 
         // Variables
         keys.put(TIBasicTypes.ANS_VARIABLE, ANS_IDENTIFIER);

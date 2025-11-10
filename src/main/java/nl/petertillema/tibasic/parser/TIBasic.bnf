@@ -97,7 +97,7 @@ ncr_expr ::= expr NCR expr
 negation_expr ::= NEG expr
 // Precedence 3
 pow_expr ::= expr POW expr
-xroot_expr ::= expr "×√" expr
+xroot_expr ::= expr XROOT expr
 // Precedence 2
 radian_expr ::= expr TO_RADIAN
 degree_expr ::= expr TO_DEGREE
@@ -133,7 +133,7 @@ assignment_target ::= assignment_target_matrix_index | assignment_target_list_in
 private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=2 }
 private assignment_target_list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
 private assignment_target_variable ::= LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_TOKENS
-private assignment_target_dim ::= "dim(" (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN] { pin=1 }
+private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN] { pin=1 }
 
 private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name
 private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_char] [custom_list_char] [custom_list_char]

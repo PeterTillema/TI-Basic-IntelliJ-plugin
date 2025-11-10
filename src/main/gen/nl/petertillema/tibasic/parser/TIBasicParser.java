@@ -177,22 +177,23 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "dim(" (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN]
+  // DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN]
   static boolean assignment_target_dim(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_dim")) return false;
+    if (!nextTokenIs(b, DIM)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, "dim(");
+    r = consumeTokens(b, 1, DIM, LPAREN);
     p = r; // pin = 1
-    r = r && report_error_(b, assignment_target_dim_1(b, l + 1));
-    r = p && assignment_target_dim_2(b, l + 1) && r;
+    r = r && report_error_(b, assignment_target_dim_2(b, l + 1));
+    r = p && assignment_target_dim_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   // LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE
-  private static boolean assignment_target_dim_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "assignment_target_dim_1")) return false;
+  private static boolean assignment_target_dim_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "assignment_target_dim_2")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
     if (!r) r = custom_list_with_l(b, l + 1);
@@ -201,8 +202,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   // [RPAREN]
-  private static boolean assignment_target_dim_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "assignment_target_dim_2")) return false;
+  private static boolean assignment_target_dim_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "assignment_target_dim_3")) return false;
     consumeToken(b, RPAREN);
     return true;
   }
@@ -1343,7 +1344,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         r = expr(b, l, 8);
         exit_section_(b, l, m, POW_EXPR, r, true, null);
       }
-      else if (g < 8 && consumeTokenSmart(b, "×√")) {
+      else if (g < 8 && consumeTokenSmart(b, XROOT)) {
         r = expr(b, l, 8);
         exit_section_(b, l, m, XROOT_EXPR, r, true, null);
       }

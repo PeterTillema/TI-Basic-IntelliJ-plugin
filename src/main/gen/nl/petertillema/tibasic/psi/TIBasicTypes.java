@@ -75,6 +75,7 @@ public interface TIBasicTypes {
   IElementType CRLF = new TIBasicTokenType("CRLF");
   IElementType CUSTOM_LIST_L = new TIBasicTokenType("CUSTOM_LIST_L");
   IElementType DELVAR = new TIBasicTokenType("DELVAR");
+  IElementType DIM = new TIBasicTokenType("DIM");
   IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");
@@ -127,6 +128,7 @@ public interface TIBasicTypes {
   IElementType WHILE = new TIBasicTokenType("WHILE");
   IElementType WINDOW_TOKENS = new TIBasicTokenType("WINDOW_TOKENS");
   IElementType XOR = new TIBasicTokenType("XOR");
+  IElementType XROOT = new TIBasicTokenType("XROOT");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
