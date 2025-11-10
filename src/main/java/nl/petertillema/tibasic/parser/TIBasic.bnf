@@ -140,7 +140,7 @@ private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_cha
 private custom_list_char ::= SIMPLE_VARIABLE | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 delvar_statement ::= delvar_variable+ [statement_internal]
-private delvar_variable ::= "DelVar" (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE) { pin=1 }
+private delvar_variable ::= DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
 goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER] { methods=[getReferences] }

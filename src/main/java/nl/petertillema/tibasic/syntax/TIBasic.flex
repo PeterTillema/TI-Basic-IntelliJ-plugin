@@ -111,6 +111,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "For"                                                     { return TIBasicTypes.FOR; }
     "Goto"                                                    { return TIBasicTypes.GOTO; }
     "Lbl"                                                     { return TIBasicTypes.LBL; }
+    "DelVar"                                                  { return TIBasicTypes.DELVAR; }
 
     // Operators and punctuation
     "->"                                                      { return TIBasicTypes.STO; }

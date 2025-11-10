@@ -74,6 +74,7 @@ public interface TIBasicTypes {
   IElementType COMMENT = new TIBasicTokenType("COMMENT");
   IElementType CRLF = new TIBasicTokenType("CRLF");
   IElementType CUSTOM_LIST_L = new TIBasicTokenType("CUSTOM_LIST_L");
+  IElementType DELVAR = new TIBasicTokenType("DELVAR");
   IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");

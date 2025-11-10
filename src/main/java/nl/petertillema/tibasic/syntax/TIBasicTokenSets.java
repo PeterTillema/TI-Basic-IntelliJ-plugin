@@ -31,6 +31,7 @@ public interface TIBasicTokenSets {
             TIBasicTypes.FOR,
             TIBasicTypes.GOTO,
             TIBasicTypes.LBL,
+            TIBasicTypes.DELVAR,
             TIBasicTypes.COMMAND_NO_PARENS,
             TIBasicTypes.COMMAND_WITH_PARENS
     );

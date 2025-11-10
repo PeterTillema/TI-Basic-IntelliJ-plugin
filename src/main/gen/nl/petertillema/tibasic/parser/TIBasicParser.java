@@ -384,11 +384,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // delvar_variable+ [statement_internal]
   public static boolean delvar_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_statement")) return false;
+    if (!nextTokenIs(b, DELVAR)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, DELVAR_STATEMENT, "<delvar statement>");
+    Marker m = enter_section_(b);
     r = delvar_statement_0(b, l + 1);
     r = r && delvar_statement_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, DELVAR_STATEMENT, r);
     return r;
   }
 
@@ -415,12 +416,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "DelVar" (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE)
+  // DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE)
   static boolean delvar_variable(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_variable")) return false;
+    if (!nextTokenIs(b, DELVAR)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
-    r = consumeToken(b, "DelVar");
+    r = consumeToken(b, DELVAR);
     p = r; // pin = 1
     r = r && delvar_variable_1(b, l + 1);
     exit_section_(b, l, m, r, p, null);
