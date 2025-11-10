@@ -33,7 +33,9 @@ public final class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
         var variants = new ArrayList<LookupElement>();
 
         for (var label : labels) {
-            variants.add(LookupElementBuilder.create(label.getLblName()).withPresentableText(label.getText()));
+            if (label.getLblName() != null) {
+                variants.add(LookupElementBuilder.create(label.getLblName()).withPresentableText(label.getText()));
+            }
         }
 
         return variants.toArray();

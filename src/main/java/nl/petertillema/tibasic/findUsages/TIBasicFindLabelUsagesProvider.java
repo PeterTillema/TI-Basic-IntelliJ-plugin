@@ -1,13 +1,12 @@
-package nl.petertillema.tibasic.refactoring;
+package nl.petertillema.tibasic.findUsages;
 
-import com.intellij.lang.cacheBuilder.VersionedWordsScanner;
 import com.intellij.lang.cacheBuilder.WordOccurrence;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.Processor;
-import nl.petertillema.tibasic.psi.TIBasicNamedElement;
+import nl.petertillema.tibasic.psi.TIBasicLblName;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.syntax.TIBasicLexerAdapter;
 import org.jetbrains.annotations.Nls;
@@ -26,7 +25,7 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
 
     @Override
     public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-        return psiElement instanceof TIBasicNamedElement;
+        return psiElement instanceof TIBasicLblName;
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
         return "";
     }
 
-    private static class GotoLabelWordScanner extends VersionedWordsScanner {
+    private static class GotoLabelWordScanner implements WordsScanner {
 
         @Override
         public void processWords(@NotNull CharSequence fileText, @NotNull Processor<? super WordOccurrence> processor) {

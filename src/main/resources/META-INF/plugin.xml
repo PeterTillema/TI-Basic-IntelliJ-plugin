@@ -70,7 +70,7 @@
                 implementation="nl.petertillema.tibasic.editor.formatting.TIBasicLanguageCodeStyleSettingsProvider"/>
         <lang.findUsagesProvider
                 language="TIBasic"
-                implementationClass="nl.petertillema.tibasic.refactoring.TIBasicFindLabelUsagesProvider"/>
+                implementationClass="nl.petertillema.tibasic.findUsages.TIBasicFindLabelUsagesProvider"/>
         <bundledColorScheme
                 order="after Light"
                 id="TIBasicSourceCoder3Light"
