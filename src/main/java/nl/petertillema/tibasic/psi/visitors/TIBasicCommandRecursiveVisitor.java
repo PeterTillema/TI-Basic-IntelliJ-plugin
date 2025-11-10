@@ -6,7 +6,6 @@ import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
-import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
@@ -17,11 +16,6 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
     @Override
     public void visitFile(@NotNull PsiFile file) {
         file.acceptChildren(this);
-    }
-
-    @Override
-    public void visitStatement(@NotNull TIBasicStatement o) {
-        o.acceptChildren(this);
     }
 
     @Override
@@ -37,14 +31,14 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
     @Override
     public void visitForStatement(@NotNull TIBasicForStatement o) {
         for (var statement : o.getStatementList()) {
-            visitStatement(statement);
+            statement.accept(this);
         }
     }
 
     @Override
     public void visitIfStatement(@NotNull TIBasicIfStatement o) {
         if (o.getStatement() != null) {
-            this.visitStatement(o.getStatement());
+            o.getStatement().accept(this);
         }
         if (o.getThenBlock() != null) {
             this.visitThenBlock(o.getThenBlock());
