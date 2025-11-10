@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.intellij.psi.TokenType.WHITE_SPACE;
+
 public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider {
 
     @Override
@@ -59,13 +61,19 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
             IElementType type;
             while ((type = lexer.getTokenType()) != null) {
                 if (type == TIBasicTypes.GOTO) {
-                    var beginLabelIndex = lexer.getTokenEnd();
+                    // Skip whitespace
+                    do {
+                        lexer.advance();
+                        type = lexer.getTokenType();
+                    } while (type != null && type == WHITE_SPACE);
+
+                    var beginLabelIndex = lexer.getTokenStart();
 
                     // Get everything up to the newline or end of the file
                     do {
                         lexer.advance();
                         type = lexer.getTokenType();
-                    } while (type != null && type != TIBasicTypes.CRLF);
+                    } while (type != null && type != TIBasicTypes.CRLF && type != TIBasicTypes.COLON);
 
                     // Eventually process the occurrence
                     var endLabelIndex = lexer.getTokenStart();
