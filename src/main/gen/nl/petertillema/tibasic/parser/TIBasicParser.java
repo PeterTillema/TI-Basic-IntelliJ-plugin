@@ -1443,18 +1443,28 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // EXPR_FUNCTIONS_WITH_ARGS LPAREN <<list expr>> [RPAREN]
+  // (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> [RPAREN]
   public static boolean func_expr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "func_expr")) return false;
-    if (!nextTokenIsSmart(b, EXPR_FUNCTIONS_WITH_ARGS)) return false;
+    if (!nextTokenIsSmart(b, DIM, EXPR_FUNCTIONS_WITH_ARGS)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, FUNC_EXPR, null);
-    r = consumeTokensSmart(b, 1, EXPR_FUNCTIONS_WITH_ARGS, LPAREN);
+    Marker m = enter_section_(b, l, _COLLAPSE_, FUNC_EXPR, "<func expr>");
+    r = func_expr_0(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, list(b, l + 1, expr_parser_));
+    r = r && report_error_(b, consumeToken(b, LPAREN));
+    r = p && report_error_(b, list(b, l + 1, expr_parser_)) && r;
     r = p && func_expr_3(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // EXPR_FUNCTIONS_WITH_ARGS | DIM
+  private static boolean func_expr_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "func_expr_0")) return false;
+    boolean r;
+    r = consumeTokenSmart(b, EXPR_FUNCTIONS_WITH_ARGS);
+    if (!r) r = consumeTokenSmart(b, DIM);
+    return r;
   }
 
   // [RPAREN]
