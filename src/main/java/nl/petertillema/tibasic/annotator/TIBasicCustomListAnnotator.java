@@ -20,7 +20,7 @@ public final class TIBasicCustomListAnnotator implements Annotator {
     private static final String FIRST_DIGIT_PATTERN = "([A-Zθ]|theta)";
     private static final String OTHER_DIGIT_PATTERN = "([0-9A-Zθ]|theta)";
     private static final Pattern CUSTOM_LIST_WITH_L_PATTERN = Pattern.compile("\\|L" + FIRST_DIGIT_PATTERN + OTHER_DIGIT_PATTERN + "{0,4}");
-    private static final Pattern CUSTOM_LIST_WITHOUT_L_PATTERN = Pattern.compile("^" + FIRST_DIGIT_PATTERN + OTHER_DIGIT_PATTERN + "{1,4}");
+    private static final Pattern CUSTOM_LIST_WITHOUT_L_PATTERN = Pattern.compile("^(?!L[1-6])" + FIRST_DIGIT_PATTERN + OTHER_DIGIT_PATTERN + "{1,4}");
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
