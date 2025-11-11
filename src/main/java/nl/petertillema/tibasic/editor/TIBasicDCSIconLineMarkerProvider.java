@@ -17,7 +17,6 @@ import nl.petertillema.tibasic.editor.dcs.impl.DCSMonochrome8Icon;
 import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
-import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,8 +40,7 @@ public final class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDe
         // Element should be a string, with the proper parents
         if (element.getNode().getElementType() != TIBasicTypes.STRING) return null;
         if (!(element.getParent() instanceof TIBasicLiteralExpr literalExpr)) return null;
-        if (!(literalExpr.getParent() instanceof TIBasicExprStatement exprStatement)) return null;
-        if (!(exprStatement.getParent() instanceof TIBasicStatement statement)) return null;
+        if (!(literalExpr.getParent() instanceof TIBasicExprStatement statement)) return null;
         if (!(statement.getParent() instanceof TIBasicFile file)) return null;
 
         // Statement should be the second child of the main file
