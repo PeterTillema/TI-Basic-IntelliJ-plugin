@@ -28,9 +28,15 @@ public class TIBasicExprStatementImpl extends TIBasicStatementImpl implements TI
   }
 
   @Override
-  @NotNull
+  @Nullable
+  public TIBasicAssignmentStatement getAssignmentStatement() {
+    return findChildByClass(TIBasicAssignmentStatement.class);
+  }
+
+  @Override
+  @Nullable
   public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+    return findChildByClass(TIBasicExpr.class);
   }
 
 }

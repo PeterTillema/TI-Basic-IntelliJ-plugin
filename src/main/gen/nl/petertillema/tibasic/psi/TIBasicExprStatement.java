@@ -7,7 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicExprStatement extends TIBasicStatement {
 
-  @NotNull
+  @Nullable
+  TIBasicAssignmentStatement getAssignmentStatement();
+
+  @Nullable
   TIBasicExpr getExpr();
 
 }

@@ -34,7 +34,7 @@ private end_block_ ::= NEWLINE+ (!END (statement_internal NEWLINE*))*
 private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_statement | goto_statement | lbl_statement | command_statement | prgm_statement | assignment_statement | expr_statement
+private small_statement ::= delvar_statement | goto_statement | lbl_statement | command_statement | prgm_statement | expr_statement
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
 private unused_ ::= TOKEN
@@ -122,8 +122,8 @@ anonymous_matrix_row ::= LBRACKET <<list expr>> [RBRACKET] { pin=1 }
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
-expr_statement ::= expr
-assignment_statement ::= expr STO assignment_target { pin=2 }
+expr_statement ::= expr assignment_statement?
+left assignment_statement ::= STO assignment_target { pin=1 }
 assignment_target ::= assignment_target_matrix_index | assignment_target_list_index | assignment_target_variable | assignment_target_dim
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
