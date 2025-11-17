@@ -73,18 +73,18 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" | "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn" | "FnOff" | "StorePic" | "RecallPic" | "StoreGDB" | "RecallGDB" |
     "Vertical" | "Horizontal" | "DrawInv" | "DrawF" | "Return" | "Pause" | "Stop" | "Input" | "Prompt" | "Disp" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" | "DelVar" | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" |
     "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" | "uvAxes" | "vwAxes" | "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" |
-    "BackgroundOn" | "BackgroundOff" | "Wait" | "Archive" | "UnArchive" | "SetUpEditor"
+    "BackgroundOn" | "BackgroundOff" | "Wait" | "Archive" | "UnArchive" | "SetUpEditor" | "DetectAsymOn" | "DetectAsymOff" | "Real" | "BorderColor"
 
 // Other tokens with higher priority (must be matched before COMMAND_NO_PARENS to avoid conflicts)
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin"
 
 OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_FV" | ">Rect" | ">Polar" | "SinReg" | "Logistic" | "LinRegTTest" | "T-Test" |
-    "ZInterval" | "2-SampTTest" | "2-SampFTest" | "TInterval" | "2-SampTInt" | "Pmt_End" | "Pmt_Bgn" | "Real" | "re^thetai" | "re^θi" | "a+bi" | "ClrAllLists" |
+    "ZInterval" | "2-SampTTest" | "2-SampFTest" | "TInterval" | "2-SampTInt" | "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "re^θi" | "a+bi" | "ClrAllLists" |
     "ModBoxplot" | "NormProbPlot" | "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" | "ZFrac1/2" | "ZFrac1/3" |
     "ZFrac1/4" | "ZFrac1/5" | "ZFrac1/8" | "ZFrac1/10" | "n/d" | "Un/d" | ">n/d<>Un/d" | ">F<>D" | "Sigma(" |
     "[MATHPRINT]" | "MATHPRINT" | "[CLASSIC]" | "CLASSIC" | "[n/d]" | "[Un/d]" | "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" | "FRAC" | "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARD ON" | "[STATWIZARD OFF]" |
-    "STATWIZARD OFF" | "GridLine" | "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "DetectAsymOn" | "DetectAsymOff" | "BorderColor" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" | "pieceWise(" | "xroot" |
+    "STATWIZARD OFF" | "GridLine" | "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" | "pieceWise(" | "xroot" |
     "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" | "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "ClrList" | "ClrTable" | "Histogram" | "xyLine" | "Scatter" | "LinReg(ax+b)"
 
 %state STRING
