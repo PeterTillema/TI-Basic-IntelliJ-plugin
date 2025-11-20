@@ -1,0 +1,4 @@
+<info textAttributesKey="TIBASIC_LIST_IDENTIFIER">|LABC</info>(3)+2->A
+A(3)+2-><info textAttributesKey="TIBASIC_LIST_IDENTIFIER">AB</info>
+A(3)+2-><info textAttributesKey="TIBASIC_LIST_IDENTIFIER">|LAB</info>
+DelVar <info textAttributesKey="TIBASIC_LIST_IDENTIFIER">|LA</info>DelVar BDelVar <info textAttributesKey="TIBASIC_LIST_IDENTIFIER">|LABC</info>min(L1->A
