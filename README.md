@@ -32,7 +32,6 @@ The source code can be found here: https://github.com/PeterTillema/TI-Basic-Inte
 The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/28722-ti-basic.
 
 ## Known issues
- - Allow chained DelVar with custom list names
  - Typing a "]" after typing the start of a matrix name first (i.e. "[A") inserts another right bracket.
  - Allow references from/to custom list names without the |L prefix
 
