@@ -53,6 +53,7 @@ public interface TIBasicTypes {
   IElementType NPR_EXPR = new TIBasicElementType("NPR_EXPR");
   IElementType OR_EXPR = new TIBasicElementType("OR_EXPR");
   IElementType PAREN_EXPR = new TIBasicElementType("PAREN_EXPR");
+  IElementType PLOT_STATEMENT = new TIBasicElementType("PLOT_STATEMENT");
   IElementType PLUS_EXPR = new TIBasicElementType("PLUS_EXPR");
   IElementType POW_2_EXPR = new TIBasicElementType("POW_2_EXPR");
   IElementType POW_3_EXPR = new TIBasicElementType("POW_3_EXPR");
@@ -108,6 +109,9 @@ public interface TIBasicTypes {
   IElementType NUMBER = new TIBasicTokenType("NUMBER");
   IElementType OR = new TIBasicTokenType("OR");
   IElementType PICTURE_VARIABLE = new TIBasicTokenType("PICTURE_VARIABLE");
+  IElementType PLOT_COMMAND = new TIBasicTokenType("PLOT_COMMAND");
+  IElementType PLOT_MARK = new TIBasicTokenType("PLOT_MARK");
+  IElementType PLOT_TYPE = new TIBasicTokenType("PLOT_TYPE");
   IElementType PLUS = new TIBasicTokenType("PLUS");
   IElementType POW = new TIBasicTokenType("POW");
   IElementType POW2 = new TIBasicTokenType("POW2");
@@ -266,6 +270,9 @@ public interface TIBasicTypes {
       }
       else if (type == PAREN_EXPR) {
         return new TIBasicParenExprImpl(node);
+      }
+      else if (type == PLOT_STATEMENT) {
+        return new TIBasicPlotStatementImpl(node);
       }
       else if (type == PLUS_EXPR) {
         return new TIBasicPlusExprImpl(node);

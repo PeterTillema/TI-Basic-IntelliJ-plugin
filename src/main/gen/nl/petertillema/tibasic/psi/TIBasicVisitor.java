@@ -187,6 +187,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
+  public void visitPlotStatement(@NotNull TIBasicPlotStatement o) {
+    visitStatement(o);
+  }
+
   public void visitPlusExpr(@NotNull TIBasicPlusExpr o) {
     visitExpr(o);
   }

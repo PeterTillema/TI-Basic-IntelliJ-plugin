@@ -33,7 +33,8 @@ public interface TIBasicTokenSets {
             TIBasicTypes.LBL,
             TIBasicTypes.DELVAR,
             TIBasicTypes.COMMAND_NO_PARENS,
-            TIBasicTypes.COMMAND_WITH_PARENS
+            TIBasicTypes.COMMAND_WITH_PARENS,
+            TIBasicTypes.PLOT_COMMAND
     );
     TokenSet FUNCTIONS = TokenSet.create(
             TIBasicTypes.DIM,

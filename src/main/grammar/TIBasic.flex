@@ -65,6 +65,7 @@ EXPR_FUNCTIONS_WITH_ARGS = "round" | "pxl-Test" | "augment" | "rowSwap" | "row+"
 EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey" | "getDate" | "getTime" | "startTmr" | "getDtFmt" | "getTmFmt" | "isClockOn" | "LEFT" | "CENTER" | "RIGHT"
 
 // Commands, which should be present at the start of the line
+PLOT_COMMAND = "Plot" [1-3]
 COMMAND_WITH_PARENS = "Text" | "Line" | "Pt-On" | "Pt-Off" | "Pt-Change" | "Pxl-On" | "Pxl-Off" | "Pxl-Change" | "Shade" | "Circle" | "Tangent" | "IS>" | "DS<" | "Output" | "Fill" | "SortA" | "SortD" | "Menu" | "Send" | "Get" | "Plot1" | "Plot2" | "Plot3" |
     "GraphColor" | "TextColor" | "Matr>list" | "List>matr" | "ShadeNorm" | "Shade_t" | "Shadechi^2" | "ShadeF" | "Z-Test" | "2-SampZTest" | "1-PropZTest" | "2-PropZTest" |
     "chi^2-Test" | "χ^2-Test" | "2-SampZInt" | "1-PropZInt" | "2-PropZInt" | "GraphStyle" | "GetCalc" | "Equ>String" | "String>Equ" | "Select" | "ANOVA" | "setDate" | "setTime" | "setDtFmt" | "setTmFmt" |
@@ -73,19 +74,23 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" | "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn" | "FnOff" | "StorePic" | "RecallPic" | "StoreGDB" | "RecallGDB" |
     "Vertical" | "Horizontal" | "DrawInv" | "DrawF" | "Return" | "Pause" | "Stop" | "Input" | "Prompt" | "Disp" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" | "DelVar" | "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" |
     "CoordOff" | "Connected" | "Thick" | "Dot" | "Dot-Thick" | "AxesOn" | "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" | "uvAxes" | "vwAxes" | "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" |
-    "BackgroundOn" | "BackgroundOff" | "Wait" | "Archive" | "UnArchive" | "SetUpEditor" | "DetectAsymOn" | "DetectAsymOff" | "Real" | "BorderColor"
+    "BackgroundOn" | "BackgroundOff" | "Wait" | "Archive" | "UnArchive" | "SetUpEditor" | "DetectAsymOn" | "DetectAsymOff" | "Real" | "BorderColor" | "ClrList"
+
+// Plots
+PLOT_TYPE = "Boxplot" | "xyLine" | "Scatter" | "Histogram" | "ModBoxplot" | "NormProbPlot"
+PLOT_MARK = "plotdot" | "plotcross" | "plotsquare"
 
 // Other tokens with higher priority (must be matched before COMMAND_NO_PARENS to avoid conflicts)
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin"
 
-OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_FV" | ">Rect" | ">Polar" | "SinReg" | "Logistic" | "LinRegTTest" | "T-Test" |
+OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_FV" | ">Rect" | ">Polar" | "SinReg" | "Logistic" | "LinRegTTest" | "T-Test" |
     "ZInterval" | "2-SampTTest" | "2-SampFTest" | "TInterval" | "2-SampTInt" | "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "re^θi" | "a+bi" | "ClrAllLists" |
-    "ModBoxplot" | "NormProbPlot" | "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" | "ZFrac1/2" | "ZFrac1/3" |
+    "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" | "ZFrac1/2" | "ZFrac1/3" |
     "ZFrac1/4" | "ZFrac1/5" | "ZFrac1/8" | "ZFrac1/10" | "n/d" | "Un/d" | ">n/d<>Un/d" | ">F<>D" | "Sigma(" |
     "[MATHPRINT]" | "MATHPRINT" | "[CLASSIC]" | "CLASSIC" | "[n/d]" | "[Un/d]" | "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" | "FRAC" | "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARD ON" | "[STATWIZARD OFF]" |
     "STATWIZARD OFF" | "GridLine" | "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" | "pieceWise(" | "xroot" |
-    "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" | "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "ClrList" | "ClrTable" | "Histogram" | "xyLine" | "Scatter" | "LinReg(ax+b)"
+    "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" | "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "ClrTable" | "LinReg(ax+b)"
 
 %state STRING
 
@@ -115,7 +120,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     "dim"                                                     { return TIBasicTypes.DIM; }
 
     // Operators and punctuation
-    "->"                                                      { return TIBasicTypes.STO; }
+    "->" | "→"                                                { return TIBasicTypes.STO; }
     "^^2"                                                     { return TIBasicTypes.POW2; }
     "^^3"                                                     { return TIBasicTypes.POW3; }
     "^^T"                                                     { return TIBasicTypes.TRANSPOSE; }
@@ -156,6 +161,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     {PRGM_CALL}                                               { return TIBasicTypes.PRGM_CALL; }
 
     // Commands and functions (multi-character tokens before single-char variables)
+    {PLOT_COMMAND}                                            { return TIBasicTypes.PLOT_COMMAND; }
     {COMMAND_WITH_PARENS}                                     { return TIBasicTypes.COMMAND_WITH_PARENS; }
     {COMMAND_NO_PARENS}                                       { return TIBasicTypes.COMMAND_NO_PARENS; }
     {EXPR_FUNCTIONS_WITH_ARGS}                                { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS; }
@@ -164,6 +170,8 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
     {OTHER_TOKEN}                                             { return TIBasicTypes.TOKEN; }
 
     // Multi-character variables (before simple variables)
+    {PLOT_TYPE}                                               { return TIBasicTypes.PLOT_TYPE; }
+    {PLOT_MARK}                                               { return TIBasicTypes.PLOT_MARK; }
     {MATH_VARIABLE}                                           { return TIBasicTypes.MATH_VARIABLE; }
     {ANS_VARIABLE}                                            { return TIBasicTypes.ANS_VARIABLE; }
     {LIST_VARIABLE}                                           { return TIBasicTypes.LIST_VARIABLE; }
@@ -186,7 +194,7 @@ OTHER_TOKEN = ">DMS" | ">Dec" | ">Frac" | "Boxplot" | "!" | "tvm_Pmt" | "tvm_I%"
 
 <STRING> {
     "\""                                                      { yybegin(YYINITIAL); return TIBasicTypes.STRING; }
-    "->"                                                      { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
+    "->" | "→"                                                { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "//"                                                      { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "\r\n"                                                    { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "\r"|"\n"                                                 { yypushback(1); yybegin(YYINITIAL); return TIBasicTypes.STRING; }

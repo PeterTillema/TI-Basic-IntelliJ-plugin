@@ -41,6 +41,7 @@ public final class TIBasicFormattingModelBuilder implements FormattingModelBuild
                 .after(TIBasicTypes.GOTO).spaces(1)
                 .after(TIBasicTypes.LBL).spaces(1)
                 .between(TIBasicTypes.COMMAND_WITH_PARENS, TIBasicTypes.LPAREN).none()
+                .between(TIBasicTypes.PLOT_COMMAND, TIBasicTypes.LPAREN).none()
                 // Functions
                 .between(TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS, TIBasicTypes.LPAREN).none()
                 // Operators
