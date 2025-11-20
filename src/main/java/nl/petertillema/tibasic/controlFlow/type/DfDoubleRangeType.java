@@ -54,19 +54,19 @@ public record DfDoubleRangeType(double from, double to, boolean invert, boolean 
             int to = Double.compare(val, this.to);
             return (from <= 0 && to <= 0) != invert;
         }
-        if (other instanceof DfDoubleRangeType range) {
-            if (range.nan && !nan) return false;
+        if (other instanceof DfDoubleRangeType(double from1, double v, boolean invert1, boolean nan1)) {
+            if (nan1 && !nan) return false;
             if (!invert && from == Double.NEGATIVE_INFINITY && to == Double.POSITIVE_INFINITY) return true;
-            int from = Double.compare(this.from, range.from);
-            int to = Double.compare(range.to, this.to);
+            int from = Double.compare(this.from, from1);
+            int to = Double.compare(v, this.to);
             if (invert) {
-                if (range.invert) {
+                if (invert1) {
                     return from >= 0 && to >= 0;
                 } else {
-                    return Double.compare(range.to, this.from) < 0 || Double.compare(range.from, this.to) > 0;
+                    return Double.compare(v, this.from) < 0 || Double.compare(from1, this.to) > 0;
                 }
             } else {
-                return !range.invert && from <= 0 && to <= 0;
+                return !invert1 && from <= 0 && to <= 0;
             }
         }
         return false;
@@ -92,20 +92,20 @@ public record DfDoubleRangeType(double from, double to, boolean invert, boolean 
             }
             return joinRange(value, value, exact);
         }
-        if (!(other instanceof DfDoubleRangeType range)) {
+        if (!(other instanceof DfDoubleRangeType(double from1, double v, boolean invert1, boolean nan1))) {
             return exact ? null : TOP;
         }
-        DfDoubleRangeType res = range.nan && !nan ? new DfDoubleRangeType(from, to, invert, true) : this;
-        if (range.invert) {
-            if (range.from > Double.NEGATIVE_INFINITY) {
-                res = res.joinRange(Double.NEGATIVE_INFINITY, nextDown(range.from), exact);
+        DfDoubleRangeType res = nan1 && !nan ? new DfDoubleRangeType(from, to, invert, true) : this;
+        if (invert1) {
+            if (from1 > Double.NEGATIVE_INFINITY) {
+                res = res.joinRange(Double.NEGATIVE_INFINITY, nextDown(from1), exact);
                 if (res == null) return null;
             }
-            if (range.to < Double.POSITIVE_INFINITY) {
-                res = res.joinRange(nextUp(range.to), Double.POSITIVE_INFINITY, exact);
+            if (v < Double.POSITIVE_INFINITY) {
+                res = res.joinRange(nextUp(v), Double.POSITIVE_INFINITY, exact);
             }
         } else {
-            res = res.joinRange(range.from, range.to, exact);
+            res = res.joinRange(from1, v, exact);
         }
         return res;
     }

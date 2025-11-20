@@ -1,5 +1,6 @@
 package nl.petertillema.tibasic.editor.dcs;
 
+import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
         MouseAdapter mouse = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int idx = indexAt(e.getX(), e.getY());
+                int idx = indexAt(e.getX());
                 setSelectedIndex(idx);
                 if (selectionListener != null) selectionListener.onSelected(idx);
             }
@@ -58,8 +59,8 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
             if (i == 0 && this.firstIndexIsTransparent) {
                 // Transparent swatch: draw checkerboard instead of plain fill
                 int tile = 2;
-                Color light = new JBColor(new Color(240, 240, 240), new Color(70, 70, 70));
-                Color dark = new JBColor(new Color(220, 220, 220), new Color(90, 90, 90));
+                Color light = new JBColor(Gray._240, Gray._70);
+                Color dark = new JBColor(Gray._220, Gray._90);
                 for (int yy = 0; yy < CELL; yy += tile) {
                     for (int xx = 0; xx < CELL; xx += tile) {
                         boolean isLight = (((xx / tile) + (yy / tile)) & 1) == 0;
@@ -79,7 +80,7 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
             // selection highlight (more explicit)
             if (i == selected) {
                 // Outer thick border
-                g2.setColor(new JBColor(new Color(0, 0, 0), new Color(255, 255, 255)));
+                g2.setColor(new JBColor(Gray._0, Gray._255));
                 g2.drawRect(px - 2, py - 2, CELL + 4, CELL + 4);
                 g2.drawRect(px - 1, py - 1, CELL + 2, CELL + 2);
             }
@@ -99,7 +100,7 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
 
     protected abstract List<Color> getPalette();
 
-    private int indexAt(int x, int y) {
+    private int indexAt(int x) {
         int gx = x - GAP;
         if (gx < 0) return -1;
         int stride = CELL + GAP;

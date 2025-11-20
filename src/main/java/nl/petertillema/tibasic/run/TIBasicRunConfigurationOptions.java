@@ -11,6 +11,8 @@ public final class TIBasicRunConfigurationOptions extends RunConfigurationOption
     private final StoredProperty<String> programTypeField = string("").provideDelegate(this, "programTypeField");
     private final StoredProperty<Boolean> archivedField = property(false).provideDelegate(this, "archivedField");
 
+    private TIBasicRunConfigurationOptions() {}
+
     public String getInputPathField() {
         return this.inputPathField.getValue(this);
     }

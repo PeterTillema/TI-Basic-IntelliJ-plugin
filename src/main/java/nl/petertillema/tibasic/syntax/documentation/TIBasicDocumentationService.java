@@ -67,7 +67,7 @@ public final class TIBasicDocumentationService {
         sb.append("</code>");
         sb.append(DocumentationMarkup.CONTENT_END);
 
-        ArrayList<String> syntaxes = new ArrayList<String>();
+        ArrayList<String> syntaxes = new ArrayList<>();
 
         for (TokenSyntax syntax : token.syntaxes()) {
             StringBuilder sb1 = new StringBuilder();
@@ -77,11 +77,11 @@ public final class TIBasicDocumentationService {
             sb1.append("Description: ");
             sb1.append(syntax.description());
 
-            ArrayList<String> fields = new ArrayList<String>();
+            ArrayList<String> fields = new ArrayList<>();
 
             // Eventually add the location
             if (syntax.location() instanceof ArrayNode arrayNode) {
-                ArrayList<String> elements = new ArrayList<String>();
+                ArrayList<String> elements = new ArrayList<>();
                 for (Iterator<JsonNode> it = arrayNode.elements(); it.hasNext(); ) {
                     JsonNode element = it.next();
                     if (element instanceof TextNode textNode) {

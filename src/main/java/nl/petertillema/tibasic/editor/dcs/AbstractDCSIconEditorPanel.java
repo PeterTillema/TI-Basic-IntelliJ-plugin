@@ -12,6 +12,7 @@ import java.util.List;
 public abstract class AbstractDCSIconEditorPanel extends JPanel {
 
     private static final int CELL_WIDTH = 16;
+    private static final int CELL_HEIGHT = 16;
     private static final int GAP = 1;
 
     private boolean dragging = false;
@@ -23,7 +24,7 @@ public abstract class AbstractDCSIconEditorPanel extends JPanel {
 
         setOpaque(true);
         setBackground(JBColor.PanelBackground);
-        setPreferredSize(new Dimension(this.getGridSize() * (CELL_WIDTH + GAP) + GAP, this.getGridSize() * (CELL_WIDTH + GAP) + GAP));
+        setPreferredSize(new Dimension(this.getGridSize() * (CELL_WIDTH + GAP) + GAP, this.getGridSize() * (CELL_HEIGHT + GAP) + GAP));
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -69,18 +70,18 @@ public abstract class AbstractDCSIconEditorPanel extends JPanel {
                 int tile = 8;
                 Color light = new JBColor(Gray._240, Gray._70);
                 Color dark = new JBColor(Gray._220, Gray._90);
-                for (int yy = 0; yy < CELL_WIDTH; yy += tile) {
+                for (int yy = 0; yy < CELL_HEIGHT; yy += tile) {
                     for (int xx = 0; xx < CELL_WIDTH; xx += tile) {
                         boolean isLight = (((xx / tile) + (yy / tile)) & 1) == 0;
                         g2.setColor(isLight ? light : dark);
                         int w = Math.min(tile, CELL_WIDTH - xx);
-                        int h = Math.min(tile, CELL_WIDTH - yy);
+                        int h = Math.min(tile, CELL_HEIGHT - yy);
                         g2.fillRect(px + xx, py + yy, w, h);
                     }
                 }
             } else {
                 g2.setColor(this.getPalette().get(pi));
-                g2.fillRect(px, py, CELL_WIDTH, CELL_WIDTH);
+                g2.fillRect(px, py, CELL_WIDTH, CELL_HEIGHT);
             }
         }
 
@@ -145,7 +146,7 @@ public abstract class AbstractDCSIconEditorPanel extends JPanel {
         int stride = CELL_WIDTH + GAP;
         int x = GAP + cx * stride;
         int y = GAP + cy * stride;
-        return new Rectangle(x, y, CELL_WIDTH, CELL_WIDTH);
+        return new Rectangle(x, y, CELL_WIDTH, CELL_HEIGHT);
     }
 
 }

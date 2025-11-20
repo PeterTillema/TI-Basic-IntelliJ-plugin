@@ -2,7 +2,6 @@ package nl.petertillema.tibasic.tokenization;
 
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.OutputStream;
@@ -31,10 +30,6 @@ public final class TIBasicTokenizerProcessHandler extends ProcessHandler {
     @Override
     public @Nullable OutputStream getProcessInput() {
         return null;
-    }
-
-    public void print(String text, Key<?> outputType) {
-        notifyTextAvailable(text, outputType);
     }
 
     public void println(String line) {

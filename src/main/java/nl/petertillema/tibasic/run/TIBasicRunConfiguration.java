@@ -1,6 +1,5 @@
 package nl.petertillema.tibasic.run;
 
-import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.ConfigurationFactory;
@@ -38,7 +37,7 @@ public final class TIBasicRunConfiguration extends RunConfigurationBase<TIBasicR
     }
 
     @Override
-    public @NotNull RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public @NotNull RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
         return new CommandLineState(environment) {
             @Override
             protected @NotNull ProcessHandler startProcess() {

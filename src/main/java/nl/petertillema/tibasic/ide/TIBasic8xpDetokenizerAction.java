@@ -73,7 +73,7 @@ public class TIBasic8xpDetokenizerAction extends AnAction {
             PsiFile newFile = PsiFileFactory.getInstance(e.getProject()).createFileFromText(newName, TIBasicFileType.INSTANCE, detokenized);
 
             // Eventually add to the parent directory
-            boolean caseSensitive = parentDirectory.getVirtualFile().isCaseSensitive();
+            boolean caseSensitive = parentDirectory.getVirtualFile().getFileSystem().isCaseSensitive();
             VirtualFile existing = ContainerUtil.find(parentDirectory.getVirtualFile().getChildren(),
                     item -> Comparing.strEqual(item.getName(), newName, caseSensitive));
             if (existing != null) {

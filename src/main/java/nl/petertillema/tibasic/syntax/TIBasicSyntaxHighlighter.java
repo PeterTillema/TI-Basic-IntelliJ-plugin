@@ -32,14 +32,11 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey LIST_IDENTIFIER = createTextAttributesKey("TIBASIC_LIST_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey EQUATION_IDENTIFIER = createTextAttributesKey("TIBASIC_EQUATION_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey PICTURE_IDENTIFIER = createTextAttributesKey("TIBASIC_PICTURE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
-    public static final TextAttributesKey GDB_IDENTIFIER = createTextAttributesKey("TIBASIC_GDB_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey STRING_IDENTIFIER = createTextAttributesKey("TIBASIC_STRING_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey SIMPLE_IDENTIFIER = createTextAttributesKey("TIBASIC_SIMPLE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey MATRIX_IDENTIFIER = createTextAttributesKey("TIBASIC_MATRIX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
-    public static final TextAttributesKey STATISTIC_IDENTIFIER = createTextAttributesKey("TIBASIC_STATISTIC_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey COLOR_IDENTIFIER = createTextAttributesKey("TIBASIC_COLOR_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey WINDOW_IDENTIFIER = createTextAttributesKey("TIBASIC_WINDOW_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
-    public static final TextAttributesKey IMAGE_IDENTIFIER = createTextAttributesKey("TIBASIC_IMAGE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey BAD_CHARACTER = createTextAttributesKey("TIBASIC_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
     private static final Map<IElementType, TextAttributesKey> keys;

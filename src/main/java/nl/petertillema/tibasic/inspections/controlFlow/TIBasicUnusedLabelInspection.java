@@ -29,7 +29,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
-        ArrayList<String> gotoLabels = new ArrayList<String>();
+        ArrayList<String> gotoLabels = new ArrayList<>();
 
         // Collect all the goto's and Menu's first
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {

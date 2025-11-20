@@ -76,7 +76,7 @@ public final class TIBasicFileTokenizer {
                 programName = programName == null ? "PROGRAM" : programName;
                 programName = programName
                         .trim()
-                        .replace("theta", "\u005B")
+                        .replace("theta", "[")
                         .toUpperCase()
                         .substring(0, Math.min(programName.length(), 8));
                 int programType = switch (options.getProgramTypeField()) {
