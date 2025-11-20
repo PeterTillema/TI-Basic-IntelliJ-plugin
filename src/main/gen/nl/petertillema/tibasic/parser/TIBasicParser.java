@@ -38,7 +38,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(ASSIGNMENT_STATEMENT, COMMAND_STATEMENT, DELVAR_STATEMENT, EXPR_STATEMENT,
       FOR_STATEMENT, GOTO_STATEMENT, IF_STATEMENT, LBL_STATEMENT,
-      PRGM_STATEMENT, REPEAT_STATEMENT, WHILE_STATEMENT),
+      MENU_STATEMENT, PRGM_STATEMENT, REPEAT_STATEMENT, WHILE_STATEMENT),
     create_token_set_(AND_EXPR, DEC_EXPR, DEGREE_EXPR, DIV_EXPR,
       DMS_EXPR, EQ_EXPR, EXPR, FRAC_EXPR,
       FUNC_EXPR, GE_EXPR, GT_EXPR, IMPLIED_MUL_EXPR,
@@ -911,6 +911,44 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // expr COMMA goto_name
+  public static boolean menu_option(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "menu_option")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, MENU_OPTION, "<menu option>");
+    r = expr(b, l + 1, -1);
+    p = r; // pin = 1
+    r = r && report_error_(b, consumeToken(b, COMMA));
+    r = p && goto_name(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // "Menu" LPAREN expr COMMA <<list menu_option>> [RPAREN]
+  public static boolean menu_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "menu_statement")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, MENU_STATEMENT, "<menu statement>");
+    r = consumeToken(b, "Menu");
+    p = r; // pin = 1
+    r = r && report_error_(b, consumeToken(b, LPAREN));
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, list(b, l + 1, TIBasicParser::menu_option)) && r;
+    r = p && menu_statement_5(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // [RPAREN]
+  private static boolean menu_statement_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "menu_statement_5")) return false;
+    consumeToken(b, RPAREN);
+    return true;
+  }
+
+  /* ********************************************************** */
   // PRGM_CALL
   public static boolean prgm_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "prgm_statement")) return false;
@@ -977,13 +1015,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // delvar_statement | goto_statement | lbl_statement | command_statement | prgm_statement | expr_statement
+  // delvar_statement | goto_statement | lbl_statement | menu_statement | command_statement | prgm_statement | expr_statement
   static boolean small_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "small_statement")) return false;
     boolean r;
     r = delvar_statement(b, l + 1);
     if (!r) r = goto_statement(b, l + 1);
     if (!r) r = lbl_statement(b, l + 1);
+    if (!r) r = menu_statement(b, l + 1);
     if (!r) r = command_statement(b, l + 1);
     if (!r) r = prgm_statement(b, l + 1);
     if (!r) r = expr_statement(b, l + 1);

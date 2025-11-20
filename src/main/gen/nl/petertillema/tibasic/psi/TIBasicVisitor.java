@@ -147,6 +147,14 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitMenuOption(@NotNull TIBasicMenuOption o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMenuStatement(@NotNull TIBasicMenuStatement o) {
+    visitStatement(o);
+  }
+
   public void visitMinusExpr(@NotNull TIBasicMinusExpr o) {
     visitExpr(o);
   }

@@ -43,6 +43,8 @@ public interface TIBasicTypes {
   IElementType LITERAL_EXPR = new TIBasicElementType("LITERAL_EXPR");
   IElementType LT_EXPR = new TIBasicElementType("LT_EXPR");
   IElementType MATRIX_INDEX = new TIBasicElementType("MATRIX_INDEX");
+  IElementType MENU_OPTION = new TIBasicElementType("MENU_OPTION");
+  IElementType MENU_STATEMENT = new TIBasicElementType("MENU_STATEMENT");
   IElementType MINUS_EXPR = new TIBasicElementType("MINUS_EXPR");
   IElementType MUL_EXPR = new TIBasicElementType("MUL_EXPR");
   IElementType NCR_EXPR = new TIBasicElementType("NCR_EXPR");
@@ -234,6 +236,12 @@ public interface TIBasicTypes {
       }
       else if (type == MATRIX_INDEX) {
         return new TIBasicMatrixIndexImpl(node);
+      }
+      else if (type == MENU_OPTION) {
+        return new TIBasicMenuOptionImpl(node);
+      }
+      else if (type == MENU_STATEMENT) {
+        return new TIBasicMenuStatementImpl(node);
       }
       else if (type == MINUS_EXPR) {
         return new TIBasicMinusExprImpl(node);

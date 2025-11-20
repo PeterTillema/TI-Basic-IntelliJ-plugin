@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElementVisitor;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
+import nl.petertillema.tibasic.psi.TIBasicMenuStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
@@ -27,12 +28,22 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         var gotoLabels = new ArrayList<String>();
 
-        // Collect all the goto's first
+        // Collect all the goto's and Menu's first
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
             @Override
             public void visitGotoStatement(@NotNull TIBasicGotoStatement o) {
                 if (o.getGotoName() != null) {
                     gotoLabels.add(o.getGotoName().getText());
+                }
+            }
+
+            @Override
+            public void visitMenuStatement(@NotNull TIBasicMenuStatement o) {
+                var options = o.getMenuOptionList();
+                for (var option : options) {
+                    if (option.getGotoName() != null) {
+                        gotoLabels.add(option.getGotoName().getText());
+                    }
                 }
             }
         });
