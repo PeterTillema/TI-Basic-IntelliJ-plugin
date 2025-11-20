@@ -104,7 +104,7 @@ public class TIBasicCommonDataflow {
             point.addValue(memState, value);
         }
 
-        public @NotNull Collection<PsiElement> getUnreachableRanges() {
+        public @NotNull Collection<PsiElement> getUnreachableElements() {
             return result != RunnerResult.OK ? Collections.emptyList() : myUnreachable;
         }
 
