@@ -57,7 +57,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            var element = descriptor.getPsiElement().getParent();
+            var element = descriptor.getPsiElement();
 
             // Eventually also delete the next newline
             if (element.getNextSibling() != null && element.getNextSibling().getNode().getElementType() == TIBasicTypes.CRLF) {
