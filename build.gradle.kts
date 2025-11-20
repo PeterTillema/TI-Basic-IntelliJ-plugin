@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.petertillema"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -41,8 +41,8 @@ intellijPlatform {
         }
 
         changeNotes = """
-            Created the initial version of the plugin. The plugin contains many extensions
-            used for advanced TI-BASIC code editing. See the description for more information.
+            Improved the codebase to be more mature, add a few inspections. Also wrote tests to test the correct
+            behaviour. See the description for more information.
         """.trimIndent()
     }
     publishing {
