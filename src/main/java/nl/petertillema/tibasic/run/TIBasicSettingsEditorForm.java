@@ -19,7 +19,7 @@ public class TIBasicSettingsEditorForm {
         this.programNameField.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
-                var text = ((JTextField) input).getText();
+                String text = ((JTextField) input).getText();
                 return !text.isEmpty() && text.length() <= 8;
             }
         });

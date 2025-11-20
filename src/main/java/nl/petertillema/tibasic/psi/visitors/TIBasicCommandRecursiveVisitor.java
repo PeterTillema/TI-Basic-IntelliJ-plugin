@@ -6,6 +6,7 @@ import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
+import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
@@ -30,7 +31,7 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
 
     @Override
     public void visitForStatement(@NotNull TIBasicForStatement o) {
-        for (var statement : o.getStatementList()) {
+        for (TIBasicStatement statement : o.getStatementList()) {
             statement.accept(this);
         }
     }

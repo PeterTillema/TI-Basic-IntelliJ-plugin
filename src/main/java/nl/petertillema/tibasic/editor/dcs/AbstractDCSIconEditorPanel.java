@@ -25,7 +25,7 @@ public abstract class AbstractDCSIconEditorPanel extends JPanel {
         setBackground(JBColor.PanelBackground);
         setPreferredSize(new Dimension(this.getGridSize() * (CELL_WIDTH + GAP) + GAP, this.getGridSize() * (CELL_WIDTH + GAP) + GAP));
 
-        var mouseAdapter = new MouseAdapter() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 dragging = true;
