@@ -52,8 +52,8 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
 
         @Override
         public void processWords(@NotNull CharSequence fileText, @NotNull Processor<? super WordOccurrence> processor) {
-            var lexer = new TIBasicLexerAdapter();
-            var occurrence = new WordOccurrence(fileText, 0, 0, null);
+            TIBasicLexerAdapter lexer = new TIBasicLexerAdapter();
+            WordOccurrence occurrence = new WordOccurrence(fileText, 0, 0, null);
 
             lexer.start(fileText);
 
@@ -66,7 +66,7 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
                         type = lexer.getTokenType();
                     } while (type != null && type == WHITE_SPACE);
 
-                    var beginLabelIndex = lexer.getTokenStart();
+                    int beginLabelIndex = lexer.getTokenStart();
 
                     // Get everything up to the newline or end of the file
                     do {
@@ -75,7 +75,7 @@ public final class TIBasicFindLabelUsagesProvider implements FindUsagesProvider 
                     } while (type != null && type != TIBasicTypes.CRLF && type != TIBasicTypes.COLON);
 
                     // Eventually process the occurrence
-                    var endLabelIndex = lexer.getTokenStart();
+                    int endLabelIndex = lexer.getTokenStart();
                     if (endLabelIndex > beginLabelIndex) {
                         occurrence.init(fileText, beginLabelIndex, endLabelIndex, null);
                         if (!processor.process(occurrence)) {

@@ -6,11 +6,13 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import nl.petertillema.tibasic.language.TIBasicFile;
+import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
 
@@ -20,19 +22,19 @@ public final class TIBasicLabelReference extends PsiReferenceBase<PsiElement> {
 
     @Override
     public @Nullable PsiElement resolve() {
-        var file = (TIBasicFile) myElement.getContainingFile();
-        var labels = TIBasicUtil.findLabels(file, getValue());
+        TIBasicFile file = (TIBasicFile) myElement.getContainingFile();
+        List<TIBasicLblStatement> labels = TIBasicUtil.findLabels(file, getValue());
 
         return !labels.isEmpty() ? labels.getFirst().getLblName() : null;
     }
 
     @Override
     public Object @NotNull [] getVariants() {
-        var file = (TIBasicFile) myElement.getContainingFile();
-        var labels = TIBasicUtil.findLabels(file);
-        var variants = new ArrayList<LookupElement>();
+        TIBasicFile file = (TIBasicFile) myElement.getContainingFile();
+        List<TIBasicLblStatement> labels = TIBasicUtil.findLabels(file);
+        ArrayList<LookupElement> variants = new ArrayList<>();
 
-        for (var label : labels) {
+        for (TIBasicLblStatement label : labels) {
             if (label.getLblName() != null) {
                 variants.add(LookupElementBuilder.create(label.getLblName()).withPresentableText(label.getText()));
             }

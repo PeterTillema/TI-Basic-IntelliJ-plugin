@@ -28,8 +28,8 @@ public final class DCSMonochrome16Icon extends AbstractDCSIcon {
     @Override
     protected int getData(int index) {
         if (this.iconData.length() < index / 4) return 0;
-        var nibble = Character.digit(this.iconData.charAt(index / 4), 16);
-        var mask = 1 << (3 - (index % 4));
+        int nibble = Character.digit(this.iconData.charAt(index / 4), 16);
+        int mask = 1 << (3 - (index % 4));
         return (nibble & mask) == 0 ? 0 : 1;
     }
 

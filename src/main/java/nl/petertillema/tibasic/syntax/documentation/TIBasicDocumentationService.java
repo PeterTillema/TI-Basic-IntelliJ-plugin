@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.intellij.lang.documentation.DocumentationMarkup;
 import com.intellij.openapi.components.Service;
 import nl.petertillema.tibasic.syntax.documentation.models.Token;
+import nl.petertillema.tibasic.syntax.documentation.models.TokenSyntax;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ public final class TIBasicDocumentationService {
         try (InputStream catalogJsonStream = this.getClass().getResourceAsStream("/catalog.json")) {
             if (catalogJsonStream == null) return;
 
-            var catalog = objectMapper.readValue(catalogJsonStream, new TypeReference<Map<String, Token>>() {
+            Map<String, Token> catalog = objectMapper.readValue(catalogJsonStream, new TypeReference<>() {
             });
-            for (var token : catalog.entrySet()) {
+            for (Map.Entry<String, Token> token : catalog.entrySet()) {
                 addToken(token.getValue(), token.getKey());
             }
         } catch (Exception ignored) {
@@ -43,19 +44,19 @@ public final class TIBasicDocumentationService {
     }
 
     private void addToken(Token token, String bytes) {
-        var html = getTokenDoc(token, bytes);
+        String html = getTokenDoc(token, bytes);
 
         TOKEN_DOCUMENTATION.put(token.name(), html);
         if (token.accessibleName() != null) TOKEN_DOCUMENTATION.put(token.accessibleName(), html);
         if (token.nameVariants() != null) {
-            for (var variant : token.nameVariants()) {
+            for (String variant : token.nameVariants()) {
                 TOKEN_DOCUMENTATION.put(variant, html);
             }
         }
     }
 
     private String getTokenDoc(Token token, String bytes) {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append(DocumentationMarkup.DEFINITION_START);
         sb.append(token.name());
         sb.append(DocumentationMarkup.DEFINITION_END);
@@ -66,23 +67,23 @@ public final class TIBasicDocumentationService {
         sb.append("</code>");
         sb.append(DocumentationMarkup.CONTENT_END);
 
-        var syntaxes = new ArrayList<String>();
+        ArrayList<String> syntaxes = new ArrayList<String>();
 
-        for (var syntax : token.syntaxes()) {
-            var sb1 = new StringBuilder();
+        for (TokenSyntax syntax : token.syntaxes()) {
+            StringBuilder sb1 = new StringBuilder();
             sb1.append("<code>");
             sb1.append(syntax.syntax());
             sb1.append("</code><br><br>");
             sb1.append("Description: ");
             sb1.append(syntax.description());
 
-            var fields = new ArrayList<String>();
+            ArrayList<String> fields = new ArrayList<String>();
 
             // Eventually add the location
             if (syntax.location() instanceof ArrayNode arrayNode) {
-                var elements = new ArrayList<String>();
+                ArrayList<String> elements = new ArrayList<String>();
                 for (Iterator<JsonNode> it = arrayNode.elements(); it.hasNext(); ) {
-                    var element = it.next();
+                    JsonNode element = it.next();
                     if (element instanceof TextNode textNode) {
                         elements.add("<code>" + textNode.textValue() + "</code>");
                     }

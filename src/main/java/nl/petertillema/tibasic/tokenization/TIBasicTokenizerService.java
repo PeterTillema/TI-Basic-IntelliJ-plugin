@@ -3,9 +3,11 @@ package nl.petertillema.tibasic.tokenization;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.progress.ProgressIndicator;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public final class TIBasicTokenizerService {
                         if (i + 3 >= text.length()) {
                             return new TokenizeResult(TokenizeStatus.FAIL, text.length() - 1, new byte[0]);
                         }
-                        var b = Integer.parseInt(text.substring(i + 2, i + 4), 16);
+                        int b = Integer.parseInt(text.substring(i + 2, i + 4), 16);
                         output.add(new byte[]{(byte) b});
                         i += 4;
                         continue;
@@ -59,7 +61,7 @@ public final class TIBasicTokenizerService {
                         if (i + 5 >= text.length()) {
                             return new TokenizeResult(TokenizeStatus.FAIL, text.length() - 1, new byte[0]);
                         }
-                        var b = Integer.parseInt(text.substring(i + 2, i + 6), 16);
+                        int b = Integer.parseInt(text.substring(i + 2, i + 6), 16);
                         output.add(new byte[]{(byte) (b % 256), (byte) (b / 256)});
                         i += 6;
                         continue;
@@ -104,14 +106,14 @@ public final class TIBasicTokenizerService {
             throw new RuntimeException("Not enough input data");
         }
 
-        var i = 17 + 55 + 2;
-        var out = new StringBuilder();
-        var currBytes = new byte[0];
+        int i = 17 + 55 + 2;
+        StringBuilder out = new StringBuilder();
+        byte[] currBytes = new byte[0];
 
         while (i < bytes.length - 2) {
             currBytes = appendByte(currBytes, bytes[i]);
             i++;
-            var foundToken = TOKEN_TABLE_REVERSED.get(new TokenBytes(currBytes));
+            String foundToken = TOKEN_TABLE_REVERSED.get(new TokenBytes(currBytes));
             if (foundToken == null) {
                 if (currBytes.length >= 3) {
                     throw new RuntimeException("Invalid bytes encountered");
@@ -141,10 +143,10 @@ public final class TIBasicTokenizerService {
         try (InputStream tokensXmlStream = this.getClass().getResourceAsStream("/tokens.xml")) {
             if (tokensXmlStream == null) return;
 
-            var factory = DocumentBuilderFactory.newInstance();
-            var builder = factory.newDocumentBuilder();
-            var document = builder.parse(tokensXmlStream);
-            var mainTokens = document.getElementsByTagName("tokens").item(0);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(tokensXmlStream);
+            Node mainTokens = document.getElementsByTagName("tokens").item(0);
             if (mainTokens != null) {
                 this.loadAllTokens(mainTokens, new byte[0]);
             }
@@ -204,7 +206,7 @@ public final class TIBasicTokenizerService {
             }
         }
 
-        var tokenBytes = new TokenBytes(bytes);
+        TokenBytes tokenBytes = new TokenBytes(bytes);
         for (String key : keys) {
             TOKEN_TABLE.putIfAbsent(key, tokenBytes);
             TOKEN_TABLE_REVERSED.putIfAbsent(tokenBytes, key);

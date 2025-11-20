@@ -25,12 +25,12 @@ public final class DCSIconEditorService {
 
     public void showPopup(RelativePoint relativePoint, String iconData, Consumer<String> onSave) {
         // Setup main panels
-        var editorPanel = switch (iconData.length()) {
+        AbstractDCSIconEditorPanel editorPanel = switch (iconData.length()) {
             case 16 -> new DCSMonochrome8IconEditorPanel(iconData);
             case 64 -> new DCSMonochrome16IconEditorPanel(iconData);
             default -> new DCSColoredIconEditorPanel(iconData);
         };
-        var palettePanel = switch (iconData.length()) {
+        AbstractDCSColorPalettePanel palettePanel = switch (iconData.length()) {
             case 16 -> new DCSMonochrome8ColorPalettePanel();
             case 64 -> new DCSMonochrome16ColorPalettePanel();
             default -> new DCSColoredColorPalettePanel();

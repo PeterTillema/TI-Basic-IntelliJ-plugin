@@ -9,7 +9,7 @@ public record TokenBytes(byte[] bytes) {
 
     @Override
     public int hashCode() {
-        var hash = 0;
+        int hash = 0;
         for (byte aByte : bytes) {
             hash = hash * 256 + (int) aByte;
         }

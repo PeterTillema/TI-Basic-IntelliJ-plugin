@@ -4,9 +4,13 @@ import com.intellij.codeInsight.daemon.GutterName;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.FunctionUtil;
 import nl.petertillema.tibasic.editor.dcs.AbstractDCSIcon;
@@ -44,15 +48,15 @@ public final class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDe
         if (!(statement.getParent() instanceof TIBasicFile file)) return null;
 
         // Statement should be the second child of the main file
-        var children = file.getChildren();
+        PsiElement[] children = file.getChildren();
         if (children.length < 4) return null;
         if (children[2].getNode().getElementType() != TIBasicTypes.CRLF || children[3] != statement) return null;
 
         // Icon is valid, let's check the length
-        var iconData = element.getText().replace("\"", "");
+        String iconData = element.getText().replace("\"", "");
         if (iconData.length() > 256) return null;
 
-        var icon = switch (iconData.length()) {
+        AbstractDCSIcon icon = switch (iconData.length()) {
             case 16 -> new DCSMonochrome8Icon(iconData);
             case 64 -> new DCSMonochrome16Icon(iconData);
             default -> new DCSColoredIcon(iconData);
@@ -76,15 +80,15 @@ public final class TIBasicDCSIconLineMarkerProvider extends LineMarkerProviderDe
         private static void onIconClick(MouseEvent e, PsiElement element, String data) {
             if (!element.isWritable()) return;
 
-            var relativePoint = new RelativePoint(e.getComponent(), e.getPoint());
-            var project = element.getProject();
-            var file = element.getContainingFile();
-            var document = PsiDocumentManager.getInstance(project).getDocument(file);
+            RelativePoint relativePoint = new RelativePoint(e.getComponent(), e.getPoint());
+            Project project = element.getProject();
+            PsiFile file = element.getContainingFile();
+            Document document = PsiDocumentManager.getInstance(project).getDocument(file);
 
             DCSIconEditorService.getInstance().showPopup(relativePoint, data, newData -> {
                 if (document == null) return;
-                var quoted = '"' + (newData == null ? "" : newData) + '"';
-                var range = element.getTextRange();
+                String quoted = '"' + (newData == null ? "" : newData) + '"';
+                TextRange range = element.getTextRange();
                 Runnable action = () -> {
                     document.replaceString(range.getStartOffset(), range.getEndOffset(), quoted);
                     PsiDocumentManager.getInstance(project).commitDocument(document);

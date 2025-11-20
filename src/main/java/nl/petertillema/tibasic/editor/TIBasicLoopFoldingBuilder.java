@@ -17,11 +17,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbAware {
     @Override
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-        var descriptors = new ArrayList<FoldingDescriptor>();
+        List<FoldingDescriptor> descriptors = new ArrayList<>();
 
         root.accept(new TIBasicCommandRecursiveVisitor() {
 
@@ -32,11 +33,11 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                 if (o.getThenBlock() != null) {
                     if (o.getElseBlock() != null) {
                         // Add for "If" + "Then"
-                        var ifStartOffset = o.getTextRange().getStartOffset();
-                        var ifThenLength = o.getThenBlock().getTextRangeInParent().getEndOffset() - 1;
-                        var ifText = o.getText().substring(0, o.getExpr().getTextRangeInParent().getEndOffset());
+                        int ifStartOffset = o.getTextRange().getStartOffset();
+                        int ifThenLength = o.getThenBlock().getTextRangeInParent().getEndOffset() - 1;
+                        String ifText = o.getText().substring(0, o.getExpr().getTextRangeInParent().getEndOffset());
 
-                        var descriptor = new FoldingDescriptor(
+                        FoldingDescriptor descriptor = new FoldingDescriptor(
                                 o.getNode(),
                                 TextRange.from(ifStartOffset, ifThenLength),
                                 null,
@@ -74,11 +75,11 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
             }
 
             private void addLoopDescriptor(PsiElement o, int textOffsetToCollapse) {
-                var absoluteStartOffset = o.getTextRange().getStartOffset();
-                var totalLength = o.getTextLength();
-                var textToDisplay = o.getText().substring(0, textOffsetToCollapse);
+                int absoluteStartOffset = o.getTextRange().getStartOffset();
+                int totalLength = o.getTextLength();
+                String textToDisplay = o.getText().substring(0, textOffsetToCollapse);
 
-                var descriptor = new FoldingDescriptor(
+                FoldingDescriptor descriptor = new FoldingDescriptor(
                         o.getNode(),
                         TextRange.from(absoluteStartOffset, totalLength),
                         null,

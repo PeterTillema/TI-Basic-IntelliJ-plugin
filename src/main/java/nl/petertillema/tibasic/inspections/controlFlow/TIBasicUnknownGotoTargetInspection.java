@@ -20,7 +20,7 @@ public final class TIBasicUnknownGotoTargetInspection extends LocalInspectionToo
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
-        var lblLabels = new ArrayList<String>();
+        ArrayList<String> lblLabels = new ArrayList<>();
 
         // Collect all the labels first
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {

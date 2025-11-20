@@ -16,7 +16,7 @@ public final class TIBasicFormattingModelBuilder implements FormattingModelBuild
 
     @Override
     public @NotNull FormattingModel createModel(@NotNull FormattingContext formattingContext) {
-        var codeStyleSettings = formattingContext.getCodeStyleSettings();
+        CodeStyleSettings codeStyleSettings = formattingContext.getCodeStyleSettings();
         return FormattingModelProvider.createFormattingModelForPsiFile(
                 formattingContext.getContainingFile(),
                 new TIBasicBlock(

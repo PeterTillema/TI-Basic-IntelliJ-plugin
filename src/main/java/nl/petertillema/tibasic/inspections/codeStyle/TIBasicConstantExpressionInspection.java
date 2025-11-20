@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
+import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicDivExpr;
 import nl.petertillema.tibasic.psi.TIBasicEqExpr;
@@ -141,14 +142,14 @@ public final class TIBasicConstantExpressionInspection extends LocalInspectionTo
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            var element = descriptor.getPsiElement();
+            PsiElement element = descriptor.getPsiElement();
             if (element == null) return;
-            var evaluator = getEvaluator(element);
+            BiFunction<BigDecimal, BigDecimal, BigDecimal> evaluator = getEvaluator(element);
             if (evaluator == null) return;
 
-            var result = evaluator.apply(new BigDecimal(element.getFirstChild().getText()), new BigDecimal(element.getLastChild().getText()));
-            var tempBasicFile = createFromText(project, result.toString());
-            var literalExpr = PsiTreeUtil.findChildOfType(tempBasicFile, TIBasicLiteralExpr.class);
+            BigDecimal result = evaluator.apply(new BigDecimal(element.getFirstChild().getText()), new BigDecimal(element.getLastChild().getText()));
+            TIBasicFile tempBasicFile = createFromText(project, result.toString());
+            TIBasicLiteralExpr literalExpr = PsiTreeUtil.findChildOfType(tempBasicFile, TIBasicLiteralExpr.class);
             if (literalExpr == null) return;
 
             element.replace(literalExpr);
@@ -196,8 +197,8 @@ public final class TIBasicConstantExpressionInspection extends LocalInspectionTo
             Predicate<BigDecimal> nonZeroPredicate = num1 -> num1.compareTo(BigDecimal.ZERO) != 0;
 
             return (num1, num2) -> {
-                var result1 = nonZeroPredicate.test(num1);
-                var result2 = nonZeroPredicate.test(num2);
+                boolean result1 = nonZeroPredicate.test(num1);
+                boolean result2 = nonZeroPredicate.test(num2);
                 return logicalTest.test(result1, result2) ? BigDecimal.ONE : BigDecimal.ZERO;
             };
         }

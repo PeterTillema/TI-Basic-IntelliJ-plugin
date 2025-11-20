@@ -6,6 +6,7 @@ import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
+import com.intellij.psi.PsiElement;
 import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
@@ -19,6 +20,8 @@ import nl.petertillema.tibasic.psi.impl.TIBasicRepeatStatementImpl;
 import nl.petertillema.tibasic.psi.impl.TIBasicThenBlockImpl;
 import nl.petertillema.tibasic.psi.impl.TIBasicWhileStatementImpl;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static com.intellij.psi.util.PsiTreeUtil.getChildrenOfAnyType;
 
@@ -47,23 +50,23 @@ public record TIBasicStructureViewElement(
 
     @Override
     public @NotNull String getAlphaSortKey() {
-        var name = element.getName();
+        String name = element.getName();
         return name != null ? name : "";
     }
 
     @Override
     public @NotNull ItemPresentation getPresentation() {
-        var presentation = element.getPresentation();
+        ItemPresentation presentation = element.getPresentation();
         return presentation != null ? presentation : new PresentationData();
     }
 
     @Override
     public TreeElement @NotNull [] getChildren() {
-        var elementToCheck = element;
+        NavigatablePsiElement elementToCheck = element;
         if (element instanceof TIBasicIfStatement statement && statement.getElseBlock() == null) {
             elementToCheck = (TIBasicThenBlockImpl) statement.getThenBlock();
         }
-        var loopChildren = getChildrenOfAnyType(elementToCheck,
+        List<PsiElement> loopChildren = getChildrenOfAnyType(elementToCheck,
                 TIBasicWhileStatement.class,
                 TIBasicRepeatStatement.class,
                 TIBasicForStatement.class,

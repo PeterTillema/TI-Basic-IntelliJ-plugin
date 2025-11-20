@@ -49,7 +49,7 @@ public abstract class AbstractDCSColorPalettePanel extends JPanel {
         g2.setColor(JBColor.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        var palette = this.getPalette();
+        List<Color> palette = this.getPalette();
 
         int stride = CELL + GAP;
         for (int i = 0; i < palette.size(); i++) {

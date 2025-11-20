@@ -40,19 +40,19 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        var elementToCheck = getMainElementToCheck(element);
+        PsiElement elementToCheck = getMainElementToCheck(element);
         if (elementToCheck == null) return;
 
-        var lastChild = getDeepestLast(elementToCheck);
-        var originalLastChild = lastChild;
-        var firstToDelete = lastChild;
+        PsiElement lastChild = getDeepestLast(elementToCheck);
+        PsiElement originalLastChild = lastChild;
+        PsiElement firstToDelete = lastChild;
         while (lastChild != null && CLOSING_PARENTHESIS_TYPES.contains(lastChild.getNode().getElementType())) {
             firstToDelete = lastChild;
             lastChild = prevLeaf(lastChild);
         }
 
         if (lastChild != originalLastChild) {
-            var startOffset = firstToDelete.getTextRange().getStartOffset();
+            int startOffset = firstToDelete.getTextRange().getStartOffset();
             holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.parenthesis.description"))
                     .range(TextRange.from(startOffset, originalLastChild.getTextRange().getEndOffset() - startOffset))
                     .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
@@ -87,9 +87,9 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
 
         @Override
         public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-            var current = firstToDelete;
+            PsiElement current = firstToDelete;
             while (current != null && current.getTextRange().getStartOffset() <= lastToDelete.getTextRange().getStartOffset()) {
-                var next = nextLeaf(current);
+                PsiElement next = nextLeaf(current);
                 current.delete();
                 current = next;
             }

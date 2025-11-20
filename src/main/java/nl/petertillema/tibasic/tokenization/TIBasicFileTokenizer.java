@@ -6,6 +6,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.LineColumn;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import nl.petertillema.tibasic.run.TIBasicRunConfigurationOptions;
@@ -56,36 +57,36 @@ public final class TIBasicFileTokenizer {
                 source = Pattern.compile("\\s+//.*/", Pattern.MULTILINE).matcher(source).replaceAll("");
 
                 // Tokenize the entire source
-                var tokenizerService = ApplicationManager.getApplication().getService(TIBasicTokenizerService.class);
-                var tokenizeResult = tokenizerService.tokenize(source, indicator);
+                TIBasicTokenizerService tokenizerService = ApplicationManager.getApplication().getService(TIBasicTokenizerService.class);
+                TokenizeResult tokenizeResult = tokenizerService.tokenize(source, indicator);
 
                 if (tokenizeResult.status() == TokenizeStatus.FAIL) {
                     // todo: count for comments and indentation
-                    var lineColumn = StringUtil.offsetToLineColumn(source, tokenizeResult.errorOffset());
+                    LineColumn lineColumn = StringUtil.offsetToLineColumn(source, tokenizeResult.errorOffset());
                     reporter.accept("Error encountered at line " + (lineColumn.line + 1) + ", column " + lineColumn.column);
                     onFinished.run();
                     return;
                 }
 
                 byte[] bytes = tokenizeResult.out();
-                var programDataSize = bytes.length + 2;
+                int programDataSize = bytes.length + 2;
 
                 // Get some output properties
-                var programName = options.getProgramNameField();
+                String programName = options.getProgramNameField();
                 programName = programName == null ? "PROGRAM" : programName;
                 programName = programName
                         .trim()
                         .replace("theta", "\u005B")
                         .toUpperCase()
                         .substring(0, Math.min(programName.length(), 8));
-                var programType = switch (options.getProgramTypeField()) {
+                int programType = switch (options.getProgramTypeField()) {
                     case "Protected Program" -> 0x06;
                     case "AppVar" -> 0x17;
                     default -> 0x05;
                 };
-                var archived = options.getArchivedField();
+                boolean archived = options.getArchivedField();
 
-                var innerBuffer = ByteBuffer.allocate(bytes.length + 19);
+                ByteBuffer innerBuffer = ByteBuffer.allocate(bytes.length + 19);
                 innerBuffer.order(ByteOrder.LITTLE_ENDIAN);
                 innerBuffer.putShort((short) 0x0D);                                                         // Header size
                 innerBuffer.putShort((short) programDataSize);                                              // Data size 2
@@ -97,14 +98,14 @@ public final class TIBasicFileTokenizer {
                 innerBuffer.putShort((short) programDataSize);                                              // Data size 3
                 innerBuffer.putShort((short) bytes.length);                                                 // Data size 4
                 innerBuffer.put(bytes);                                                                     // Main data
-                var innerBytes = innerBuffer.array();
+                byte[] innerBytes = innerBuffer.array();
 
-                var checksum = 0;
-                for (var b : innerBytes) {
+                int checksum = 0;
+                for (byte b : innerBytes) {
                     checksum = (checksum + (b & 0xFF)) % 0x10000;
                 }
 
-                var buffer = ByteBuffer.allocate(bytes.length + 76);
+                ByteBuffer buffer = ByteBuffer.allocate(bytes.length + 76);
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
                 buffer.put("**TI83F*".getBytes());                                                          // Main header
                 buffer.put(new byte[]{0x1A, 0x0A, 0x00});                                                   // Magic tokens
@@ -113,11 +114,11 @@ public final class TIBasicFileTokenizer {
                 buffer.putShort((short) innerBytes.length);                                                 // Data size 1
                 buffer.put(innerBytes);                                                                     // Program data
                 buffer.putShort((short) checksum);                                                          // Checksum
-                var bufferBytes = buffer.array();
+                byte[] bufferBytes = buffer.array();
 
                 // Write the output file
                 try {
-                    var outputFile = new File(options.getOutputPathField());
+                    File outputFile = new File(options.getOutputPathField());
                     ensureParent(outputFile);
                     try (FileOutputStream out = new FileOutputStream(outputFile)) {
                         out.write(bufferBytes);

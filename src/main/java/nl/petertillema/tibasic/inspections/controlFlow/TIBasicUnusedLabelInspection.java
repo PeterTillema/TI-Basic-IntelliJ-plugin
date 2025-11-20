@@ -6,10 +6,12 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
+import nl.petertillema.tibasic.psi.TIBasicMenuOption;
 import nl.petertillema.tibasic.psi.TIBasicMenuStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
@@ -17,6 +19,7 @@ import nl.petertillema.tibasic.psi.visitors.TIBasicCommandRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.intellij.codeInspection.ProblemHighlightType.LIKE_UNUSED_SYMBOL;
 
@@ -26,7 +29,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
-        var gotoLabels = new ArrayList<String>();
+        ArrayList<String> gotoLabels = new ArrayList<String>();
 
         // Collect all the goto's and Menu's first
         holder.getFile().accept(new TIBasicCommandRecursiveVisitor() {
@@ -39,8 +42,8 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
             @Override
             public void visitMenuStatement(@NotNull TIBasicMenuStatement o) {
-                var options = o.getMenuOptionList();
-                for (var option : options) {
+                List<TIBasicMenuOption> options = o.getMenuOptionList();
+                for (TIBasicMenuOption option : options) {
                     if (option.getGotoName() != null) {
                         gotoLabels.add(option.getGotoName().getText());
                     }
@@ -68,7 +71,7 @@ public final class TIBasicUnusedLabelInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            var element = descriptor.getPsiElement();
+            PsiElement element = descriptor.getPsiElement();
 
             // Eventually also delete the next newline
             if (element.getNextSibling() != null && element.getNextSibling().getNode().getElementType() == TIBasicTypes.CRLF) {

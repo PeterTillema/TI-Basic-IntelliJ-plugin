@@ -19,6 +19,7 @@ import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
@@ -76,7 +77,7 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
                 if (isExprFunction.test(element.getFirstChild())) return false;
 
-                var literalExprs = findChildrenOfType(element, TIBasicLiteralExpr.class);
+                Collection<TIBasicLiteralExpr> literalExprs = findChildrenOfType(element, TIBasicLiteralExpr.class);
                 return literalExprs.stream()
                         .map(PsiElement::getFirstChild)
                         .noneMatch(isExprFunction);
@@ -93,7 +94,7 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            var element = descriptor.getPsiElement().getParent();
+            PsiElement element = descriptor.getPsiElement().getParent();
 
             // Eventually also delete the next newline
             if (element.getNextSibling() != null && element.getNextSibling().getNode().getElementType() == TIBasicTypes.CRLF) {
@@ -112,7 +113,7 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            var lastChild = descriptor.getPsiElement().getLastChild();
+            PsiElement lastChild = descriptor.getPsiElement().getLastChild();
             if (lastChild == null) {
                 // If there is no child at all, delete it immediately
                 descriptor.getPsiElement().delete();

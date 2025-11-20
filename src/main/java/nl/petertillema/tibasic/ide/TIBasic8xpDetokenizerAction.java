@@ -6,6 +6,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.refactoring.SkipOverwriteChoice;
 import com.intellij.util.containers.ContainerUtil;
@@ -19,13 +22,13 @@ public class TIBasic8xpDetokenizerAction extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
-        var file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-        var psiFile = e.getData(CommonDataKeys.PSI_FILE);
+        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
         if (file == null || e.getProject() == null || psiFile == null) {
             e.getPresentation().setVisible(false);
         } else {
-            var name = file.getName();
-            var index = name.lastIndexOf('.');
+            String name = file.getName();
+            int index = name.lastIndexOf('.');
             String extension = null;
             if (index > 0) {
                 extension = name.substring(index + 1);
@@ -44,12 +47,12 @@ public class TIBasic8xpDetokenizerAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        var file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-        var psiFile = e.getData(CommonDataKeys.PSI_FILE);
+        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
         if (file == null || e.getProject() == null || psiFile == null) return;
 
-        var name = file.getName();
-        var index = name.lastIndexOf('.');
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
         String newName;
         String extension = null;
         if (index > 0) {
@@ -59,22 +62,22 @@ public class TIBasic8xpDetokenizerAction extends AnAction {
             newName = name + ".basic";
         }
 
-        var parentDirectory = psiFile.getContainingDirectory();
+        PsiDirectory parentDirectory = psiFile.getContainingDirectory();
         if (!"8xp".equalsIgnoreCase(extension)) return;
 
         try {
-            var bytes = file.contentsToByteArray();
+            byte[] bytes = file.contentsToByteArray();
 
-            var service = ApplicationManager.getApplication().getService(TIBasicTokenizerService.class);
-            var detokenized = service.detokenize(bytes);
-            var newFile = PsiFileFactory.getInstance(e.getProject()).createFileFromText(newName, TIBasicFileType.INSTANCE, detokenized);
+            TIBasicTokenizerService service = ApplicationManager.getApplication().getService(TIBasicTokenizerService.class);
+            String detokenized = service.detokenize(bytes);
+            PsiFile newFile = PsiFileFactory.getInstance(e.getProject()).createFileFromText(newName, TIBasicFileType.INSTANCE, detokenized);
 
             // Eventually add to the parent directory
-            var caseSensitive = parentDirectory.getVirtualFile().isCaseSensitive();
-            var existing = ContainerUtil.find(parentDirectory.getVirtualFile().getChildren(),
+            boolean caseSensitive = parentDirectory.getVirtualFile().isCaseSensitive();
+            VirtualFile existing = ContainerUtil.find(parentDirectory.getVirtualFile().getChildren(),
                     item -> Comparing.strEqual(item.getName(), newName, caseSensitive));
             if (existing != null) {
-                var choice = SkipOverwriteChoice.askUser(parentDirectory, newName, "Create", false);
+                SkipOverwriteChoice choice = SkipOverwriteChoice.askUser(parentDirectory, newName, "Create", false);
                 if (choice == SkipOverwriteChoice.OVERWRITE) {
                     ApplicationManager.getApplication().runWriteAction(() -> {
                         try {

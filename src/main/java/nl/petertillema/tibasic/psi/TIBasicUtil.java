@@ -1,13 +1,16 @@
 package nl.petertillema.tibasic.psi;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.language.TIBasicFileType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public final class TIBasicUtil {
@@ -17,7 +20,7 @@ public final class TIBasicUtil {
     }
 
     public static List<TIBasicLblStatement> findLabels(TIBasicFile file, String key) {
-        var labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
+        Collection<TIBasicLblStatement> labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
 
         return labels.stream()
                 .filter(label -> label.getLblName() != null)
@@ -26,12 +29,12 @@ public final class TIBasicUtil {
     }
 
     public static List<TIBasicLblStatement> findLabels(TIBasicFile file) {
-        var labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
+        Collection<TIBasicLblStatement> labels = PsiTreeUtil.findChildrenOfType(file, TIBasicLblStatement.class);
         return new ArrayList<>(labels);
     }
 
     public static List<TIBasicAssignmentStatement> findAssignments(TIBasicFile file, String key) {
-        var assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
+        Collection<TIBasicAssignmentStatement> assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
 
         return assignments.stream()
                 .filter(assignment -> assignment.getAssignmentTarget() != null)
@@ -40,13 +43,13 @@ public final class TIBasicUtil {
     }
 
     public static List<TIBasicAssignmentStatement> findAssignments(TIBasicFile file) {
-        var assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
+        Collection<TIBasicAssignmentStatement> assignments = PsiTreeUtil.findChildrenOfType(file, TIBasicAssignmentStatement.class);
 
         return new ArrayList<>(assignments);
     }
 
     public static List<TIBasicForStatement> findForLoops(TIBasicFile file, String key) {
-        var forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
+        Collection<TIBasicForStatement> forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
 
         return forLoops.stream()
                 .filter(forLoop -> forLoop.getNode().getChildren(null)[1].getText().equals(key))
@@ -54,19 +57,19 @@ public final class TIBasicUtil {
     }
 
     public static List<TIBasicForStatement> findForLoops(TIBasicFile file) {
-        var forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
+        Collection<TIBasicForStatement> forLoops = PsiTreeUtil.findChildrenOfType(file, TIBasicForStatement.class);
 
         return new ArrayList<>(forLoops);
     }
 
     public static String getTextUntilNewline(PsiElement element) {
         StringBuilder sb = new StringBuilder();
-        var node = element.getNode();
+        ASTNode node = element.getNode();
         if (node == null) return "";
 
-        var current = node.getFirstChildNode();
+        ASTNode current = node.getFirstChildNode();
         while (current != null) {
-            var type = current.getElementType();
+            IElementType type = current.getElementType();
             if (type.equals(TIBasicTypes.COLON) || type.equals(TIBasicTypes.CRLF)) break;
             sb.append(current.getText());
             current = current.getTreeNext();

@@ -132,8 +132,8 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
                 if (!(expressions.getFirst() instanceof TIBasicLiteralExpr l1)) return;
                 if (!(expressions.getLast() instanceof TIBasicLiteralExpr l2)) return;
 
-                var type1 = getLiteralType(l1);
-                var type2 = getLiteralType(l2);
+                IElementType type1 = getLiteralType(l1);
+                IElementType type2 = getLiteralType(l2);
 
                 // Anything with "Ans" is not checked
                 if (type1 == TIBasicTypes.ANS_VARIABLE || type2 == TIBasicTypes.ANS_VARIABLE) return;
@@ -143,14 +143,14 @@ public final class TIBasicIncompatibleOperatorOperandsInspection extends LocalIn
                         (type2 == TIBasicTypes.STRING || type2 == TIBasicTypes.STRING_VARIABLE)) return;
 
                 // Doing something with equations and strings is never allowed
-                var invalidOperandTypes = List.of(
+                List<@NotNull IElementType> invalidOperandTypes = List.of(
                         TIBasicTypes.EQUATION_VARIABLE,
                         TIBasicTypes.STRING,
                         TIBasicTypes.STRING_VARIABLE
                 );
                 if (!invalidOperandTypes.contains(type1) && !invalidOperandTypes.contains(type2)) return;
 
-                var message = TIBasicMessageBundle.message("inspection.incompatible.operands.description", operator);
+                String message = TIBasicMessageBundle.message("inspection.incompatible.operands.description", operator);
                 holder.registerProblem(element, message, GENERIC_ERROR);
             }
 

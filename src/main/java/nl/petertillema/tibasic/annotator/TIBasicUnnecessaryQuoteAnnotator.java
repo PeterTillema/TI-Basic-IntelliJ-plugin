@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
+import nl.petertillema.tibasic.language.TIBasicFile;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
@@ -33,16 +34,16 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        var elementToCheck = getMainElementToCheck(element);
+        PsiElement elementToCheck = getMainElementToCheck(element);
         if (elementToCheck == null) return;
 
-        var text = elementToCheck.getText();
+        String text = elementToCheck.getText();
         if (text.charAt(text.length() - 1) == '"') {
             // Check if the statement has whitespace and a comment attached
-            var statement = getParentOfType(elementToCheck, TIBasicStatement.class);
+            TIBasicStatement statement = getParentOfType(elementToCheck, TIBasicStatement.class);
             if (hasCommentSiblingAtSameLine(statement)) return;
 
-            var endOffset = elementToCheck.getTextRange().getEndOffset();
+            int endOffset = elementToCheck.getTextRange().getEndOffset();
 
             holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.quote.description"))
                     .range(TextRange.from(endOffset - 1, 1))
@@ -85,14 +86,14 @@ public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
         @Override
         public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-            var element = file.findElementAt(this.offset);
+            PsiElement element = file.findElementAt(this.offset);
             if (element == null) return;
 
             String text = element.getText();
-            var tempBasicFile = createFromText(project, text.substring(0, text.length() - 1));
-            var literalExpr = PsiTreeUtil.findChildOfType(tempBasicFile, TIBasicLiteralExpr.class);
+            TIBasicFile tempBasicFile = createFromText(project, text.substring(0, text.length() - 1));
+            TIBasicLiteralExpr literalExpr = PsiTreeUtil.findChildOfType(tempBasicFile, TIBasicLiteralExpr.class);
             if (literalExpr == null) return;
-            var newElement = literalExpr.getFirstChild();
+            PsiElement newElement = literalExpr.getFirstChild();
 
             element.replace(newElement);
         }

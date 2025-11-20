@@ -8,10 +8,13 @@ import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import nl.petertillema.tibasic.language.TIBasicFile;
+import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
+import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<PsiElement> {
 
@@ -21,15 +24,15 @@ public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<
 
     @Override
     public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
-        var file = (TIBasicFile) myElement.getContainingFile();
-        var assignments = TIBasicUtil.findAssignments(file, getValue());
-        var forLoops = TIBasicUtil.findForLoops(file, getValue());
-        var results = new ArrayList<ResolveResult>();
+        TIBasicFile file = (TIBasicFile) myElement.getContainingFile();
+        List<TIBasicAssignmentStatement> assignments = TIBasicUtil.findAssignments(file, getValue());
+        List<TIBasicForStatement> forLoops = TIBasicUtil.findForLoops(file, getValue());
+        ArrayList<ResolveResult> results = new ArrayList<>();
 
-        for (var assignment : assignments) {
+        for (TIBasicAssignmentStatement assignment : assignments) {
             results.add(new PsiElementResolveResult(assignment));
         }
-        for (var forLoop : forLoops) {
+        for (TIBasicForStatement forLoop : forLoops) {
             results.add(new PsiElementResolveResult(forLoop));
         }
 
@@ -38,19 +41,19 @@ public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<
 
     @Override
     public Object @NotNull [] getVariants() {
-        var file = (TIBasicFile) myElement.getContainingFile();
-        var assignments = TIBasicUtil.findAssignments(file);
-        var forLoops = TIBasicUtil.findForLoops(file);
-        var variants = new ArrayList<LookupElement>();
+        TIBasicFile file = (TIBasicFile) myElement.getContainingFile();
+        List<TIBasicAssignmentStatement> assignments = TIBasicUtil.findAssignments(file);
+        List<TIBasicForStatement> forLoops = TIBasicUtil.findForLoops(file);
+        ArrayList<LookupElement> variants = new ArrayList<>();
 
-        for (var assignment : assignments) {
+        for (TIBasicAssignmentStatement assignment : assignments) {
             if (assignment.getAssignmentTarget() != null) {
                 variants.add(LookupElementBuilder.create(assignment.getAssignmentTarget()).withTypeText(assignment.getText()));
             }
         }
-        for (var forLoop : forLoops) {
-            var endOffset = forLoop.getForInitializer().getTextRangeInParent().getEndOffset();
-            var text = forLoop.getText().substring(0, endOffset);
+        for (TIBasicForStatement forLoop : forLoops) {
+            int endOffset = forLoop.getForInitializer().getTextRangeInParent().getEndOffset();
+            String text = forLoop.getText().substring(0, endOffset);
             variants.add(LookupElementBuilder.create(forLoop.getForInitializer().getForIdentifier()).withTypeText(text));
         }
 

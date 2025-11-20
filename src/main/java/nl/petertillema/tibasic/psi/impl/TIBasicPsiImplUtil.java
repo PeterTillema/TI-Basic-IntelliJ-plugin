@@ -5,6 +5,7 @@ import com.intellij.openapi.util.NlsSafe;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForIdentifier;
@@ -69,7 +70,7 @@ public final class TIBasicPsiImplUtil {
     }
 
     public static PsiReference[] getReferences(TIBasicLiteralExpr element) {
-        var type = element.getFirstChild().getNode().getElementType();
+        IElementType type = element.getFirstChild().getNode().getElementType();
 
         if (type == TIBasicTypes.SIMPLE_VARIABLE ||
                 type == TIBasicTypes.ANS_VARIABLE ||

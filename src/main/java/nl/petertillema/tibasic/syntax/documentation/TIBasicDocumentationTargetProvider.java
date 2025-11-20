@@ -2,6 +2,7 @@ package nl.petertillema.tibasic.syntax.documentation;
 
 import com.intellij.platform.backend.documentation.DocumentationTarget;
 import com.intellij.platform.backend.documentation.DocumentationTargetProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.language.TIBasicFile;
@@ -26,7 +27,7 @@ public final class TIBasicDocumentationTargetProvider implements DocumentationTa
         if (offset == file.getTextLength()) {
             offset = Math.max(0, offset - 1);
         }
-        var element = file.findElementAt(offset);
+        PsiElement element = file.findElementAt(offset);
         if (element == null) return List.of();
 
         if (!ALLOWED_DOCUMENTATION_TYPES.contains(element.getNode().getElementType())) return List.of();

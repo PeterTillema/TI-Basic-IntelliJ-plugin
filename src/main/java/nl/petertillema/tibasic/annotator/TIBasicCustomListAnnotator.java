@@ -30,20 +30,20 @@ public final class TIBasicCustomListAnnotator implements Annotator {
         // Quick filter before the pattern matching
         if ((element instanceof TIBasicImpliedMulExpr || element instanceof TIBasicLiteralExpr || element instanceof TIBasicAssignmentTarget) &&
                 element.getText().contains("|L")) {
-            var matcher = CUSTOM_LIST_WITH_L_PATTERN.matcher(element.getText());
+            Matcher matcher = CUSTOM_LIST_WITH_L_PATTERN.matcher(element.getText());
             addFromMatcher(element, holder, matcher);
         }
 
         // Also check the target of an assignment, which doesn't necessarily need the |L prefix
         if (element instanceof TIBasicAssignmentTarget) {
-            var matcher = CUSTOM_LIST_WITHOUT_L_PATTERN.matcher(element.getText());
+            Matcher matcher = CUSTOM_LIST_WITHOUT_L_PATTERN.matcher(element.getText());
             addFromMatcher(element, holder, matcher);
         }
 
         // Custom list names in DelVar are not literal expressions, so a custom match is necessary
         if (element instanceof TIBasicDelvarStatement) {
             int startIndex = -1;
-            var child = element.getFirstChild();
+            PsiElement child = element.getFirstChild();
             while (child != null) {
                 if (child instanceof TIBasicStatement) break;
                 if (child.getNode().getElementType() == TIBasicTypes.DELVAR && startIndex != -1) {
@@ -56,7 +56,7 @@ public final class TIBasicCustomListAnnotator implements Annotator {
                 child = child.getNextSibling();
             }
             if (startIndex != -1) {
-                var lastChild = element.getLastChild();
+                PsiElement lastChild = element.getLastChild();
                 if (lastChild instanceof TIBasicStatement) lastChild = lastChild.getPrevSibling();
                 addAnnotation(holder, startIndex, lastChild.getTextRange().getEndOffset() - startIndex);
             }

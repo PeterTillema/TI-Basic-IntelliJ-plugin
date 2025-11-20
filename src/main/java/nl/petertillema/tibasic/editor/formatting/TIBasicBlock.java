@@ -12,6 +12,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.FormatterUtil;
+import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
@@ -49,9 +50,9 @@ public final class TIBasicBlock implements ASTBlock {
     @Override
     public @NotNull @Unmodifiable List<Block> getSubBlocks() {
         if (subBlocks == null) {
-            var children = node.getChildren(null);
+            ASTNode[] children = node.getChildren(null);
             subBlocks = new ArrayList<>(children.length);
-            for (var child : children) {
+            for (ASTNode child : children) {
                 if (isWhitespaceOrEmpty(child)) continue;
                 subBlocks.add(makeSubBlock(child));
             }
@@ -60,7 +61,7 @@ public final class TIBasicBlock implements ASTBlock {
     }
 
     private Block makeSubBlock(ASTNode childNode) {
-        var childIndent = Indent.getNoneIndent();
+        Indent childIndent = Indent.getNoneIndent();
 
         // The second check is necessary to only match children which belong to the actual statements in the loop,
         // and not the normal nodes. For example, "WHILE" is a child node from the "WHILE_STATEMENT", but should
@@ -103,7 +104,7 @@ public final class TIBasicBlock implements ASTBlock {
     @Override
     public boolean isIncomplete() {
         if (node.getElementType() == TIBasicTypes.THEN_BLOCK) {
-            var lastChildElementType = node.getLastChildNode().getElementType();
+            IElementType lastChildElementType = node.getLastChildNode().getElementType();
             return lastChildElementType != TIBasicTypes.ELSE && lastChildElementType != TIBasicTypes.END;
         }
 

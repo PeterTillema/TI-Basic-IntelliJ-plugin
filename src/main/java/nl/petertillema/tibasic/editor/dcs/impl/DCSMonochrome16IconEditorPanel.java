@@ -43,15 +43,15 @@ public final class DCSMonochrome16IconEditorPanel extends AbstractDCSIconEditorP
 
     @Override
     protected int getData(int index) {
-        var nibble = Character.digit(this.data[index / 4], 16);
-        var mask = 1 << ((3 - index % 4));
+        int nibble = Character.digit(this.data[index / 4], 16);
+        int mask = 1 << ((3 - index % 4));
         return (nibble & mask) == 0 ? 0 : 1;
     }
 
     @Override
     protected void setData(int index, int paletteIndex) {
-        var nibble = Character.digit(this.data[index / 4], 16);
-        var mask = 1 << (3 - (index % 4));
+        int nibble = Character.digit(this.data[index / 4], 16);
+        int mask = 1 << (3 - (index % 4));
         nibble = paletteIndex == 0 ? (nibble & ~mask) : (nibble | mask);
         this.data[index / 4] = toHex(nibble);
     }
