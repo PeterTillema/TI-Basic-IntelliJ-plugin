@@ -4,71 +4,55 @@ import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
 import nl.petertillema.tibasic.language.TIBasicFile;
-import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
-import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
-import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
-import nl.petertillema.tibasic.psi.TIBasicExprStatement;
-import nl.petertillema.tibasic.psi.TIBasicForInitializer;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
-import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.psi.util.PsiTreeUtil.nextLeaf;
 import static nl.petertillema.tibasic.psi.TIBasicUtil.createFromText;
 
 public final class TIBasicUnnecessaryQuoteAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        PsiElement elementToCheck = getMainElementToCheck(element);
-        if (elementToCheck == null) return;
+        if (!(element instanceof TIBasicLiteralExpr literalExpr)) return;
+        String text = element.getText();
+        if (text.length() < 2 || text.charAt(text.length() - 1) != '"') return;
 
-        String text = elementToCheck.getText();
-        if (text.charAt(text.length() - 1) == '"') {
-            // Check if the statement has whitespace and a comment attached
-            TIBasicStatement statement = getParentOfType(elementToCheck, TIBasicStatement.class);
-            if (hasCommentSiblingAtSameLine(statement)) return;
+        ASTNode node = literalExpr.getFirstChild().getNode();
+        if (node.getElementType() != TIBasicTypes.STRING) return;
 
-            int endOffset = elementToCheck.getTextRange().getEndOffset();
-
-            holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.quote.description"))
-                    .range(TextRange.from(endOffset - 1, 1))
-                    .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
-                    .withFix(new RemoveUnnecessaryQuoteQuickFix(endOffset - 1))
-                    .create();
+        PsiElement nextLeaf = nextLeaf(element);
+        while (nextLeaf != null) {
+            if (nextLeaf instanceof PsiComment) return;
+            IElementType elementType = nextLeaf.getNode().getElementType();
+            if (elementType == TIBasicTypes.CRLF || elementType == TIBasicTypes.STO) break;
+            if (!(nextLeaf instanceof PsiWhiteSpace)) return;
+            nextLeaf = nextLeaf(nextLeaf);
         }
-    }
 
-    private boolean hasCommentSiblingAtSameLine(PsiElement element) {
-        while (element != null) {
-            if (element.getNode().getElementType() == TIBasicTypes.CRLF) return false;
-            if (element.getNode().getElementType() == TIBasicTypes.COMMENT) return true;
-            element = element.getNextSibling();
-        }
-        return false;
-    }
-
-    private @Nullable PsiElement getMainElementToCheck(PsiElement element) {
-        if (element instanceof TIBasicAssignmentStatement assignmentStatement) return assignmentStatement.getExpr();
-        if (element instanceof TIBasicExprStatement exprStatement) return exprStatement.getExpr();
-        if (element instanceof TIBasicCommandStatement ||
-                element instanceof TIBasicAssignmentTarget ||
-                element instanceof TIBasicForInitializer) return element;
-        return null;
+        int endOffset = element.getTextRange().getEndOffset();
+        holder.newAnnotation(HighlightSeverity.INFORMATION, TIBasicMessageBundle.message("annotator.unnecessary.quote.description"))
+                .range(TextRange.from(endOffset - 1, 1))
+                .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL)
+                .withFix(new RemoveUnnecessaryQuoteQuickFix(endOffset - 1))
+                .create();
     }
 
     private static class RemoveUnnecessaryQuoteQuickFix extends BaseIntentionAction {
