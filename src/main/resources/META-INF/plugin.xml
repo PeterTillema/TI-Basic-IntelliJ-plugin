@@ -102,6 +102,11 @@
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.structure.TIBasicStructureViewFactory"/>
         <breadcrumbsInfoProvider implementation="nl.petertillema.tibasic.editor.TIBasicBreadCrumbsProvider" />
+        <toolWindow
+                factoryClass="nl.petertillema.tibasic.ide.CEmu.CEmuToolWindowFactory"
+                anchor="right"
+                icon="nl.petertillema.tibasic.language.TIBasicIcons.FILE"
+                id="CEmu" />
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>
