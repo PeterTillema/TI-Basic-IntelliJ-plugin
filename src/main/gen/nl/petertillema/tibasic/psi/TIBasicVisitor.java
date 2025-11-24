@@ -119,6 +119,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
+  public void visitIsDsStatement(@NotNull TIBasicIsDsStatement o) {
+    visitStatement(o);
+  }
+
   public void visitLblName(@NotNull TIBasicLblName o) {
     visitNamedElement(o);
   }

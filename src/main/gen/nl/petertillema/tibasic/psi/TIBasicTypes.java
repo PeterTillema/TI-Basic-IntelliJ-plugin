@@ -36,6 +36,7 @@ public interface TIBasicTypes {
   IElementType IF_STATEMENT = new TIBasicElementType("IF_STATEMENT");
   IElementType IMPLIED_MUL_EXPR = new TIBasicElementType("IMPLIED_MUL_EXPR");
   IElementType INVERSE_EXPR = new TIBasicElementType("INVERSE_EXPR");
+  IElementType IS_DS_STATEMENT = new TIBasicElementType("IS_DS_STATEMENT");
   IElementType LBL_NAME = new TIBasicElementType("LBL_NAME");
   IElementType LBL_STATEMENT = new TIBasicElementType("LBL_STATEMENT");
   IElementType LE_EXPR = new TIBasicElementType("LE_EXPR");
@@ -81,6 +82,7 @@ public interface TIBasicTypes {
   IElementType DIM = new TIBasicTokenType("DIM");
   IElementType DISP = new TIBasicTokenType("DISP");
   IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
+  IElementType DS = new TIBasicTokenType("DS");
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");
   IElementType EQ = new TIBasicTokenType("EQ");
@@ -96,6 +98,7 @@ public interface TIBasicTypes {
   IElementType GT = new TIBasicTokenType("GT");
   IElementType IF = new TIBasicTokenType("IF");
   IElementType INVERSE = new TIBasicTokenType("INVERSE");
+  IElementType IS = new TIBasicTokenType("IS");
   IElementType LBL = new TIBasicTokenType("LBL");
   IElementType LBRACKET = new TIBasicTokenType("LBRACKET");
   IElementType LCURLY = new TIBasicTokenType("LCURLY");
@@ -223,6 +226,9 @@ public interface TIBasicTypes {
       }
       else if (type == INVERSE_EXPR) {
         return new TIBasicInverseExprImpl(node);
+      }
+      else if (type == IS_DS_STATEMENT) {
+        return new TIBasicIsDsStatementImpl(node);
       }
       else if (type == LBL_NAME) {
         return new TIBasicLblNameImpl(node);

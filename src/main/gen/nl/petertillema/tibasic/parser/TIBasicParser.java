@@ -38,8 +38,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(ASSIGNMENT_STATEMENT, COMMAND_STATEMENT, DELVAR_STATEMENT, DISP_STATEMENT,
       EXPR_STATEMENT, FOR_STATEMENT, GOTO_STATEMENT, IF_STATEMENT,
-      LBL_STATEMENT, MENU_STATEMENT, PLOT_STATEMENT, PRGM_STATEMENT,
-      REPEAT_STATEMENT, WHILE_STATEMENT),
+      IS_DS_STATEMENT, LBL_STATEMENT, MENU_STATEMENT, PLOT_STATEMENT,
+      PRGM_STATEMENT, REPEAT_STATEMENT, WHILE_STATEMENT),
     create_token_set_(AND_EXPR, DEGREE_EXPR, DIV_EXPR, EQ_EXPR,
       EXPR, FACTORIAL_EXPR, FUNC_EXPR, FUNC_OPTIONAL_EXPR,
       GE_EXPR, GT_EXPR, IMPLIED_MUL_EXPR, INVERSE_EXPR,
@@ -295,11 +295,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // if_statement | while_statement | repeat_statement | for_statement
+  // is_ds_statement | if_statement | while_statement | repeat_statement | for_statement
   static boolean compound_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "compound_statement")) return false;
     boolean r;
-    r = if_statement(b, l + 1);
+    r = is_ds_statement(b, l + 1);
+    if (!r) r = if_statement(b, l + 1);
     if (!r) r = while_statement(b, l + 1);
     if (!r) r = repeat_statement(b, l + 1);
     if (!r) r = for_statement(b, l + 1);
@@ -817,6 +818,40 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = func_optional_expr(b, l + 1);
     if (!r) r = func_expr(b, l + 1);
     return r;
+  }
+
+  /* ********************************************************** */
+  // (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr [RPAREN] NEWLINE statement_internal
+  public static boolean is_ds_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "is_ds_statement")) return false;
+    if (!nextTokenIs(b, "<is ds statement>", DS, IS)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _COLLAPSE_, IS_DS_STATEMENT, "<is ds statement>");
+    r = is_ds_statement_0(b, l + 1);
+    p = r; // pin = 1
+    r = r && report_error_(b, consumeTokens(b, -1, LPAREN, SIMPLE_VARIABLE, COMMA));
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, is_ds_statement_5(b, l + 1)) && r;
+    r = p && report_error_(b, NEWLINE(b, l + 1)) && r;
+    r = p && statement_internal(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // IS | DS
+  private static boolean is_ds_statement_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "is_ds_statement_0")) return false;
+    boolean r;
+    r = consumeToken(b, IS);
+    if (!r) r = consumeToken(b, DS);
+    return r;
+  }
+
+  // [RPAREN]
+  private static boolean is_ds_statement_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "is_ds_statement_5")) return false;
+    consumeToken(b, RPAREN);
+    return true;
   }
 
   /* ********************************************************** */

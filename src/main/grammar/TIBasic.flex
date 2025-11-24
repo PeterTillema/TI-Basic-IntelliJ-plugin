@@ -91,7 +91,7 @@ EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey" | "getDate" | "getTime" | "startTmr" 
 // Commands, which should be present at the start of the line
 PLOT_COMMAND = "Plot" [1-3]
 COMMAND_WITH_PARENS = "Text" | "Line" | "Pt-On" | "Pt-Off" | "Pt-Change" | "Pxl-On" | "Pxl-Off" | "Pxl-Change" |
-    "Shade" | "Circle" | "Tangent" | "IS>" | "DS<" | "Output" | "Fill" | "SortA" | "SortD" | "Menu" | "Send" | "Get" |
+    "Shade" | "Circle" | "Tangent" | "Output" | "Fill" | "SortA" | "SortD" | "Menu" | "Send" | "Get" |
     "Plot1" | "Plot2" | "Plot3" | "GraphColor" | "TextColor" | "Matr>list" | "Matr►list" | "List>matr" | "List►matr" |
     "ShadeNorm" | "Shade_t" | "Shadechi^2" | "Shadeχ²" | "Shadeχ^2" | "Shadechi²" | "ShadeF" | "Shade𝙵" | "Shade𝐅" |
     "Z-Test" | "2-SampZTest" | "1-PropZTest" | "2-PropZTest" | "chi^2-Test" | "χ²-Test" | "χ^2-Test" | "chi²-Test" |
@@ -177,6 +177,8 @@ OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" | "ZInterval" | "2
     "Lbl"                                                     { return TIBasicTypes.LBL; }
     "DelVar"                                                  { return TIBasicTypes.DELVAR; }
     "Disp"                                                    { return TIBasicTypes.DISP; }
+    "IS>"                                                     { return TIBasicTypes.IS; }
+    "DS<"                                                     { return TIBasicTypes.DS; }
     "dim"                                                     { return TIBasicTypes.DIM; }
 
     // Operators and punctuation
