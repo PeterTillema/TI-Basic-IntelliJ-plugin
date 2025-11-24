@@ -108,7 +108,8 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" | "uvAxes" | "vwAxes" |
     "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" | "BackgroundOn" | "BackgroundOff" | "Wait" |
     "Archive" | "UnArchive" | "SetUpEditor" | "DetectAsymOn" | "DetectAsymOff" | "Real" | "BorderColor" | "ClrList" |
-    "ClearEntries"
+    "ClearEntries" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" | "Pmt_End" | "Pmt_Bgn" |
+    "ClrAllLists"
 
 // Plots
 PLOT_TYPE = "Boxplot" | "xyLine" | "Scatter" | "Histogram" | "ModBoxplot" | "NormProbPlot"
@@ -121,10 +122,9 @@ EXPR_MODIFIER = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | ">
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin" | "Dot-Thick"
 
-OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" |
-    "ZInterval" | "2-SampTTest" | "2-SampFTest" | "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" |
-    "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" | "ClrAllLists" |
-    "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" |
+OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" | "ZInterval" | "2-SampTTest" | "2-SampFTest" |
+    "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" | "G-T" |
+    "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" |
     "ZFrac1/2" | "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" |
     "ZFrac1⁄8" | "ZFrac1/10" | "ZFrac1⁄10" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "󸏵" | "ᵤ" | ">n/d<>Un/d" |
     "►n⁄d◄►Un⁄d" | "►n/d◄►Un/d" | ">n⁄d<>Un⁄d" | ">F<>D" | "►F◄►D" | "Sigma(" | "Σ(" | "[MATHPRINT]" | "MATHPRINT" |
