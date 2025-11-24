@@ -104,7 +104,7 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "DependAsk" | "Trace" | "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" |
     "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn" | "FnOff" | "StorePic" |
     "RecallPic" | "StoreGDB" | "RecallGDB" | "Vertical" | "Horizontal" | "DrawInv" | "DrawF" | "Return" | "Pause" |
-    "Stop" | "Input" | "Prompt" | "Disp" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" | "DelVar" |
+    "Stop" | "Input" | "Prompt" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" | "DelVar" |
     "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "AxesOn" |
     "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" | "uvAxes" | "vwAxes" |
     "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" | "BackgroundOn" | "BackgroundOff" | "Wait" |
@@ -115,12 +115,14 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
 PLOT_TYPE = "Boxplot" | "xyLine" | "Scatter" | "Histogram" | "ModBoxplot" | "NormProbPlot"
 PLOT_MARK = "plotdot" | "dotplot" | "plotcross" | "crossplot" | "﹢" | "plotsquare" | "squareplot" | "□"
 
+// Expression modifiers
+EXPR_MODIFIER = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | ">Rect" | "►Rect" | ">Polar" | "►Polar"
+
 // Other tokens with higher priority (must be matched before COMMAND_NO_PARENS to avoid conflicts)
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin" | "Dot-Thick"
 
-OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" |
-    "tvm_𝗡" | "tvm_FV" | ">Rect" | "►Rect" | ">Polar" | "►Polar" | "SinReg" | "Logistic" | "LinRegTTest" | "T-Test" |
+OTHER_TOKEN = "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV" | "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" |
     "ZInterval" | "2-SampTTest" | "2-SampFTest" | "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" |
     "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" + "ClrAllLists" |
     "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" |
@@ -175,6 +177,7 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "!" 
     "Goto"                                                    { return TIBasicTypes.GOTO; }
     "Lbl"                                                     { return TIBasicTypes.LBL; }
     "DelVar"                                                  { return TIBasicTypes.DELVAR; }
+    "Disp"                                                    { return TIBasicTypes.DISP; }
     "dim"                                                     { return TIBasicTypes.DIM; }
 
     // Operators and punctuation
@@ -244,7 +247,8 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "!" 
     // Single-character variables
     {SIMPLE_VARIABLE}                                         { return TIBasicTypes.SIMPLE_VARIABLE; }
 
-    // All the other tokens
+    // Other tokens
+    {EXPR_MODIFIER}                                           { return TIBasicTypes.EXPR_MODIFIER; }
     {OTHER_TOKEN}                                             { return TokenType.BAD_CHARACTER; }
 
     // Invalid identifier-like sequences (catch "abc" as one token instead of "a"+"b"+"c")
@@ -259,8 +263,7 @@ OTHER_TOKEN = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | "!" 
     "\r\n"                                                    { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     "\r"|"\n"                                                 { yypushback(1); yybegin(YYINITIAL); return TIBasicTypes.STRING; }
     <<EOF>>                                                   { yybegin(YYINITIAL); return TIBasicTypes.STRING; }
-    {OTHER_TOKEN}                                             {}
-    [^]                                                       { return TokenType.BAD_CHARACTER; }
+    [^]                                                       {}
 }
 
 [^]                                                           { return TokenType.BAD_CHARACTER; }

@@ -15,11 +15,10 @@ public interface TIBasicTypes {
   IElementType ASSIGNMENT_STATEMENT = new TIBasicElementType("ASSIGNMENT_STATEMENT");
   IElementType ASSIGNMENT_TARGET = new TIBasicElementType("ASSIGNMENT_TARGET");
   IElementType COMMAND_STATEMENT = new TIBasicElementType("COMMAND_STATEMENT");
-  IElementType DEC_EXPR = new TIBasicElementType("DEC_EXPR");
   IElementType DEGREE_EXPR = new TIBasicElementType("DEGREE_EXPR");
   IElementType DELVAR_STATEMENT = new TIBasicElementType("DELVAR_STATEMENT");
+  IElementType DISP_STATEMENT = new TIBasicElementType("DISP_STATEMENT");
   IElementType DIV_EXPR = new TIBasicElementType("DIV_EXPR");
-  IElementType DMS_EXPR = new TIBasicElementType("DMS_EXPR");
   IElementType ELSE_BLOCK = new TIBasicElementType("ELSE_BLOCK");
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
@@ -27,7 +26,6 @@ public interface TIBasicTypes {
   IElementType FOR_IDENTIFIER = new TIBasicElementType("FOR_IDENTIFIER");
   IElementType FOR_INITIALIZER = new TIBasicElementType("FOR_INITIALIZER");
   IElementType FOR_STATEMENT = new TIBasicElementType("FOR_STATEMENT");
-  IElementType FRAC_EXPR = new TIBasicElementType("FRAC_EXPR");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
   IElementType GE_EXPR = new TIBasicElementType("GE_EXPR");
   IElementType GOTO_NAME = new TIBasicElementType("GOTO_NAME");
@@ -79,6 +77,7 @@ public interface TIBasicTypes {
   IElementType CUSTOM_LIST_L = new TIBasicTokenType("CUSTOM_LIST_L");
   IElementType DELVAR = new TIBasicTokenType("DELVAR");
   IElementType DIM = new TIBasicTokenType("DIM");
+  IElementType DISP = new TIBasicTokenType("DISP");
   IElementType DIVIDE = new TIBasicTokenType("DIVIDE");
   IElementType ELSE = new TIBasicTokenType("ELSE");
   IElementType END = new TIBasicTokenType("END");
@@ -86,6 +85,7 @@ public interface TIBasicTypes {
   IElementType EQUATION_VARIABLE = new TIBasicTokenType("EQUATION_VARIABLE");
   IElementType EXPR_FUNCTIONS_NO_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_NO_ARGS");
   IElementType EXPR_FUNCTIONS_WITH_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_WITH_ARGS");
+  IElementType EXPR_MODIFIER = new TIBasicTokenType("EXPR_MODIFIER");
   IElementType FOR = new TIBasicTokenType("FOR");
   IElementType GE = new TIBasicTokenType("GE");
   IElementType GOTO = new TIBasicTokenType("GOTO");
@@ -160,20 +160,17 @@ public interface TIBasicTypes {
       else if (type == COMMAND_STATEMENT) {
         return new TIBasicCommandStatementImpl(node);
       }
-      else if (type == DEC_EXPR) {
-        return new TIBasicDecExprImpl(node);
-      }
       else if (type == DEGREE_EXPR) {
         return new TIBasicDegreeExprImpl(node);
       }
       else if (type == DELVAR_STATEMENT) {
         return new TIBasicDelvarStatementImpl(node);
       }
+      else if (type == DISP_STATEMENT) {
+        return new TIBasicDispStatementImpl(node);
+      }
       else if (type == DIV_EXPR) {
         return new TIBasicDivExprImpl(node);
-      }
-      else if (type == DMS_EXPR) {
-        return new TIBasicDmsExprImpl(node);
       }
       else if (type == ELSE_BLOCK) {
         return new TIBasicElseBlockImpl(node);
@@ -192,9 +189,6 @@ public interface TIBasicTypes {
       }
       else if (type == FOR_STATEMENT) {
         return new TIBasicForStatementImpl(node);
-      }
-      else if (type == FRAC_EXPR) {
-        return new TIBasicFracExprImpl(node);
       }
       else if (type == FUNC_EXPR) {
         return new TIBasicFuncExprImpl(node);

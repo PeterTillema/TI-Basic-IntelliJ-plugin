@@ -35,10 +35,6 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitStatement(o);
   }
 
-  public void visitDecExpr(@NotNull TIBasicDecExpr o) {
-    visitExpr(o);
-  }
-
   public void visitDegreeExpr(@NotNull TIBasicDegreeExpr o) {
     visitExpr(o);
   }
@@ -47,11 +43,11 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitStatement(o);
   }
 
-  public void visitDivExpr(@NotNull TIBasicDivExpr o) {
-    visitExpr(o);
+  public void visitDispStatement(@NotNull TIBasicDispStatement o) {
+    visitStatement(o);
   }
 
-  public void visitDmsExpr(@NotNull TIBasicDmsExpr o) {
+  public void visitDivExpr(@NotNull TIBasicDivExpr o) {
     visitExpr(o);
   }
 
@@ -81,10 +77,6 @@ public class TIBasicVisitor extends PsiElementVisitor {
 
   public void visitForStatement(@NotNull TIBasicForStatement o) {
     visitStatement(o);
-  }
-
-  public void visitFracExpr(@NotNull TIBasicFracExpr o) {
-    visitExpr(o);
   }
 
   public void visitFuncExpr(@NotNull TIBasicFuncExpr o) {

@@ -32,6 +32,7 @@ public interface TIBasicTokenSets {
             TIBasicTypes.GOTO,
             TIBasicTypes.LBL,
             TIBasicTypes.DELVAR,
+            TIBasicTypes.DISP,
             TIBasicTypes.COMMAND_NO_PARENS,
             TIBasicTypes.COMMAND_WITH_PARENS,
             TIBasicTypes.PLOT_COMMAND

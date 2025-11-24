@@ -34,14 +34,13 @@ private end_block_ ::= NEWLINE+ (!END (statement_internal NEWLINE*))*
 private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | command_statement | prgm_statement | expr_statement
+private small_statement ::= delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | disp_statement | command_statement | prgm_statement | expr_statement
 private compound_statement ::= if_statement | while_statement | repeat_statement | for_statement
 
 private unused_ ::= TOKEN
 
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
-expr ::= conversion_group
-  | or_group
+expr ::= or_group
   | and_group
   | comparison_group
   | addition_group
@@ -53,7 +52,6 @@ expr ::= conversion_group
   | primary_group
 
 // Private rules to define operators with the same priority
-private conversion_group ::= dms_expr | dec_expr | frac_expr
 private or_group ::= or_expr | xor_expr
 private and_group ::= and_expr
 private comparison_group ::= eq_expr | ne_expr | gt_expr | ge_expr | lt_expr | le_expr
@@ -66,10 +64,6 @@ private modifiers_group ::= radian_expr | degree_expr | inverse_expr | pow2_expr
 private primary_group ::= literal_expr | func_expr | paren_expr
 
 // Public rules for each expression
-// Precedence 10
-dms_expr ::= expr "►DMS"
-dec_expr ::= expr "►Dec"
-frac_expr ::= expr "►Frac"
 // Precedence 9
 or_expr ::= expr OR expr
 xor_expr ::= expr XOR expr
@@ -122,7 +116,7 @@ anonymous_matrix_row ::= LBRACKET <<list expr>> [RBRACKET] { pin=1 }
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
-expr_statement ::= expr assignment_statement?
+expr_statement ::= expr [EXPR_MODIFIER | assignment_statement]
 left assignment_statement ::= STO assignment_target { pin=1 }
 assignment_target ::= assignment_target_matrix_index | assignment_target_list_index | assignment_target_variable | assignment_target_dim
 {
@@ -153,6 +147,9 @@ lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
 }
 
 prgm_statement ::= PRGM_CALL
+
+disp_statement ::= DISP [<<list disp_item>>]
+private disp_item ::= expr [EXPR_MODIFIER]
 
 menu_statement ::= "Menu" LPAREN expr COMMA <<list menu_option>> [RPAREN] { pin=1 }
 menu_option ::= expr COMMA goto_name { pin=1 }

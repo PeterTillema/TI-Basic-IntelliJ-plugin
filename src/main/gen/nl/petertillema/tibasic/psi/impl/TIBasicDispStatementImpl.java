@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 import nl.petertillema.tibasic.psi.*;
 
-public class TIBasicDecExprImpl extends TIBasicExprImpl implements TIBasicDecExpr {
+public class TIBasicDispStatementImpl extends TIBasicStatementImpl implements TIBasicDispStatement {
 
-  public TIBasicDecExprImpl(@NotNull ASTNode node) {
+  public TIBasicDispStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull TIBasicVisitor visitor) {
-    visitor.visitDecExpr(this);
+    visitor.visitDispStatement(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class TIBasicDecExprImpl extends TIBasicExprImpl implements TIBasicDecExp
 
   @Override
   @NotNull
-  public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+  public List<TIBasicExpr> getExprList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
   }
 
 }

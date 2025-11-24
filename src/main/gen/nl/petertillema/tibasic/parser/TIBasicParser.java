@@ -36,18 +36,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ASSIGNMENT_STATEMENT, COMMAND_STATEMENT, DELVAR_STATEMENT, EXPR_STATEMENT,
-      FOR_STATEMENT, GOTO_STATEMENT, IF_STATEMENT, LBL_STATEMENT,
-      MENU_STATEMENT, PLOT_STATEMENT, PRGM_STATEMENT, REPEAT_STATEMENT,
-      WHILE_STATEMENT),
-    create_token_set_(AND_EXPR, DEC_EXPR, DEGREE_EXPR, DIV_EXPR,
-      DMS_EXPR, EQ_EXPR, EXPR, FRAC_EXPR,
-      FUNC_EXPR, GE_EXPR, GT_EXPR, IMPLIED_MUL_EXPR,
-      INVERSE_EXPR, LE_EXPR, LITERAL_EXPR, LT_EXPR,
-      MINUS_EXPR, MUL_EXPR, NCR_EXPR, NEGATION_EXPR,
-      NE_EXPR, NPR_EXPR, OR_EXPR, PAREN_EXPR,
-      PLUS_EXPR, POW_2_EXPR, POW_3_EXPR, POW_EXPR,
-      RADIAN_EXPR, TRANSPOSE_EXPR, XOR_EXPR, XROOT_EXPR),
+    create_token_set_(ASSIGNMENT_STATEMENT, COMMAND_STATEMENT, DELVAR_STATEMENT, DISP_STATEMENT,
+      EXPR_STATEMENT, FOR_STATEMENT, GOTO_STATEMENT, IF_STATEMENT,
+      LBL_STATEMENT, MENU_STATEMENT, PLOT_STATEMENT, PRGM_STATEMENT,
+      REPEAT_STATEMENT, WHILE_STATEMENT),
+    create_token_set_(AND_EXPR, DEGREE_EXPR, DIV_EXPR, EQ_EXPR,
+      EXPR, FUNC_EXPR, GE_EXPR, GT_EXPR,
+      IMPLIED_MUL_EXPR, INVERSE_EXPR, LE_EXPR, LITERAL_EXPR,
+      LT_EXPR, MINUS_EXPR, MUL_EXPR, NCR_EXPR,
+      NEGATION_EXPR, NE_EXPR, NPR_EXPR, OR_EXPR,
+      PAREN_EXPR, PLUS_EXPR, POW_2_EXPR, POW_3_EXPR,
+      POW_EXPR, RADIAN_EXPR, TRANSPOSE_EXPR, XOR_EXPR,
+      XROOT_EXPR),
   };
 
   /* ********************************************************** */
@@ -446,6 +446,45 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // expr [EXPR_MODIFIER]
+  static boolean disp_item(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "disp_item")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = expr(b, l + 1, -1);
+    r = r && disp_item_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [EXPR_MODIFIER]
+  private static boolean disp_item_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "disp_item_1")) return false;
+    consumeToken(b, EXPR_MODIFIER);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // DISP [<<list disp_item>>]
+  public static boolean disp_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "disp_statement")) return false;
+    if (!nextTokenIs(b, DISP)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, DISP);
+    r = r && disp_statement_1(b, l + 1);
+    exit_section_(b, m, DISP_STATEMENT, r);
+    return r;
+  }
+
+  // [<<list disp_item>>]
+  private static boolean disp_statement_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "disp_statement_1")) return false;
+    list(b, l + 1, TIBasicParser::disp_item);
+    return true;
+  }
+
+  /* ********************************************************** */
   // ELSE end_block_ [END]
   public static boolean else_block(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "else_block")) return false;
@@ -549,7 +588,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // expr assignment_statement?
+  // expr [EXPR_MODIFIER | assignment_statement]
   public static boolean expr_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expr_statement")) return false;
     boolean r;
@@ -560,11 +599,20 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // assignment_statement?
+  // [EXPR_MODIFIER | assignment_statement]
   private static boolean expr_statement_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expr_statement_1")) return false;
-    assignment_statement(b, l + 1);
+    expr_statement_1_0(b, l + 1);
     return true;
+  }
+
+  // EXPR_MODIFIER | assignment_statement
+  private static boolean expr_statement_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expr_statement_1_0")) return false;
+    boolean r;
+    r = consumeToken(b, EXPR_MODIFIER);
+    if (!r) r = assignment_statement(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1058,7 +1106,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | command_statement | prgm_statement | expr_statement
+  // delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | disp_statement | command_statement | prgm_statement | expr_statement
   static boolean small_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "small_statement")) return false;
     boolean r;
@@ -1067,6 +1115,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = lbl_statement(b, l + 1);
     if (!r) r = menu_statement(b, l + 1);
     if (!r) r = plot_statement(b, l + 1);
+    if (!r) r = disp_statement(b, l + 1);
     if (!r) r = command_statement(b, l + 1);
     if (!r) r = prgm_statement(b, l + 1);
     if (!r) r = expr_statement(b, l + 1);
@@ -1324,19 +1373,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // Expression root: expr
   // Operator priority table:
-  // 0: POSTFIX(dms_expr) POSTFIX(dec_expr) POSTFIX(frac_expr)
-  // 1: BINARY(or_expr) BINARY(xor_expr)
-  // 2: BINARY(and_expr)
-  // 3: BINARY(eq_expr) BINARY(ne_expr) BINARY(gt_expr) BINARY(ge_expr)
+  // 0: BINARY(or_expr) BINARY(xor_expr)
+  // 1: BINARY(and_expr)
+  // 2: BINARY(eq_expr) BINARY(ne_expr) BINARY(gt_expr) BINARY(ge_expr)
   //    BINARY(lt_expr) BINARY(le_expr)
-  // 4: BINARY(plus_expr) BINARY(minus_expr)
-  // 5: BINARY(mul_expr) BINARY(div_expr) ATOM(implied_mul_expr)
-  // 6: BINARY(npr_expr) BINARY(ncr_expr)
-  // 7: PREFIX(negation_expr)
-  // 8: BINARY(pow_expr) BINARY(xroot_expr)
-  // 9: POSTFIX(radian_expr) POSTFIX(degree_expr) POSTFIX(inverse_expr) POSTFIX(pow2_expr)
+  // 3: BINARY(plus_expr) BINARY(minus_expr)
+  // 4: BINARY(mul_expr) BINARY(div_expr) ATOM(implied_mul_expr)
+  // 5: BINARY(npr_expr) BINARY(ncr_expr)
+  // 6: PREFIX(negation_expr)
+  // 7: BINARY(pow_expr) BINARY(xroot_expr)
+  // 8: POSTFIX(radian_expr) POSTFIX(degree_expr) POSTFIX(inverse_expr) POSTFIX(pow2_expr)
   //    POSTFIX(transpose_expr) POSTFIX(pow3_expr)
-  // 10: ATOM(literal_expr) ATOM(func_expr) PREFIX(paren_expr)
+  // 9: ATOM(literal_expr) ATOM(func_expr) PREFIX(paren_expr)
   public static boolean expr(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expr")) return false;
     addVariant(b, "<expr>");
@@ -1358,107 +1406,95 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 0 && consumeTokenSmart(b, "►DMS")) {
-        r = true;
-        exit_section_(b, l, m, DMS_EXPR, r, true, null);
-      }
-      else if (g < 0 && consumeTokenSmart(b, "►Dec")) {
-        r = true;
-        exit_section_(b, l, m, DEC_EXPR, r, true, null);
-      }
-      else if (g < 0 && consumeTokenSmart(b, "►Frac")) {
-        r = true;
-        exit_section_(b, l, m, FRAC_EXPR, r, true, null);
-      }
-      else if (g < 1 && consumeTokenSmart(b, OR)) {
-        r = expr(b, l, 1);
+      if (g < 0 && consumeTokenSmart(b, OR)) {
+        r = expr(b, l, 0);
         exit_section_(b, l, m, OR_EXPR, r, true, null);
       }
-      else if (g < 1 && consumeTokenSmart(b, XOR)) {
-        r = expr(b, l, 1);
+      else if (g < 0 && consumeTokenSmart(b, XOR)) {
+        r = expr(b, l, 0);
         exit_section_(b, l, m, XOR_EXPR, r, true, null);
       }
-      else if (g < 2 && consumeTokenSmart(b, AND)) {
-        r = expr(b, l, 2);
+      else if (g < 1 && consumeTokenSmart(b, AND)) {
+        r = expr(b, l, 1);
         exit_section_(b, l, m, AND_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, EQ)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, EQ)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, EQ_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, NE)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, NE)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, NE_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, GT)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, GT)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, GT_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, GE)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, GE)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, GE_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, LT)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, LT)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, LT_EXPR, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, LE)) {
-        r = expr(b, l, 3);
+      else if (g < 2 && consumeTokenSmart(b, LE)) {
+        r = expr(b, l, 2);
         exit_section_(b, l, m, LE_EXPR, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, PLUS)) {
-        r = expr(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, PLUS)) {
+        r = expr(b, l, 3);
         exit_section_(b, l, m, PLUS_EXPR, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, MINUS)) {
-        r = expr(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, MINUS)) {
+        r = expr(b, l, 3);
         exit_section_(b, l, m, MINUS_EXPR, r, true, null);
       }
-      else if (g < 5 && consumeTokenSmart(b, TIMES)) {
-        r = expr(b, l, 5);
+      else if (g < 4 && consumeTokenSmart(b, TIMES)) {
+        r = expr(b, l, 4);
         exit_section_(b, l, m, MUL_EXPR, r, true, null);
       }
-      else if (g < 5 && consumeTokenSmart(b, DIVIDE)) {
-        r = expr(b, l, 5);
+      else if (g < 4 && consumeTokenSmart(b, DIVIDE)) {
+        r = expr(b, l, 4);
         exit_section_(b, l, m, DIV_EXPR, r, true, null);
       }
-      else if (g < 6 && consumeTokenSmart(b, NPR)) {
-        r = expr(b, l, 6);
+      else if (g < 5 && consumeTokenSmart(b, NPR)) {
+        r = expr(b, l, 5);
         exit_section_(b, l, m, NPR_EXPR, r, true, null);
       }
-      else if (g < 6 && consumeTokenSmart(b, NCR)) {
-        r = expr(b, l, 6);
+      else if (g < 5 && consumeTokenSmart(b, NCR)) {
+        r = expr(b, l, 5);
         exit_section_(b, l, m, NCR_EXPR, r, true, null);
       }
-      else if (g < 8 && consumeTokenSmart(b, POW)) {
-        r = expr(b, l, 8);
+      else if (g < 7 && consumeTokenSmart(b, POW)) {
+        r = expr(b, l, 7);
         exit_section_(b, l, m, POW_EXPR, r, true, null);
       }
-      else if (g < 8 && consumeTokenSmart(b, XROOT)) {
-        r = expr(b, l, 8);
+      else if (g < 7 && consumeTokenSmart(b, XROOT)) {
+        r = expr(b, l, 7);
         exit_section_(b, l, m, XROOT_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, TO_RADIAN)) {
+      else if (g < 8 && consumeTokenSmart(b, TO_RADIAN)) {
         r = true;
         exit_section_(b, l, m, RADIAN_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, TO_DEGREE)) {
+      else if (g < 8 && consumeTokenSmart(b, TO_DEGREE)) {
         r = true;
         exit_section_(b, l, m, DEGREE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, INVERSE)) {
+      else if (g < 8 && consumeTokenSmart(b, INVERSE)) {
         r = true;
         exit_section_(b, l, m, INVERSE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, POW2)) {
+      else if (g < 8 && consumeTokenSmart(b, POW2)) {
         r = true;
         exit_section_(b, l, m, POW_2_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, TRANSPOSE)) {
+      else if (g < 8 && consumeTokenSmart(b, TRANSPOSE)) {
         r = true;
         exit_section_(b, l, m, TRANSPOSE_EXPR, r, true, null);
       }
-      else if (g < 9 && consumeTokenSmart(b, POW3)) {
+      else if (g < 8 && consumeTokenSmart(b, POW3)) {
         r = true;
         exit_section_(b, l, m, POW_3_EXPR, r, true, null);
       }
@@ -1503,7 +1539,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, NEG);
     p = r;
-    r = p && expr(b, l, 7);
+    r = p && expr(b, l, 6);
     exit_section_(b, l, m, NEGATION_EXPR, r, p, null);
     return r || p;
   }
