@@ -41,13 +41,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
       LBL_STATEMENT, MENU_STATEMENT, PLOT_STATEMENT, PRGM_STATEMENT,
       REPEAT_STATEMENT, WHILE_STATEMENT),
     create_token_set_(AND_EXPR, DEGREE_EXPR, DIV_EXPR, EQ_EXPR,
-      EXPR, FUNC_EXPR, GE_EXPR, GT_EXPR,
-      IMPLIED_MUL_EXPR, INVERSE_EXPR, LE_EXPR, LITERAL_EXPR,
-      LT_EXPR, MINUS_EXPR, MUL_EXPR, NCR_EXPR,
-      NEGATION_EXPR, NE_EXPR, NPR_EXPR, OR_EXPR,
-      PAREN_EXPR, PLUS_EXPR, POW_2_EXPR, POW_3_EXPR,
-      POW_EXPR, RADIAN_EXPR, TRANSPOSE_EXPR, XOR_EXPR,
-      XROOT_EXPR),
+      EXPR, FACTORIAL_EXPR, FUNC_EXPR, FUNC_OPTIONAL_EXPR,
+      GE_EXPR, GT_EXPR, IMPLIED_MUL_EXPR, INVERSE_EXPR,
+      LE_EXPR, LITERAL_EXPR, LT_EXPR, MINUS_EXPR,
+      MUL_EXPR, NCR_EXPR, NEGATION_EXPR, NE_EXPR,
+      NPR_EXPR, OR_EXPR, PAREN_EXPR, PLUS_EXPR,
+      POW_2_EXPR, POW_3_EXPR, POW_EXPR, RADIAN_EXPR,
+      TRANSPOSE_EXPR, XOR_EXPR, XROOT_EXPR),
   };
 
   /* ********************************************************** */
@@ -799,7 +799,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_expr
+  // NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_optional_expr | func_expr
   static boolean implied_mul_arg(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "implied_mul_arg")) return false;
     boolean r;
@@ -813,6 +813,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, SIMPLE_VARIABLE);
     if (!r) r = consumeToken(b, COLOR_VARIABLE);
     if (!r) r = paren_expr(b, l + 1);
+    if (!r) r = func_optional_expr(b, l + 1);
     if (!r) r = func_expr(b, l + 1);
     return r;
   }
@@ -1383,8 +1384,8 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // 6: PREFIX(negation_expr)
   // 7: BINARY(pow_expr) BINARY(xroot_expr)
   // 8: POSTFIX(radian_expr) POSTFIX(degree_expr) POSTFIX(inverse_expr) POSTFIX(pow2_expr)
-  //    POSTFIX(transpose_expr) POSTFIX(pow3_expr)
-  // 9: ATOM(literal_expr) ATOM(func_expr) PREFIX(paren_expr)
+  //    POSTFIX(transpose_expr) POSTFIX(pow3_expr) POSTFIX(factorial_expr)
+  // 9: ATOM(literal_expr) ATOM(func_expr) ATOM(func_optional_expr) PREFIX(paren_expr)
   public static boolean expr(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expr")) return false;
     addVariant(b, "<expr>");
@@ -1394,6 +1395,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = negation_expr(b, l + 1);
     if (!r) r = literal_expr(b, l + 1);
     if (!r) r = func_expr(b, l + 1);
+    if (!r) r = func_optional_expr(b, l + 1);
     if (!r) r = paren_expr(b, l + 1);
     p = r;
     r = r && expr_0(b, l + 1, g);
@@ -1498,6 +1500,10 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         r = true;
         exit_section_(b, l, m, POW_3_EXPR, r, true, null);
       }
+      else if (g < 8 && consumeTokenSmart(b, FACTORIAL)) {
+        r = true;
+        exit_section_(b, l, m, FACTORIAL_EXPR, r, true, null);
+      }
       else {
         exit_section_(b, l, m, null, false, false, null);
         break;
@@ -1596,6 +1602,45 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // [RPAREN]
   private static boolean func_expr_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "func_expr_3")) return false;
+    consumeTokenSmart(b, RPAREN);
+    return true;
+  }
+
+  // EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> [RPAREN]]
+  public static boolean func_optional_expr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "func_optional_expr")) return false;
+    if (!nextTokenIsSmart(b, EXPR_FUNCTIONS_OPTIONAL_ARGS)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FUNC_OPTIONAL_EXPR, null);
+    r = consumeTokenSmart(b, EXPR_FUNCTIONS_OPTIONAL_ARGS);
+    p = r; // pin = 1
+    r = r && func_optional_expr_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // [LPAREN <<list expr>> [RPAREN]]
+  private static boolean func_optional_expr_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "func_optional_expr_1")) return false;
+    func_optional_expr_1_0(b, l + 1);
+    return true;
+  }
+
+  // LPAREN <<list expr>> [RPAREN]
+  private static boolean func_optional_expr_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "func_optional_expr_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, LPAREN);
+    r = r && list(b, l + 1, expr_parser_);
+    r = r && func_optional_expr_1_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [RPAREN]
+  private static boolean func_optional_expr_1_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "func_optional_expr_1_0_2")) return false;
     consumeTokenSmart(b, RPAREN);
     return true;
   }

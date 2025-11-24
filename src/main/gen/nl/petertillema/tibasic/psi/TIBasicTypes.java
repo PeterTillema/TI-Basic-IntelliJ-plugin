@@ -23,10 +23,12 @@ public interface TIBasicTypes {
   IElementType EQ_EXPR = new TIBasicElementType("EQ_EXPR");
   IElementType EXPR = new TIBasicElementType("EXPR");
   IElementType EXPR_STATEMENT = new TIBasicElementType("EXPR_STATEMENT");
+  IElementType FACTORIAL_EXPR = new TIBasicElementType("FACTORIAL_EXPR");
   IElementType FOR_IDENTIFIER = new TIBasicElementType("FOR_IDENTIFIER");
   IElementType FOR_INITIALIZER = new TIBasicElementType("FOR_INITIALIZER");
   IElementType FOR_STATEMENT = new TIBasicElementType("FOR_STATEMENT");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
+  IElementType FUNC_OPTIONAL_EXPR = new TIBasicElementType("FUNC_OPTIONAL_EXPR");
   IElementType GE_EXPR = new TIBasicElementType("GE_EXPR");
   IElementType GOTO_NAME = new TIBasicElementType("GOTO_NAME");
   IElementType GOTO_STATEMENT = new TIBasicElementType("GOTO_STATEMENT");
@@ -84,8 +86,10 @@ public interface TIBasicTypes {
   IElementType EQ = new TIBasicTokenType("EQ");
   IElementType EQUATION_VARIABLE = new TIBasicTokenType("EQUATION_VARIABLE");
   IElementType EXPR_FUNCTIONS_NO_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_NO_ARGS");
+  IElementType EXPR_FUNCTIONS_OPTIONAL_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_OPTIONAL_ARGS");
   IElementType EXPR_FUNCTIONS_WITH_ARGS = new TIBasicTokenType("EXPR_FUNCTIONS_WITH_ARGS");
   IElementType EXPR_MODIFIER = new TIBasicTokenType("EXPR_MODIFIER");
+  IElementType FACTORIAL = new TIBasicTokenType("FACTORIAL");
   IElementType FOR = new TIBasicTokenType("FOR");
   IElementType GE = new TIBasicTokenType("GE");
   IElementType GOTO = new TIBasicTokenType("GOTO");
@@ -181,6 +185,9 @@ public interface TIBasicTypes {
       else if (type == EXPR_STATEMENT) {
         return new TIBasicExprStatementImpl(node);
       }
+      else if (type == FACTORIAL_EXPR) {
+        return new TIBasicFactorialExprImpl(node);
+      }
       else if (type == FOR_IDENTIFIER) {
         return new TIBasicForIdentifierImpl(node);
       }
@@ -192,6 +199,9 @@ public interface TIBasicTypes {
       }
       else if (type == FUNC_EXPR) {
         return new TIBasicFuncExprImpl(node);
+      }
+      else if (type == FUNC_OPTIONAL_EXPR) {
+        return new TIBasicFuncOptionalExprImpl(node);
       }
       else if (type == GE_EXPR) {
         return new TIBasicGeExprImpl(node);

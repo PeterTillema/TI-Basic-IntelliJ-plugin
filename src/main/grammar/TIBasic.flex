@@ -86,6 +86,7 @@ EXPR_FUNCTIONS_WITH_ARGS = "round" | "pxl-Test" | "augment" | "rowSwap" | "row+"
     "Fpdf" | "𝙵pdf" | "𝐅pdf" | "randNorm" | "conj" | "real" | "imag" | "angle" | "cumSum" | "expr" | "length" |
     "DeltaList" | "ΔList" | "ref" | "rref" | "remainder" | "checkTmr" | "timeCnv" | "dayOfWk" | "getDtStr" |
     "getTmStr" | "invT" | "eval" | "randIntNoRep" | "logBASE" | piecewise | "toString" | "invBinom"
+EXPR_FUNCTIONS_OPTIONAL_ARGS = "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV"
 EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey" | "getDate" | "getTime" | "startTmr" | "getDtFmt" | "getTmFmt" |
     "isClockOn" | "LEFT" | "CENTER" | "RIGHT"
 
@@ -122,9 +123,9 @@ EXPR_MODIFIER = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | ">
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin" | "Dot-Thick"
 
-OTHER_TOKEN = "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV" | "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" |
+OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" |
     "ZInterval" | "2-SampTTest" | "2-SampFTest" | "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" |
-    "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" + "ClrAllLists" |
+    "Pmt_End" | "Pmt_Bgn" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" | "ClrAllLists" |
     "G-T" | "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" |
     "ZFrac1/2" | "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" |
     "ZFrac1⁄8" | "ZFrac1/10" | "ZFrac1⁄10" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "󸏵" | "ᵤ" | ">n/d<>Un/d" |
@@ -213,6 +214,7 @@ OTHER_TOKEN = "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tv
     "}"                                                       { return TIBasicTypes.RCURLY; }
     "["                                                       { return TIBasicTypes.LBRACKET; }
     "]"                                                       { return TIBasicTypes.RBRACKET; }
+    "!"                                                       { return TIBasicTypes.FACTORIAL; }
     "|L" | "ʟ" | "⌊" | "smallL"                               { return TIBasicTypes.CUSTOM_LIST_L; }
 
     // High-priority other tokens (must be checked before COMMAND_NO_PARENS to avoid "Dot" matching "Dot-Thin" or "Dot-Thick")
@@ -226,6 +228,7 @@ OTHER_TOKEN = "!" | "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tv
     {COMMAND_WITH_PARENS}                                     { return TIBasicTypes.COMMAND_WITH_PARENS; }
     {COMMAND_NO_PARENS}                                       { return TIBasicTypes.COMMAND_NO_PARENS; }
     {EXPR_FUNCTIONS_WITH_ARGS}                                { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS; }
+    {EXPR_FUNCTIONS_OPTIONAL_ARGS}                            { return TIBasicTypes.EXPR_FUNCTIONS_OPTIONAL_ARGS; }
     {EXPR_FUNCTIONS_NO_ARGS}                                  { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS; }
     {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
 

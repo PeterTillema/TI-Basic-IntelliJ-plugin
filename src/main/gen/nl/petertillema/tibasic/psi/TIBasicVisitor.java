@@ -67,6 +67,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitStatement(o);
   }
 
+  public void visitFactorialExpr(@NotNull TIBasicFactorialExpr o) {
+    visitExpr(o);
+  }
+
   public void visitForIdentifier(@NotNull TIBasicForIdentifier o) {
     visitNamedElement(o);
   }
@@ -80,6 +84,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
   }
 
   public void visitFuncExpr(@NotNull TIBasicFuncExpr o) {
+    visitExpr(o);
+  }
+
+  public void visitFuncOptionalExpr(@NotNull TIBasicFuncOptionalExpr o) {
     visitExpr(o);
   }
 

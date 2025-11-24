@@ -40,6 +40,7 @@ public interface TIBasicTokenSets {
     TokenSet FUNCTIONS = TokenSet.create(
             TIBasicTypes.DIM,
             TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS,
+            TIBasicTypes.EXPR_FUNCTIONS_OPTIONAL_ARGS,
             TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS
     );
     TokenSet LOOPS = TokenSet.create(
