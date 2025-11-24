@@ -1894,7 +1894,7 @@ class TIBasicLexer implements FlexLexer {
           // fall through
           case 116: break;
           case 39:
-            { return TIBasicTypes.WINDOW_TOKENS;
+            { return TIBasicTypes.WINDOW_VARIABLE;
             }
           // fall through
           case 117: break;

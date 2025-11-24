@@ -83,7 +83,7 @@ minus_expr ::= expr MINUS expr
 mul_expr ::= expr TIMES expr
 div_expr ::= expr DIVIDE expr
 implied_mul_expr ::= implied_mul_arg implied_mul_arg+
-private implied_mul_arg ::= NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | COLOR_VARIABLE | paren_expr | func_optional_expr | func_expr
+private implied_mul_arg ::= NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | COLOR_VARIABLE | paren_expr | func_optional_expr | func_expr
 // Precedence 4
 npr_expr ::= expr NPR expr
 ncr_expr ::= expr NCR expr
@@ -106,7 +106,7 @@ func_expr ::= (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> [RPAREN] { p
 func_optional_expr ::= EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> [RPAREN]] { pin=1 }
 
 // Base literal
-literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
+literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
 {
     methods=[getReferences]
 }
@@ -128,7 +128,7 @@ assignment_target ::= assignment_target_matrix_index | assignment_target_list_in
 }
 private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=2 }
 private assignment_target_list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
-private assignment_target_variable ::= LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_TOKENS
+private assignment_target_variable ::= LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
 private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN] { pin=1 }
 
 private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name

@@ -53,9 +53,7 @@ COLOR_VARIABLE = "BLUE" | "Blue" | "RED" | "Red" | "BLACK" | "Black" | "MAGENTA"
     "Gray" | "GREY" | "Grey" | "DARKGRAY" | "DarkGray" | "DARKGREY" | "DarkGrey"
 IMAGE_VARIABLE = "Image1" | "Image2" | "Image3" | "Image4" | "Image5" | "Image6" | "Image7" | "Image8" | "Image9" |
     "Image0"
-
-// Other tokens
-WINDOW_TOKENS = "ZXscl" | "ZYscl" | "Xscl" | "Yscl" | "UnStart" | "u(nMin)" | "u(𝑛Min)" | "u(𝒏Min)" | "VnStart" |
+WINDOW_VARIABLE = "ZXscl" | "ZYscl" | "Xscl" | "Yscl" | "UnStart" | "u(nMin)" | "u(𝑛Min)" | "u(𝒏Min)" | "VnStart" |
     "V𝒏Start" | "v(nMin)" | "v(𝑛Min)" | "v(𝒏Min)" | "Un-1" | "U𝑛-₁" | "U𝒏-₁" | "Un-₁" | "Un-1" | "U𝑛-₁" | "U𝒏-₁" |
     "Un-₁" | "Vn-1" | "V𝑛-₁" | "V𝒏-₁" | "Vn-₁" | "Vn-1" | "V𝑛-₁" | "V𝒏-₁" | "Vn-₁" | "ZUnStart" | "Zu(nMin)" |
     "Zu(𝑛Min)" | "Zu(𝒏Min)" | "Zu(nmin)" | "ZVnStart" | "Zv(nMin)" | "Zv(𝑛Min)" | "Zv(𝒏Min)" | "Zv(nmin)" | "Xmin" |
@@ -230,7 +228,7 @@ OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" |
     {EXPR_FUNCTIONS_WITH_ARGS}                                { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS; }
     {EXPR_FUNCTIONS_OPTIONAL_ARGS}                            { return TIBasicTypes.EXPR_FUNCTIONS_OPTIONAL_ARGS; }
     {EXPR_FUNCTIONS_NO_ARGS}                                  { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS; }
-    {WINDOW_TOKENS}                                           { return TIBasicTypes.WINDOW_TOKENS; }
+    {WINDOW_VARIABLE}                                         { return TIBasicTypes.WINDOW_VARIABLE; }
 
     // Multi-character variables
     {PLOT_TYPE}                                               { return TIBasicTypes.PLOT_TYPE; }

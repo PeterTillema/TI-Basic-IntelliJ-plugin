@@ -72,7 +72,7 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
         keys.put(TIBasicTypes.SIMPLE_VARIABLE, SIMPLE_IDENTIFIER);
         keys.put(TIBasicTypes.MATRIX_VARIABLE, MATRIX_IDENTIFIER);
         keys.put(TIBasicTypes.COLOR_VARIABLE, COLOR_IDENTIFIER);
-        keys.put(TIBasicTypes.WINDOW_TOKENS, WINDOW_IDENTIFIER);
+        keys.put(TIBasicTypes.WINDOW_VARIABLE, WINDOW_IDENTIFIER);
 
         // Operators
         fillMap(keys, TIBasicTokenSets.OPERATORS, OPERATOR);

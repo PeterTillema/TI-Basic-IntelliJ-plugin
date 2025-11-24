@@ -136,7 +136,7 @@ public interface TIBasicTypes {
   IElementType TO_RADIAN = new TIBasicTokenType("TO_RADIAN");
   IElementType TRANSPOSE = new TIBasicTokenType("TRANSPOSE");
   IElementType WHILE = new TIBasicTokenType("WHILE");
-  IElementType WINDOW_TOKENS = new TIBasicTokenType("WINDOW_TOKENS");
+  IElementType WINDOW_VARIABLE = new TIBasicTokenType("WINDOW_VARIABLE");
   IElementType XOR = new TIBasicTokenType("XOR");
   IElementType XROOT = new TIBasicTokenType("XROOT");
 
