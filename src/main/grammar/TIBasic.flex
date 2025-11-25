@@ -103,7 +103,7 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "DependAsk" | "Trace" | "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" |
     "ZPrevious" | "ZDecimal" | "ZoomStat" | "ZoomRcl" | "PrintScreen" | "ZoomSto" | "FnOn" | "FnOff" | "StorePic" |
     "RecallPic" | "StoreGDB" | "RecallGDB" | "Vertical" | "Horizontal" | "DrawInv" | "DrawF" | "Return" | "Pause" |
-    "Stop" | "Input" | "Prompt" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" | "DelVar" |
+    "Stop" | "Input" | "Prompt" | "DispGraph" | "ClrHome" | "DispTable" | "PlotsOn" | "PlotsOff" |
     "Sequential" | "Simul" | "PolarGC" | "RectGC" | "CoordOn" | "CoordOff" | "Connected" | "Thick" | "Dot" | "AxesOn" |
     "AxesOff" | "GridOn" | "GridDot" | "GridOff" | "LabelOn" | "LabelOff" | "Web" | "Time" | "uvAxes" | "vwAxes" |
     "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" | "BackgroundOn" | "BackgroundOff" | "Wait" |
@@ -256,7 +256,7 @@ OTHER_TOKEN = "AsmPrgm" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "�
 
     // Invalid identifier-like sequences (catch "abc" as one token instead of "a"+"b"+"c")
     // This must come AFTER all valid tokens to avoid matching valid multi-char tokens
-    [a-z][A-Za-z0-9-]+                                         { return TokenType.BAD_CHARACTER; }
+    [a-z][A-Za-z0-9]+                                         { return TokenType.BAD_CHARACTER; }
 }
 
 <STRING> {

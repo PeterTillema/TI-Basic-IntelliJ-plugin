@@ -101,7 +101,8 @@
         <lang.psiStructureViewFactory
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.structure.TIBasicStructureViewFactory"/>
-        <breadcrumbsInfoProvider implementation="nl.petertillema.tibasic.editor.TIBasicBreadCrumbsProvider" />
+        <breadcrumbsInfoProvider
+                implementation="nl.petertillema.tibasic.editor.TIBasicBreadCrumbsProvider"/>
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>
@@ -111,6 +112,9 @@
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicCustomListAnnotator"/>
+        <annotator
+                language="TIBasic"
+                implementationClass="nl.petertillema.tibasic.annotator.TIBasicNrArgumentsAnnotator"/>
         <localInspection
                 enabledByDefault="true"
                 language="TIBasic"
