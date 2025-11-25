@@ -110,8 +110,8 @@ literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIAB
 {
     methods=[getReferences]
 }
-list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
-matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=2 }
+list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
+matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr [RPAREN] { pin=2 }
 anonymous_list ::= LCURLY <<list expr>> [RCURLY] { pin=1 }
 anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> [RBRACKET] { pin=1 }
 anonymous_matrix_row ::= LBRACKET <<list expr>> [RBRACKET] { pin=1 }
