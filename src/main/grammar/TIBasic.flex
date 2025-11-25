@@ -83,7 +83,7 @@ EXPR_FUNCTIONS_WITH_ARGS = "round" | "pxl-Test" | "augment" | "rowSwap" | "row+"
     "poissoncdf" | "geometpdf" | "geometcdf" | "normalpdf" | "tpdf" | "chi^2pdf" | "χ²pdf" | "χ^2pdf" | "chi²pdf" |
     "Fpdf" | "𝙵pdf" | "𝐅pdf" | "randNorm" | "conj" | "real" | "imag" | "angle" | "cumSum" | "expr" | "length" |
     "DeltaList" | "ΔList" | "ref" | "rref" | "remainder" | "checkTmr" | "timeCnv" | "dayOfWk" | "getDtStr" |
-    "getTmStr" | "invT" | "eval" | "randIntNoRep" | "logBASE" | piecewise | "toString" | "invBinom"
+    "getTmStr" | "invT" | "eval" | "randIntNoRep" | "logBASE" | "piecewise" | "toString" | "invBinom"
 EXPR_FUNCTIONS_OPTIONAL_ARGS = "tvm_Pmt" | "tvm_I%" | "tvm_PV" | "tvm_N" | "tvm_𝗡" | "tvm_FV"
 EXPR_FUNCTIONS_NO_ARGS = "rand" | "getKey" | "getDate" | "getTime" | "startTmr" | "getDtFmt" | "getTmFmt" |
     "isClockOn" | "LEFT" | "CENTER" | "RIGHT"
