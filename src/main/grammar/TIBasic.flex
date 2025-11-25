@@ -109,7 +109,12 @@ COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "
     "uwAxes" | "ClockOff" | "ClockOn" | "ExecLib" | "ExprOn" | "ExprOff" | "BackgroundOn" | "BackgroundOff" | "Wait" |
     "Archive" | "UnArchive" | "SetUpEditor" | "DetectAsymOn" | "DetectAsymOff" | "Real" | "BorderColor" | "ClrList" |
     "ClearEntries" | "re^thetai" | "r𝑒^θ𝑖" | "re^θ𝑖" | "re^θi" | "re^theta𝑖" | "a+bi" | "a+b𝑖" | "Pmt_End" | "Pmt_Bgn" |
-    "ClrAllLists"
+    "ClrAllLists" | "Thin" | "GridLine" | "DiagnosticOn" | "DiagnosticOff" | "TInterval" | "SinReg" | "Logistic" |
+    "LinRegTTest" | "T-Test" | "ZInterval" | "2-SampTTest" | "2-SampFTest" | "2-Samp𝙵Test" | "2-Samp𝐅Test" |
+    "2-SampTInt" | "G-T" | "ZoomFit" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" | "LinReg(a+bx)" | "LinReg(ax+b)" |
+    "ClrTable" | "ExpReg" | "LnReg" | "PwrReg" | "Med-Med" | "QuadReg" | "1-VarStats" | "2-VarStats" | "ZFrac1/2" |
+    "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" | "ZFrac1⁄8" |
+    "ZFrac1/10" | "ZFrac1⁄10"
 
 // Plots
 PLOT_TYPE = "Boxplot" | "xyLine" | "Scatter" | "Histogram" | "ModBoxplot" | "NormProbPlot"
@@ -122,35 +127,29 @@ EXPR_MODIFIER = ">DMS" | "►DMS" | ">Dec" | "►Dec" | ">Frac" | "►Frac" | ">
 // These tokens have prefixes that overlap with COMMAND_NO_PARENS tokens
 OTHER_TOKEN_PRIORITY = "Dot-Thin" | "Dot-Thick"
 
-OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" | "ZInterval" | "2-SampTTest" | "2-SampFTest" |
-    "2-Samp𝙵Test" | "2-Samp𝐅Test" | "TInterval" | "2-SampTInt" | "G-T" |
-    "ZoomFit" | "DiagnosticOn" | "DiagnosticOff" | "AsmPrgm" | "LinRegTInt" | "Manual-Fit" | "ZQuadrant1" |
-    "ZFrac1/2" | "ZFrac1⁄2" | "ZFrac1/3" | "ZFrac1⁄3" | "ZFrac1/4" | "ZFrac1⁄4" | "ZFrac1/5" | "ZFrac1⁄5" | "ZFrac1/8" |
-    "ZFrac1⁄8" | "ZFrac1/10" | "ZFrac1⁄10" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "󸏵" | "ᵤ" | ">n/d<>Un/d" |
-    "►n⁄d◄►Un⁄d" | "►n/d◄►Un/d" | ">n⁄d<>Un⁄d" | ">F<>D" | "►F◄►D" | "Sigma(" | "Σ(" | "[MATHPRINT]" | "MATHPRINT" |
-    "[CLASSIC]" | "CLASSIC" | "[n/d]" | "n⁄d" | "[Un/d]" | "Un⁄d" | "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" |
-    "FRAC" | "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARDON" | "[STATWIZARD OFF]" |
-    "STATWIZARDOFF" | "GridLine" | "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "Thin" | "PlySmlt2" | "Asm84CEPrgm" |
-    "pieceWise(" | "xroot" | "QuartilesSetting..." | "QuartilesSetting…" | "u(n-2)" | "u(𝑛-2)" | "u(𝒏-2)" | "v(n-2)" |
-    "v(𝑛-2)" | "v(𝒏-2)" | "w(n-2)" | "w(𝑛-2)" | "w(𝒏-2)" | "u(n-1)" | "u(𝑛-1)" | "u(𝒏-1)" | "v(n-1)" | "v(𝑛-1)" |
-    "v(𝒏-1)" | "w(n-1)" | "w(𝑛-1)" | "w(𝒏-1)" | "u(n)" | "u(𝑛)" | "u(𝒏)" | "v(n)" | "v(𝑛)" | "v(𝒏)" | "w(n)" | "w(𝑛)" |
-    "w(𝒏)" | "u(n+1)" | "u(𝑛+1)" | "u(𝒏+1)" | "v(n+1)" | "v(𝑛+1)" | "v(𝒏+1)" | "w(n+1)" | "w(𝑛+1)" | "w(𝒏+1)" |
-    "SEQ(n)" | "SEQ(𝑛)" | "SEQ(𝒏)" | "SEQ(n+1)" | "SEQ(𝑛+1)" | "SEQ(𝒏+1)" | "SEQ(n+2)" | "SEQ(𝑛+2)" | "SEQ(𝒏+2)" |
-    "ExecuteProgram" | "UndoClear" | "InsertLineAbove" | "CutLine" | "CopyLine" | "PasteLineBelow" |
-    "InsertCommentAbove" | "QuitEditor" | "ˣ√" | "1-VarStats" | "2-VarStats" | "LinReg(a+bx)" | "ExpReg" | "LnReg" |
-    "PwrReg" | "Med-Med" | "QuadReg" | "ClrTable" | "LinReg(ax+b)" |  "Á" | "À" | "Â" | "Ä" | "á" | "à" | "â" | "ä" |
-    "É" | "È" | "Ê" | "Ë" | "é" | "è" | "ê" | "ë" | "Ì" | "Î" | "Ï" | "í" | "ì" | "î" | "ï" | "Ó" | "Ò" | "Ô" | "Ö" |
-    "ó" | "ò" | "ô" | "ö" | "Ú" | "Ù" | "Û" | "Ü" | "ú" | "ù" | "û" | "ü" | "Ç" | "ç" | "Ñ" | "ñ" | "|'" | "´" | "^^'" |
-    "|`" | "^^`" | "|:" | "¨" | "^^:" | "|?" | "¿" | "|!" | "¡" | "alpha" | "α" | "beta" | "β" | "gamma" | "γ" |
-    "Delta" | "Δ" | "delta" | "δ" | "epsilon" | "ε" | "lambda" | "λ" | "mu" | "μ" | "greek_pi" | "|π" | "rho" | "ρ" |
-    "Sigma" | "Σ" | "Phi" | "Φ" | "Omega" | "Ω" | "phat" | "ṗ" | "chi" | "χ" | "|F" | "𝐅" | "|𝐅" | "a" | "b" | "c" |
-    "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" |
-    "w" | "x" | "y" | "z" | "sigma" | "σ" | "tau" | "τ" | "Í" | "GarbageCollect" | "|~" | "@" | "#" | "$" | "&" | "`" |
-    ";" | "\\" | "|" | "_" | "%" | "..." | "…" | "|<" | "∠" | "sharps" | "ß" | "^^x" | "ˣ" | "smallT" | "ᴛ" | "small0" |
-    "₀" | "small1" | "₁" | "small2" | "₂" | "small3" | "₃" | "small4" | "₄" | "small5" | "₅" | "small6" | "₆" |
-    "small7" | "₇" | "small8" | "₈" | "small9" | "₉" | "small10" | "₁₀" | "<|" | "◄" | "|>" | "►" | "uparrow" | "↑" |
-    "downarrow" | "↓" | "xmark" | "×" | "integral" | "∫" | "bolduparrow" | "🡁" | "🡅" | "bolddownarrow" | "🠿" | "🡇" |
-    "squareroot" | "invertedequal" | "⌸"
+OTHER_TOKEN = "AsmPrgm" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "󸏵" | "ᵤ" | ">n/d<>Un/d" | "►n⁄d◄►Un⁄d" |
+    "►n/d◄►Un/d" | ">n⁄d<>Un⁄d" | ">F<>D" | "►F◄►D" | "Sigma(" | "Σ(" | "[MATHPRINT]" | "MATHPRINT" | "[CLASSIC]" |
+    "CLASSIC" | "[n/d]" | "n⁄d" | "[Un/d]" | "Un⁄d" | "[AUTO]" | "AUTO" | "[DEC]" | "DEC" | "[FRAC]" | "FRAC" |
+    "[FRAC-APPROX]" | "FRAC-APPROX" | "[STATWIZARD ON]" | "STATWIZARDON" | "[STATWIZARD OFF]" | "STATWIZARDOFF" |
+    "QuickPlot&Fit-EQ" | "Asm84CPrgm" | "PlySmlt2" | "Asm84CEPrgm" | "pieceWise(" | "QuartilesSetting..." |
+    "QuartilesSetting…" | "u(n-2)" | "u(𝑛-2)" | "u(𝒏-2)" | "v(n-2)" | "v(𝑛-2)" | "v(𝒏-2)" | "w(n-2)" | "w(𝑛-2)" |
+    "w(𝒏-2)" | "u(n-1)" | "u(𝑛-1)" | "u(𝒏-1)" | "v(n-1)" | "v(𝑛-1)" | "v(𝒏-1)" | "w(n-1)" | "w(𝑛-1)" | "w(𝒏-1)" |
+    "u(n)" | "u(𝑛)" | "u(𝒏)" | "v(n)" | "v(𝑛)" | "v(𝒏)" | "w(n)" | "w(𝑛)" | "w(𝒏)" | "u(n+1)" | "u(𝑛+1)" | "u(𝒏+1)" |
+    "v(n+1)" | "v(𝑛+1)" | "v(𝒏+1)" | "w(n+1)" | "w(𝑛+1)" | "w(𝒏+1)" | "SEQ(n)" | "SEQ(𝑛)" | "SEQ(𝒏)" | "SEQ(n+1)" |
+    "SEQ(𝑛+1)" | "SEQ(𝒏+1)" | "SEQ(n+2)" | "SEQ(𝑛+2)" | "SEQ(𝒏+2)" | "ExecuteProgram" | "UndoClear" |
+    "InsertLineAbove" | "CutLine" | "CopyLine" | "PasteLineBelow" | "InsertCommentAbove" | "QuitEditor" | "Á" | "À" |
+    "Â" | "Ä" | "á" | "à" | "â" | "ä" | "É" | "È" | "Ê" | "Ë" | "é" | "è" | "ê" | "ë" | "Ì" | "Î" | "Ï" | "í" | "ì" |
+    "î" | "ï" | "Ó" | "Ò" | "Ô" | "Ö" | "ó" | "ò" | "ô" | "ö" | "Ú" | "Ù" | "Û" | "Ü" | "ú" | "ù" | "û" | "ü" | "Ç" |
+    "ç" | "Ñ" | "ñ" | "|'" | "´" | "^^'" | "|`" | "^^`" | "|:" | "¨" | "^^:" | "|?" | "¿" | "|!" | "¡" | "alpha" | "α" |
+    "beta" | "β" | "gamma" | "γ" | "Delta" | "Δ" | "delta" | "δ" | "epsilon" | "ε" | "lambda" | "λ" | "mu" | "μ" |
+    "greek_pi" | "|π" | "rho" | "ρ" | "Sigma" | "Σ" | "Phi" | "Φ" | "Omega" | "Ω" | "phat" | "ṗ" | "chi" | "χ" | "|F" |
+    "𝐅" | "|𝐅" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" |
+    "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "sigma" | "σ" | "tau" | "τ" | "Í" | "GarbageCollect" | "|~" |
+    "@" | "#" | "$" | "&" | "`" | ";" | "\\" | "|" | "_" | "%" | "..." | "…" | "|<" | "∠" | "sharps" | "ß" | "^^x" |
+    "ˣ" | "smallT" | "ᴛ" | "small0" | "₀" | "small1" | "₁" | "small2" | "₂" | "small3" | "₃" | "small4" | "₄" |
+    "small5" | "₅" | "small6" | "₆" | "small7" | "₇" | "small8" | "₈" | "small9" | "₉" | "small10" | "₁₀" | "<|" | "◄" |
+    "|>" | "►" | "uparrow" | "↑" | "downarrow" | "↓" | "xmark" | "×" | "integral" | "∫" | "bolduparrow" | "🡁" | "🡅" |
+    "bolddownarrow" | "🠿" | "🡇" | "squareroot" | "invertedequal" | "⌸"
 
 %state STRING
 
@@ -201,7 +200,7 @@ OTHER_TOKEN = "SinReg" | "Logistic"| "LinRegTTest" | "T-Test" | "ZInterval" | "2
     ">"                                                       { return TIBasicTypes.GT; }
     "<"                                                       { return TIBasicTypes.LT; }
     "~" | "⁻" | "|-"                                          { return TIBasicTypes.NEG; }
-    "xroot" | "×√"                                            { return TIBasicTypes.XROOT; }
+    "xroot" | "`×√`" | "ˣ√"                                   { return TIBasicTypes.XROOT; }
     "or"                                                      { return TIBasicTypes.OR; }
     "xor"                                                     { return TIBasicTypes.XOR; }
     "and"                                                     { return TIBasicTypes.AND; }
