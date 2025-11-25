@@ -22,6 +22,7 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey NUMBER = createTextAttributesKey("TIBASIC_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey COMMAND = createTextAttributesKey("TIBASIC_COMMAND", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
     public static final TextAttributesKey FUNCTION = createTextAttributesKey("TIBASIC_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_CALL);
+    public static final TextAttributesKey LOGICAL_OPERATOR = createTextAttributesKey("TIBASIC_LOGICAL_OPERATOR", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
     public static final TextAttributesKey OPERATOR = createTextAttributesKey("TIBASIC_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
     public static final TextAttributesKey COMMA = createTextAttributesKey("TIBASIC_COMMA", DefaultLanguageHighlighterColors.COMMA);
     public static final TextAttributesKey PARENTHESES = createTextAttributesKey("TIBASIC_PARENTHESIS", DefaultLanguageHighlighterColors.PARENTHESES);
@@ -76,6 +77,9 @@ public final class TIBasicSyntaxHighlighter extends SyntaxHighlighterBase {
 
         // Operators
         fillMap(keys, TIBasicTokenSets.OPERATORS, OPERATOR);
+        keys.put(TIBasicTypes.AND, LOGICAL_OPERATOR);
+        keys.put(TIBasicTypes.OR, LOGICAL_OPERATOR);
+        keys.put(TIBasicTypes.XOR, LOGICAL_OPERATOR);
 
         keys.put(TokenType.BAD_CHARACTER, BAD_CHARACTER);
     }

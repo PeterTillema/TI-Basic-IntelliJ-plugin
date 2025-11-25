@@ -17,6 +17,7 @@ import java.util.Map;
 public final class TIBasicColorSettingsPage implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
+            new AttributesDescriptor("Braces and Operators//Logical operator", TIBasicSyntaxHighlighter.LOGICAL_OPERATOR),
             new AttributesDescriptor("Braces and Operators//Operator sign", TIBasicSyntaxHighlighter.OPERATOR),
             new AttributesDescriptor("Braces and Operators//Parenthesis", TIBasicSyntaxHighlighter.PARENTHESES),
             new AttributesDescriptor("Braces and Operators//Braces", TIBasicSyntaxHighlighter.BRACES),

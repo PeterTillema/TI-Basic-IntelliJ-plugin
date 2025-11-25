@@ -22,6 +22,12 @@
                 <option name="FONT_TYPE" value="1"/>
             </value>
         </option>
+        <option name="TIBASIC_LOGICAL_OPERATOR">
+            <value>
+                <option name="FOREGROUND" value="3838f6" />
+                <option name="FONT_TYPE" value="1"/>
+            </value>
+        </option>
         <option name="TIBASIC_FUNCTION">
             <value>
                 <option name="FOREGROUND" value="007777" />
