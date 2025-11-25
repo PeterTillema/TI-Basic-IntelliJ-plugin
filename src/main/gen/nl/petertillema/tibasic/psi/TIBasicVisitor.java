@@ -23,6 +23,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAsmStatement(@NotNull TIBasicAsmStatement o) {
+    visitStatement(o);
+  }
+
   public void visitAssignmentStatement(@NotNull TIBasicAssignmentStatement o) {
     visitStatement(o);
   }

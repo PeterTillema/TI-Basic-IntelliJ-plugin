@@ -35,8 +35,21 @@ private end_block_ ::= NEWLINE+ (!END (statement_internal NEWLINE*))*
 private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
-private small_statement ::= delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | disp_statement | command_statement | prgm_statement | expr_statement
-private compound_statement ::= is_ds_statement | if_statement | while_statement | repeat_statement | for_statement
+private small_statement ::= delvar_statement |
+    goto_statement |
+    lbl_statement |
+    menu_statement |
+    plot_statement |
+    disp_statement |
+    command_statement |
+    asm_statement |
+    prgm_statement |
+    expr_statement
+private compound_statement ::= is_ds_statement |
+    if_statement |
+    while_statement |
+    repeat_statement |
+    for_statement
 
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 expr ::= or_group
@@ -146,6 +159,8 @@ lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
     implements="nl.petertillema.tibasic.psi.TIBasicNamedElement"
     methods=[getName setName getNameIdentifier]
 }
+
+asm_statement ::= ASM LPAREN PRGM_CALL { pin=1 }
 
 prgm_statement ::= PRGM_CALL
 

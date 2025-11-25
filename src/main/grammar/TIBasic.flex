@@ -97,7 +97,7 @@ COMMAND_WITH_PARENS = "Text" | "Line" | "Pt-On" | "Pt-Off" | "Pt-Change" | "Pxl-
     "Z-Test" | "2-SampZTest" | "1-PropZTest" | "2-PropZTest" | "chi^2-Test" | "χ²-Test" | "χ^2-Test" | "chi²-Test" |
     "2-SampZInt" | "1-PropZInt" | "2-PropZInt" | "GraphStyle" | "GetCalc" | "Equ>String" | "Equ►String" | "String>Equ" |
     "String►Equ" | "Select" | "ANOVA" | "setDate" | "setTime" | "setDtFmt" | "setTmFmt" | "OpenLib" | "chi^2GOF-Test" |
-    "χ²GOF-Test" | "χ^2GOF-Test" | "chi²GOF-Test" | "Asm" | "AsmComp"
+    "χ²GOF-Test" | "χ^2GOF-Test" | "chi²GOF-Test" | "AsmComp"
 COMMAND_NO_PARENS = "CubicReg" | "QuartReg" | "Radian" | "Degree" | "Normal" | "Sci" | "Eng" | "Float" | "Fix" |
     "Horiz" | "FullScreen" | "Full" | "Func" | "Param" | "Polar" | "Seq" | "IndpntAuto" | "IndpntAsk" | "DependAuto" |
     "DependAsk" | "Trace" | "ClrDraw" | "ZStandard" | "ZTrig" | "ZBox" | "ZoomIn" | "ZoomOut" | "ZSquare" | "ZInteger" |
@@ -179,6 +179,7 @@ OTHER_TOKEN = "AsmPrgm" | "mathprintbox" | "⬚" | "n/d" | "⁄" | "Un/d" | "�
     "IS>"                                                     { return TIBasicTypes.IS; }
     "DS<"                                                     { return TIBasicTypes.DS; }
     "dim"                                                     { return TIBasicTypes.DIM; }
+    "Asm"                                                     { return TIBasicTypes.ASM; }
 
     // Operators and punctuation
     "->" | "→"                                                { return TIBasicTypes.STO; }

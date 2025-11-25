@@ -12,6 +12,7 @@ public interface TIBasicTypes {
   IElementType ANONYMOUS_LIST = new TIBasicElementType("ANONYMOUS_LIST");
   IElementType ANONYMOUS_MATRIX = new TIBasicElementType("ANONYMOUS_MATRIX");
   IElementType ANONYMOUS_MATRIX_ROW = new TIBasicElementType("ANONYMOUS_MATRIX_ROW");
+  IElementType ASM_STATEMENT = new TIBasicElementType("ASM_STATEMENT");
   IElementType ASSIGNMENT_STATEMENT = new TIBasicElementType("ASSIGNMENT_STATEMENT");
   IElementType ASSIGNMENT_TARGET = new TIBasicElementType("ASSIGNMENT_TARGET");
   IElementType COMMAND_STATEMENT = new TIBasicElementType("COMMAND_STATEMENT");
@@ -70,6 +71,7 @@ public interface TIBasicTypes {
 
   IElementType AND = new TIBasicTokenType("AND");
   IElementType ANS_VARIABLE = new TIBasicTokenType("ANS_VARIABLE");
+  IElementType ASM = new TIBasicTokenType("ASM");
   IElementType COLON = new TIBasicTokenType("COLON");
   IElementType COLOR_VARIABLE = new TIBasicTokenType("COLOR_VARIABLE");
   IElementType COMMA = new TIBasicTokenType("COMMA");
@@ -157,6 +159,9 @@ public interface TIBasicTypes {
       }
       else if (type == ANONYMOUS_MATRIX_ROW) {
         return new TIBasicAnonymousMatrixRowImpl(node);
+      }
+      else if (type == ASM_STATEMENT) {
+        return new TIBasicAsmStatementImpl(node);
       }
       else if (type == ASSIGNMENT_STATEMENT) {
         return new TIBasicAssignmentStatementImpl(node);

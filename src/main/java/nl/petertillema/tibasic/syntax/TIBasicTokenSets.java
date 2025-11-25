@@ -35,6 +35,7 @@ public interface TIBasicTokenSets {
             TIBasicTypes.DISP,
             TIBasicTypes.IS,
             TIBasicTypes.DS,
+            TIBasicTypes.ASM,
             TIBasicTypes.COMMAND_NO_PARENS,
             TIBasicTypes.COMMAND_WITH_PARENS,
             TIBasicTypes.PLOT_COMMAND

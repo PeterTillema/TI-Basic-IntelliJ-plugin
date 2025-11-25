@@ -149,32 +149,32 @@ class TIBasicLexer implements FlexLexer {
     "\1\0\15\1\1\0\6\1\1\34\3\0\1\30\2\0"+
     "\1\61\1\62\4\0\2\34\1\0\1\34\1\15\1\0"+
     "\1\1\23\0\1\63\1\0\1\64\26\0\1\65\7\0"+
-    "\1\66\2\0\1\67\1\66\7\0\1\70\6\0\1\64"+
-    "\6\0\1\71\10\0\1\72\14\0\1\34\30\0\1\73"+
-    "\15\0\1\66\61\0\1\74\30\0\1\33\2\0\1\1"+
-    "\1\75\10\1\1\42\4\1\1\76\16\1\1\42\1\1"+
-    "\1\42\1\1\1\77\3\1\1\100\11\1\1\0\4\1"+
-    "\1\0\12\1\1\0\2\1\1\101\2\1\14\0\1\42"+
-    "\3\0\1\102\46\0\1\103\2\0\1\104\2\0\1\1"+
-    "\1\64\1\0\1\66\2\0\1\105\7\0\1\106\30\0"+
-    "\1\107\35\0\1\110\5\0\1\64\1\111\47\0\1\42"+
+    "\1\66\2\0\1\67\1\66\7\0\1\70\6\0\1\71"+
+    "\6\0\1\72\10\0\1\73\14\0\1\34\30\0\1\74"+
+    "\15\0\1\66\61\0\1\75\30\0\1\33\2\0\1\1"+
+    "\1\76\10\1\1\42\4\1\1\77\16\1\1\42\1\1"+
+    "\1\42\1\1\1\100\3\1\1\101\11\1\1\0\4\1"+
+    "\1\0\12\1\1\0\2\1\1\102\2\1\14\0\1\42"+
+    "\3\0\1\103\46\0\1\104\2\0\1\105\2\0\1\1"+
+    "\1\71\1\0\1\66\2\0\1\106\7\0\1\107\30\0"+
+    "\1\110\35\0\1\111\5\0\1\71\1\112\47\0\1\42"+
     "\4\1\2\0\1\42\1\0\22\1\1\34\2\1\1\47"+
-    "\10\1\1\106\1\0\2\1\1\0\11\1\4\0\4\1"+
-    "\54\0\1\66\21\0\1\112\4\0\1\66\20\0\1\64"+
-    "\1\1\6\0\1\66\2\0\1\113\30\0\2\1\2\0"+
-    "\26\1\1\114\1\1\1\114\3\1\1\0\11\1\1\22"+
-    "\1\1\2\0\1\115\3\0\2\1\1\62\1\1\24\0"+
-    "\1\116\44\0\1\117\34\0\7\1\1\106\1\0\12\1"+
-    "\1\114\1\1\1\114\1\1\1\0\2\1\1\0\5\1"+
-    "\1\35\2\1\2\0\1\66\1\1\1\120\10\0\1\120"+
-    "\63\0\1\46\7\1\1\114\1\1\1\114\1\1\1\0"+
-    "\1\1\1\0\1\42\1\0\1\1\1\64\3\1\51\0"+
-    "\4\1\1\114\1\1\1\114\1\1\1\0\1\1\1\0"+
-    "\1\1\1\0\2\1\26\0\2\1\1\114\1\1\1\114"+
+    "\10\1\1\107\1\0\2\1\1\0\11\1\4\0\4\1"+
+    "\54\0\1\66\21\0\1\113\4\0\1\66\20\0\1\71"+
+    "\1\1\6\0\1\66\2\0\1\114\30\0\2\1\2\0"+
+    "\26\1\1\115\1\1\1\115\3\1\1\0\11\1\1\22"+
+    "\1\1\2\0\1\116\3\0\2\1\1\62\1\1\24\0"+
+    "\1\117\44\0\1\120\34\0\7\1\1\107\1\0\12\1"+
+    "\1\115\1\1\1\115\1\1\1\0\2\1\1\0\5\1"+
+    "\1\35\2\1\2\0\1\66\1\1\1\121\10\0\1\121"+
+    "\63\0\1\46\7\1\1\115\1\1\1\115\1\1\1\0"+
+    "\1\1\1\0\1\42\1\0\1\1\1\71\3\1\51\0"+
+    "\4\1\1\115\1\1\1\115\1\1\1\0\1\1\1\0"+
+    "\1\1\1\0\2\1\26\0\2\1\1\115\1\1\1\115"+
     "\1\1\1\0\1\1\1\0\1\1\2\0\1\1\17\0"+
-    "\1\114\1\1\1\114\1\1\1\0\1\1\1\0\1\1"+
-    "\2\0\1\1\13\0\1\114\1\1\1\114\1\1\1\0"+
-    "\1\1\1\0\1\1\13\0\1\114\1\1\1\114\1\1"+
+    "\1\115\1\1\1\115\1\1\1\0\1\1\1\0\1\1"+
+    "\2\0\1\1\13\0\1\115\1\1\1\115\1\1\1\0"+
+    "\1\1\1\0\1\1\13\0\1\115\1\1\1\115\1\1"+
     "\1\0\1\1\1\0\1\1\10\0\2\1\1\0\1\1"+
     "\5\0\2\1\4\0\1\1\3\0";
 
@@ -1704,402 +1704,407 @@ class TIBasicLexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 81: break;
+          case 82: break;
           case 2:
             { return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 82: break;
+          case 83: break;
           case 3:
             { return TIBasicTypes.CRLF;
             }
           // fall through
-          case 83: break;
+          case 84: break;
           case 4:
             { return TIBasicTypes.FACTORIAL;
             }
           // fall through
-          case 84: break;
+          case 85: break;
           case 5:
             { yybegin(STRING);
             }
           // fall through
-          case 85: break;
+          case 86: break;
           case 6:
             { return TIBasicTypes.LPAREN;
             }
           // fall through
-          case 86: break;
+          case 87: break;
           case 7:
             { return TIBasicTypes.RPAREN;
             }
           // fall through
-          case 87: break;
+          case 88: break;
           case 8:
             { return TIBasicTypes.TIMES;
             }
           // fall through
-          case 88: break;
+          case 89: break;
           case 9:
             { return TIBasicTypes.PLUS;
             }
           // fall through
-          case 89: break;
+          case 90: break;
           case 10:
             { return TIBasicTypes.COMMA;
             }
           // fall through
-          case 90: break;
+          case 91: break;
           case 11:
             { return TIBasicTypes.MINUS;
             }
           // fall through
-          case 91: break;
+          case 92: break;
           case 12:
             { return TIBasicTypes.DIVIDE;
             }
           // fall through
-          case 92: break;
+          case 93: break;
           case 13:
             { return TIBasicTypes.NUMBER;
             }
           // fall through
-          case 93: break;
+          case 94: break;
           case 14:
             { return TIBasicTypes.COLON;
             }
           // fall through
-          case 94: break;
+          case 95: break;
           case 15:
             { return TIBasicTypes.LT;
             }
           // fall through
-          case 95: break;
+          case 96: break;
           case 16:
             { return TIBasicTypes.EQ;
             }
           // fall through
-          case 96: break;
+          case 97: break;
           case 17:
             { return TIBasicTypes.GT;
             }
           // fall through
-          case 97: break;
+          case 98: break;
           case 18:
             { return TIBasicTypes.SIMPLE_VARIABLE;
             }
           // fall through
-          case 98: break;
+          case 99: break;
           case 19:
             { return TIBasicTypes.LBRACKET;
             }
           // fall through
-          case 99: break;
+          case 100: break;
           case 20:
             { return TIBasicTypes.RBRACKET;
             }
           // fall through
-          case 100: break;
+          case 101: break;
           case 21:
             { return TIBasicTypes.POW;
             }
           // fall through
-          case 101: break;
+          case 102: break;
           case 22:
             { return TIBasicTypes.LCURLY;
             }
           // fall through
-          case 102: break;
+          case 103: break;
           case 23:
             { return TIBasicTypes.RCURLY;
             }
           // fall through
-          case 103: break;
+          case 104: break;
           case 24:
             { return TIBasicTypes.NEG;
             }
           // fall through
-          case 104: break;
+          case 105: break;
           case 25:
             { return TIBasicTypes.TO_DEGREE;
             }
           // fall through
-          case 105: break;
+          case 106: break;
           case 26:
             { return TIBasicTypes.POW2;
             }
           // fall through
-          case 106: break;
+          case 107: break;
           case 27:
             { return TIBasicTypes.POW3;
             }
           // fall through
-          case 107: break;
+          case 108: break;
           case 28:
             { return TIBasicTypes.TOKEN;
             }
           // fall through
-          case 108: break;
+          case 109: break;
           case 29:
             { return TIBasicTypes.CUSTOM_LIST_L;
             }
           // fall through
-          case 109: break;
+          case 110: break;
           case 30:
             { return TIBasicTypes.TO_RADIAN;
             }
           // fall through
-          case 110: break;
+          case 111: break;
           case 31:
             { return TIBasicTypes.MATH_VARIABLE;
             }
           // fall through
-          case 111: break;
+          case 112: break;
           case 32:
             { return TIBasicTypes.TRANSPOSE;
             }
           // fall through
-          case 112: break;
+          case 113: break;
           case 33:
             { return TIBasicTypes.STO;
             }
           // fall through
-          case 113: break;
+          case 114: break;
           case 34:
             { return TIBasicTypes.EXPR_FUNCTIONS_WITH_ARGS;
             }
           // fall through
-          case 114: break;
+          case 115: break;
           case 35:
             { return TIBasicTypes.NE;
             }
           // fall through
-          case 115: break;
+          case 116: break;
           case 36:
             { return TIBasicTypes.LE;
             }
           // fall through
-          case 116: break;
+          case 117: break;
           case 37:
             { return TIBasicTypes.GE;
             }
           // fall through
-          case 117: break;
+          case 118: break;
           case 38:
             { return TIBasicTypes.PLOT_MARK;
             }
           // fall through
-          case 118: break;
+          case 119: break;
           case 39:
             { return TIBasicTypes.WINDOW_VARIABLE;
             }
           // fall through
-          case 119: break;
+          case 120: break;
           case 40:
             { 
             }
           // fall through
-          case 120: break;
+          case 121: break;
           case 41:
             { yypushback(1); yybegin(YYINITIAL); return TIBasicTypes.STRING;
             }
           // fall through
-          case 121: break;
+          case 122: break;
           case 42:
             { yybegin(YYINITIAL); return TIBasicTypes.STRING;
             }
           // fall through
-          case 122: break;
+          case 123: break;
           case 43:
             { yypushback(2); yybegin(YYINITIAL); return TIBasicTypes.STRING;
             }
           // fall through
-          case 123: break;
+          case 124: break;
           case 44:
             { return TIBasicTypes.COMMENT;
             }
           // fall through
-          case 124: break;
+          case 125: break;
           case 45:
             { return TIBasicTypes.IF;
             }
           // fall through
-          case 125: break;
+          case 126: break;
           case 46:
             { return TIBasicTypes.LIST_VARIABLE;
             }
           // fall through
-          case 126: break;
+          case 127: break;
           case 47:
             { return TIBasicTypes.EQUATION_VARIABLE;
             }
           // fall through
-          case 127: break;
+          case 128: break;
           case 48:
             { return TIBasicTypes.OR;
             }
           // fall through
-          case 128: break;
+          case 129: break;
           case 49:
             { return TIBasicTypes.INVERSE;
             }
           // fall through
-          case 129: break;
+          case 130: break;
           case 50:
             { return TIBasicTypes.XROOT;
             }
           // fall through
-          case 130: break;
+          case 131: break;
           case 51:
             { return TIBasicTypes.ANS_VARIABLE;
             }
           // fall through
-          case 131: break;
+          case 132: break;
           case 52:
-            { return TIBasicTypes.COMMAND_WITH_PARENS;
+            { return TIBasicTypes.ASM;
             }
           // fall through
-          case 132: break;
+          case 133: break;
           case 53:
             { return TIBasicTypes.DS;
             }
           // fall through
-          case 133: break;
+          case 134: break;
           case 54:
             { return TIBasicTypes.COMMAND_NO_PARENS;
             }
           // fall through
-          case 134: break;
+          case 135: break;
           case 55:
             { return TIBasicTypes.END;
             }
           // fall through
-          case 135: break;
+          case 136: break;
           case 56:
             { return TIBasicTypes.FOR;
             }
           // fall through
-          case 136: break;
-          case 57:
-            { return TIBasicTypes.IS;
-            }
-          // fall through
           case 137: break;
-          case 58:
-            { return TIBasicTypes.LBL;
+          case 57:
+            { return TIBasicTypes.COMMAND_WITH_PARENS;
             }
           // fall through
           case 138: break;
-          case 59:
-            { return TIBasicTypes.COLOR_VARIABLE;
+          case 58:
+            { return TIBasicTypes.IS;
             }
           // fall through
           case 139: break;
-          case 60:
-            { return TIBasicTypes.MATRIX_VARIABLE;
+          case 59:
+            { return TIBasicTypes.LBL;
             }
           // fall through
           case 140: break;
-          case 61:
-            { return TIBasicTypes.AND;
+          case 60:
+            { return TIBasicTypes.COLOR_VARIABLE;
             }
           // fall through
           case 141: break;
-          case 62:
-            { return TIBasicTypes.DIM;
+          case 61:
+            { return TIBasicTypes.MATRIX_VARIABLE;
             }
           // fall through
           case 142: break;
-          case 63:
-            { return TIBasicTypes.NCR;
+          case 62:
+            { return TIBasicTypes.AND;
             }
           // fall through
           case 143: break;
-          case 64:
-            { return TIBasicTypes.NPR;
+          case 63:
+            { return TIBasicTypes.DIM;
             }
           // fall through
           case 144: break;
-          case 65:
-            { return TIBasicTypes.XOR;
+          case 64:
+            { return TIBasicTypes.NCR;
             }
           // fall through
           case 145: break;
-          case 66:
-            { return TIBasicTypes.EXPR_MODIFIER;
+          case 65:
+            { return TIBasicTypes.NPR;
             }
           // fall through
           case 146: break;
-          case 67:
-            { return TIBasicTypes.DISP;
+          case 66:
+            { return TIBasicTypes.XOR;
             }
           // fall through
           case 147: break;
-          case 68:
-            { return TIBasicTypes.ELSE;
+          case 67:
+            { return TIBasicTypes.EXPR_MODIFIER;
             }
           // fall through
           case 148: break;
-          case 69:
-            { return TIBasicTypes.GOTO;
+          case 68:
+            { return TIBasicTypes.DISP;
             }
           // fall through
           case 149: break;
-          case 70:
-            { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS;
+          case 69:
+            { return TIBasicTypes.ELSE;
             }
           // fall through
           case 150: break;
-          case 71:
-            { return TIBasicTypes.PICTURE_VARIABLE;
+          case 70:
+            { return TIBasicTypes.GOTO;
             }
           // fall through
           case 151: break;
-          case 72:
-            { return TIBasicTypes.STRING_VARIABLE;
+          case 71:
+            { return TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS;
             }
           // fall through
           case 152: break;
-          case 73:
-            { return TIBasicTypes.THEN;
+          case 72:
+            { return TIBasicTypes.PICTURE_VARIABLE;
             }
           // fall through
           case 153: break;
-          case 74:
-            { return TIBasicTypes.PLOT_COMMAND;
+          case 73:
+            { return TIBasicTypes.STRING_VARIABLE;
             }
           // fall through
           case 154: break;
-          case 75:
-            { return TIBasicTypes.WHILE;
+          case 74:
+            { return TIBasicTypes.THEN;
             }
           // fall through
           case 155: break;
-          case 76:
-            { return TIBasicTypes.PRGM_CALL;
+          case 75:
+            { return TIBasicTypes.PLOT_COMMAND;
             }
           // fall through
           case 156: break;
-          case 77:
-            { return TIBasicTypes.EXPR_FUNCTIONS_OPTIONAL_ARGS;
+          case 76:
+            { return TIBasicTypes.WHILE;
             }
           // fall through
           case 157: break;
-          case 78:
-            { return TIBasicTypes.DELVAR;
+          case 77:
+            { return TIBasicTypes.PRGM_CALL;
             }
           // fall through
           case 158: break;
-          case 79:
-            { return TIBasicTypes.REPEAT;
+          case 78:
+            { return TIBasicTypes.EXPR_FUNCTIONS_OPTIONAL_ARGS;
             }
           // fall through
           case 159: break;
-          case 80:
-            { return TIBasicTypes.PLOT_TYPE;
+          case 79:
+            { return TIBasicTypes.DELVAR;
             }
           // fall through
           case 160: break;
+          case 80:
+            { return TIBasicTypes.REPEAT;
+            }
+          // fall through
+          case 161: break;
+          case 81:
+            { return TIBasicTypes.PLOT_TYPE;
+            }
+          // fall through
+          case 162: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }
