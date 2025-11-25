@@ -164,8 +164,6 @@ asm_statement ::= ASM LPAREN PRGM_CALL { pin=1 }
 
 prgm_statement ::= PRGM_CALL
 
-// todo: StoreGDB & RecallGDB with single digit, no expression allowed
-
 disp_statement ::= DISP [<<list disp_item>>]
 private disp_item ::= expr [EXPR_MODIFIER]
 
