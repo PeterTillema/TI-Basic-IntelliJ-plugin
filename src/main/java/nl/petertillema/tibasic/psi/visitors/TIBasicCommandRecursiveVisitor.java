@@ -5,6 +5,7 @@ import nl.petertillema.tibasic.psi.TIBasicDelvarStatement;
 import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
+import nl.petertillema.tibasic.psi.TIBasicIsDsStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
 import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
@@ -57,6 +58,13 @@ public class TIBasicCommandRecursiveVisitor extends TIBasicVisitor {
     @Override
     public void visitElseBlock(@NotNull TIBasicElseBlock o) {
         o.acceptChildren(this);
+    }
+
+    @Override
+    public void visitIsDsStatement(@NotNull TIBasicIsDsStatement o) {
+        if (o.getStatement() != null) {
+            o.getStatement().accept(this);
+        }
     }
 
     @Override
