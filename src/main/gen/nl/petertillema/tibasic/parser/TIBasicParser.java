@@ -1390,12 +1390,6 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TOKEN
-  static boolean unused_(PsiBuilder b, int l) {
-    return consumeToken(b, TOKEN);
-  }
-
-  /* ********************************************************** */
   // WHILE expr end_block_ [END]
   public static boolean while_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "while_statement")) return false;

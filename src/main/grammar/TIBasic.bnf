@@ -17,6 +17,7 @@
   extends(".*_statement")=statement
   tokens=[
     COMMENT = "regexp://[^\r\n]*"
+    TOKEN = "regexp:(.+)"
   ]
 }
 
@@ -36,8 +37,6 @@ private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
 private small_statement ::= delvar_statement | goto_statement | lbl_statement | menu_statement | plot_statement | disp_statement | command_statement | prgm_statement | expr_statement
 private compound_statement ::= is_ds_statement | if_statement | while_statement | repeat_statement | for_statement
-
-private unused_ ::= TOKEN
 
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 expr ::= or_group
