@@ -8,7 +8,7 @@ import com.intellij.navigation.ItemPresentation;
 
 public interface TIBasicRepeatStatement extends TIBasicStatement {
 
-  @NotNull
+  @Nullable
   TIBasicExpr getExpr();
 
   @NotNull

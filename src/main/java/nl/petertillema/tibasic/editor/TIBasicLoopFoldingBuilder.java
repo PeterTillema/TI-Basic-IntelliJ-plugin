@@ -59,13 +59,13 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
             @Override
             public void visitRepeatStatement(@NotNull TIBasicRepeatStatement o) {
                 super.visitRepeatStatement(o);
-                this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
+                this.addLoopDescriptor(o, o.getExpr() == null ? 7 : o.getExpr().getTextRangeInParent().getEndOffset());
             }
 
             @Override
             public void visitWhileStatement(@NotNull TIBasicWhileStatement o) {
                 super.visitWhileStatement(o);
-                this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
+                this.addLoopDescriptor(o, o.getExpr() == null ? 6 : o.getExpr().getTextRangeInParent().getEndOffset());
             }
 
             @Override

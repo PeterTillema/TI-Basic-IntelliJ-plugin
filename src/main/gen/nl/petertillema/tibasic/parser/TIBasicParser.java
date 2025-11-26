@@ -1036,18 +1036,31 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // REPEAT expr end_block_ optional_end
+  // end_block_ optional_end
+  static boolean repeat_body(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "repeat_body")) return false;
+    if (!nextTokenIs(b, "", COLON, CRLF)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = end_block_(b, l + 1);
+    r = r && optional_end(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // REPEAT expr repeat_body
   public static boolean repeat_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "repeat_statement")) return false;
     if (!nextTokenIs(b, REPEAT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, REPEAT_STATEMENT, null);
     r = consumeToken(b, REPEAT);
-    r = r && expr(b, l + 1, -1);
-    r = r && end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
-    exit_section_(b, m, REPEAT_STATEMENT, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && repeat_body(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -1330,18 +1343,31 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // WHILE expr end_block_ optional_end
+  // end_block_ optional_end
+  static boolean while_body(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "while_body")) return false;
+    if (!nextTokenIs(b, "", COLON, CRLF)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = end_block_(b, l + 1);
+    r = r && optional_end(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // WHILE expr while_body
   public static boolean while_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "while_statement")) return false;
     if (!nextTokenIs(b, WHILE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, WHILE_STATEMENT, null);
     r = consumeToken(b, WHILE);
-    r = r && expr(b, l + 1, -1);
-    r = r && end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
-    exit_section_(b, m, WHILE_STATEMENT, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && while_body(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

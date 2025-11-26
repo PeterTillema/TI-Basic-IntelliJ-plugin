@@ -33,14 +33,14 @@ public final class TIBasicEmptyLoopInspection extends LocalInspectionTool {
         return new TIBasicVisitor() {
             @Override
             public void visitWhileStatement(@NotNull TIBasicWhileStatement o) {
-                if (containsNoneExprFunctionCall(o.getExpr()) && o.getStatementList().isEmpty()) {
+                if ((o.getExpr() == null || containsNoneExprFunctionCall(o.getExpr())) && o.getStatementList().isEmpty()) {
                     holder.registerProblem(o.getFirstChild(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
             }
 
             @Override
             public void visitRepeatStatement(@NotNull TIBasicRepeatStatement o) {
-                if (containsNoneExprFunctionCall(o.getExpr()) && o.getStatementList().isEmpty()) {
+                if ((o.getExpr() == null || containsNoneExprFunctionCall(o.getExpr())) && o.getStatementList().isEmpty()) {
                     holder.registerProblem(o.getFirstChild(), ERROR_MESSAGE, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveMainLoopQuickFix());
                 }
             }
