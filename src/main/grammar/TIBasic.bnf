@@ -171,7 +171,7 @@ private disp_item ::= expr [EXPR_MODIFIER]
 menu_statement ::= "Menu" LPAREN expr COMMA <<list menu_option>> optional_rparen { pin=1 }
 menu_option ::= expr COMMA goto_name { pin=1 }
 
-plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr] optional_rparen
+plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr] optional_rparen { pin=1 }
 
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [<<list expr>>] { pin=1 }

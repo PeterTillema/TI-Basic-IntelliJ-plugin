@@ -981,17 +981,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   public static boolean plot_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "plot_statement")) return false;
     if (!nextTokenIs(b, PLOT_COMMAND)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, PLOT_COMMAND, LPAREN, PLOT_TYPE, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && plot_statement_7(b, l + 1);
-    r = r && plot_statement_8(b, l + 1);
-    r = r && optional_rparen(b, l + 1);
-    exit_section_(b, m, PLOT_STATEMENT, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, PLOT_STATEMENT, null);
+    r = consumeTokens(b, 1, PLOT_COMMAND, LPAREN, PLOT_TYPE, COMMA);
+    p = r; // pin = 1
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, plot_statement_7(b, l + 1)) && r;
+    r = p && report_error_(b, plot_statement_8(b, l + 1)) && r;
+    r = p && optional_rparen(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [COMMA PLOT_MARK]
