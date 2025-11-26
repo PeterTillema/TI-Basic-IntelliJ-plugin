@@ -33,6 +33,7 @@ The IntelliJ plugin can be found here: https://plugins.jetbrains.com/plugin/2872
 
 ## Known issues
  - Find usages from Lbl in Menu statement
+ - Typing an "Else" or "Then" within a code block causes the parser to stop entirely
  - Typing a "]" after typing the start of a matrix name first (i.e. "[A") inserts another right bracket.
  - Allow references from/to custom list names without the |L prefix
 
