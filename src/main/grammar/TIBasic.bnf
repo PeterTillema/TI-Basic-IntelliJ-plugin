@@ -161,7 +161,7 @@ lbl_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER]
     methods=[getName setName getNameIdentifier]
 }
 
-asm_statement ::= ASM LPAREN PRGM_CALL { pin=1 }
+asm_statement ::= ASM LPAREN PRGM_CALL optional_rparen { pin=1 }
 
 prgm_statement ::= PRGM_CALL
 
@@ -171,7 +171,7 @@ private disp_item ::= expr [EXPR_MODIFIER]
 menu_statement ::= "Menu" LPAREN expr COMMA <<list menu_option>> optional_rparen { pin=1 }
 menu_option ::= expr COMMA goto_name { pin=1 }
 
-plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr]
+plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr] optional_rparen
 
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [<<list expr>>] { pin=1 }

@@ -143,7 +143,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ASM LPAREN PRGM_CALL
+  // ASM LPAREN PRGM_CALL optional_rparen
   public static boolean asm_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "asm_statement")) return false;
     if (!nextTokenIs(b, ASM)) return false;
@@ -151,6 +151,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, ASM_STATEMENT, null);
     r = consumeTokens(b, 1, ASM, LPAREN, PRGM_CALL);
     p = r; // pin = 1
+    r = r && optional_rparen(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -980,7 +981,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr]
+  // PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr] optional_rparen
   public static boolean plot_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "plot_statement")) return false;
     if (!nextTokenIs(b, PLOT_COMMAND)) return false;
@@ -992,6 +993,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = r && expr(b, l + 1, -1);
     r = r && plot_statement_7(b, l + 1);
     r = r && plot_statement_8(b, l + 1);
+    r = r && optional_rparen(b, l + 1);
     exit_section_(b, m, PLOT_STATEMENT, r);
     return r;
   }
