@@ -26,7 +26,6 @@ public interface TIBasicTypes {
   IElementType EXPR_STATEMENT = new TIBasicElementType("EXPR_STATEMENT");
   IElementType FACTORIAL_EXPR = new TIBasicElementType("FACTORIAL_EXPR");
   IElementType FOR_IDENTIFIER = new TIBasicElementType("FOR_IDENTIFIER");
-  IElementType FOR_INITIALIZER = new TIBasicElementType("FOR_INITIALIZER");
   IElementType FOR_STATEMENT = new TIBasicElementType("FOR_STATEMENT");
   IElementType FUNC_EXPR = new TIBasicElementType("FUNC_EXPR");
   IElementType FUNC_OPTIONAL_EXPR = new TIBasicElementType("FUNC_OPTIONAL_EXPR");
@@ -198,9 +197,6 @@ public interface TIBasicTypes {
       }
       else if (type == FOR_IDENTIFIER) {
         return new TIBasicForIdentifierImpl(node);
-      }
-      else if (type == FOR_INITIALIZER) {
-        return new TIBasicForInitializerImpl(node);
       }
       else if (type == FOR_STATEMENT) {
         return new TIBasicForStatementImpl(node);

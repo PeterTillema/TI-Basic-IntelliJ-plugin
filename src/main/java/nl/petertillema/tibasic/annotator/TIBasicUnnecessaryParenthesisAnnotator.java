@@ -19,7 +19,6 @@ import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
-import nl.petertillema.tibasic.psi.TIBasicForInitializer;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,8 +64,8 @@ public final class TIBasicUnnecessaryParenthesisAnnotator implements Annotator {
         if (element instanceof TIBasicAssignmentStatement assignmentStatement) return assignmentStatement.getExpr();
         if (element instanceof TIBasicExprStatement exprStatement) return exprStatement.getExpr();
         if (element instanceof TIBasicCommandStatement ||
-                element instanceof TIBasicAssignmentTarget ||
-                element instanceof TIBasicForInitializer) return element;
+                element instanceof TIBasicAssignmentTarget) return element;
+        // todo: For() loop parenthesis
         return null;
     }
 

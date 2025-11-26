@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements DumbAware {
     @Override
@@ -71,7 +72,7 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
             @Override
             public void visitForStatement(@NotNull TIBasicForStatement o) {
                 super.visitForStatement(o);
-                this.addLoopDescriptor(o, o.getForInitializer().getTextRangeInParent().getEndOffset());
+                this.addLoopDescriptor(o, Objects.requireNonNull(o.getPresentation().getPresentableText()).length());
             }
 
             private void addLoopDescriptor(PsiElement o, int textOffsetToCollapse) {

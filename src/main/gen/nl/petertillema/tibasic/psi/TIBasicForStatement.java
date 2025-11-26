@@ -9,7 +9,10 @@ import com.intellij.navigation.ItemPresentation;
 public interface TIBasicForStatement extends TIBasicStatement {
 
   @NotNull
-  TIBasicForInitializer getForInitializer();
+  List<TIBasicExpr> getExprList();
+
+  @Nullable
+  TIBasicForIdentifier getForIdentifier();
 
   @NotNull
   List<TIBasicStatement> getStatementList();

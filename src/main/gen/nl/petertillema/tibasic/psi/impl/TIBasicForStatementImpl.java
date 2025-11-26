@@ -30,8 +30,14 @@ public class TIBasicForStatementImpl extends TIBasicStatementImpl implements TIB
 
   @Override
   @NotNull
-  public TIBasicForInitializer getForInitializer() {
-    return findNotNullChildByClass(TIBasicForInitializer.class);
+  public List<TIBasicExpr> getExprList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);
+  }
+
+  @Override
+  @Nullable
+  public TIBasicForIdentifier getForIdentifier() {
+    return findChildByClass(TIBasicForIdentifier.class);
   }
 
   @Override

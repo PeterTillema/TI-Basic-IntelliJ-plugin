@@ -600,6 +600,19 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // end_block_ optional_end
+  static boolean for_body(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_body")) return false;
+    if (!nextTokenIs(b, "", COLON, CRLF)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = end_block_(b, l + 1);
+    r = r && optional_end(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // SIMPLE_VARIABLE
   public static boolean for_identifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "for_identifier")) return false;
@@ -612,53 +625,41 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen
-  public static boolean for_initializer(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_initializer")) return false;
+  // FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen for_body
+  public static boolean for_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_statement")) return false;
     if (!nextTokenIs(b, FOR)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, FOR, LPAREN);
-    r = r && for_identifier(b, l + 1);
-    r = r && consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    r = r && for_initializer_7(b, l + 1);
-    r = r && optional_rparen(b, l + 1);
-    exit_section_(b, m, FOR_INITIALIZER, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FOR_STATEMENT, null);
+    r = consumeTokens(b, 1, FOR, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, for_identifier(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, for_statement_7(b, l + 1)) && r;
+    r = p && report_error_(b, optional_rparen(b, l + 1)) && r;
+    r = p && for_body(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // [COMMA expr]
-  private static boolean for_initializer_7(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_initializer_7")) return false;
-    for_initializer_7_0(b, l + 1);
+  private static boolean for_statement_7(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_statement_7")) return false;
+    for_statement_7_0(b, l + 1);
     return true;
   }
 
   // COMMA expr
-  private static boolean for_initializer_7_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_initializer_7_0")) return false;
+  private static boolean for_statement_7_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_statement_7_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
     r = r && expr(b, l + 1, -1);
     exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // for_initializer end_block_ optional_end
-  public static boolean for_statement(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_statement")) return false;
-    if (!nextTokenIs(b, FOR)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = for_initializer(b, l + 1);
-    r = r && end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
-    exit_section_(b, m, FOR_STATEMENT, r);
     return r;
   }
 

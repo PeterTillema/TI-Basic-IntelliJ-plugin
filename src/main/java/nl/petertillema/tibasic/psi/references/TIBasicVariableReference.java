@@ -52,9 +52,9 @@ public final class TIBasicVariableReference extends PsiPolyVariantReferenceBase<
             }
         }
         for (TIBasicForStatement forLoop : forLoops) {
-            int endOffset = forLoop.getForInitializer().getTextRangeInParent().getEndOffset();
-            String text = forLoop.getText().substring(0, endOffset);
-            variants.add(LookupElementBuilder.create(forLoop.getForInitializer().getForIdentifier()).withTypeText(text));
+            if (forLoop.getForIdentifier() == null) continue;
+            String text = forLoop.getPresentation().getPresentableText();
+            variants.add(LookupElementBuilder.create(forLoop.getForIdentifier()).withTypeText(text));
         }
 
         return variants.toArray();

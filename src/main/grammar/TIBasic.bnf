@@ -193,8 +193,8 @@ private while_body ::= end_block_ optional_end
 repeat_statement ::= REPEAT expr repeat_body { methods=[getPresentation] pin=1 }
 private repeat_body ::= end_block_ optional_end
 
-for_statement ::= for_initializer end_block_ optional_end { methods=[getPresentation] }
-for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen
+for_statement ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen for_body { methods=[getPresentation] pin=1 }
+private for_body ::= end_block_ optional_end
 for_identifier ::= SIMPLE_VARIABLE
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
