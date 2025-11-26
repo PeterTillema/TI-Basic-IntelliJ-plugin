@@ -11,7 +11,7 @@ public interface TIBasicIfStatement extends TIBasicStatement {
   @Nullable
   TIBasicElseBlock getElseBlock();
 
-  @NotNull
+  @Nullable
   TIBasicExpr getExpr();
 
   @Nullable

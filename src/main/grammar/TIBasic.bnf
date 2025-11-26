@@ -33,8 +33,8 @@ private optional_end ::= [END]
 private NEWLINE ::= CRLF | COLON
 private statement_recover ::= !NEWLINE
 
-private end_block_ ::= NEWLINE+ (!END (statement_internal NEWLINE*))*
-private then_block_ ::= NEWLINE+ (!ELSE !END (statement_internal NEWLINE*))*
+private end_block_ ::= NEWLINE* (!END (statement_internal NEWLINE*))*
+private then_block_ ::= NEWLINE* (!ELSE !END (statement_internal NEWLINE*))*
 
 private simple_statement ::= small_statement { recoverWhile=statement_recover }
 private small_statement ::= delvar_statement |
@@ -182,7 +182,7 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> optional_
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
 is_ds_statement ::= (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr optional_rparen NEWLINE statement_internal { pin=1 }
 
-if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] }
+if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] pin=1 }
 private if_body ::= (then_block [else_block | END]) | statement_internal
 then_block ::= THEN then_block_ { methods=[getPresentation] }
 else_block ::= ELSE end_block_ optional_end { methods=[getPresentation] }

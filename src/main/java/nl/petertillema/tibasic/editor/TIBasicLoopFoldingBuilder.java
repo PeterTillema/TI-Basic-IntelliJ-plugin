@@ -36,7 +36,8 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                         // Add for "If" + "Then"
                         int ifStartOffset = o.getTextRange().getStartOffset();
                         int ifThenLength = o.getThenBlock().getTextRangeInParent().getEndOffset() - 1;
-                        String ifText = o.getText().substring(0, o.getExpr().getTextRangeInParent().getEndOffset());
+                        int ifTextOffset = o.getExpr() == null ? 2 : o.getExpr().getTextRangeInParent().getEndOffset();
+                        String ifText = o.getText().substring(0, ifTextOffset);
 
                         FoldingDescriptor descriptor = new FoldingDescriptor(
                                 o.getNode(),
@@ -52,7 +53,7 @@ public final class TIBasicLoopFoldingBuilder extends FoldingBuilderEx implements
                         this.addLoopDescriptor(o.getElseBlock(), 4);
                     } else {
                         // Only add for "If" + "Then"
-                        this.addLoopDescriptor(o, o.getExpr().getTextRangeInParent().getEndOffset());
+                        this.addLoopDescriptor(o, o.getExpr() == null ? 2 : o.getExpr().getTextRangeInParent().getEndOffset());
                     }
                 }
             }

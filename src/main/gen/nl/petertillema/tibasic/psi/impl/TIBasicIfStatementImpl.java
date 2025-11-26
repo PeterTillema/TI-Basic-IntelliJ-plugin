@@ -35,9 +35,9 @@ public class TIBasicIfStatementImpl extends TIBasicStatementImpl implements TIBa
   }
 
   @Override
-  @NotNull
+  @Nullable
   public TIBasicExpr getExpr() {
-    return findNotNullChildByClass(TIBasicExpr.class);
+    return findChildByClass(TIBasicExpr.class);
   }
 
   @Override
