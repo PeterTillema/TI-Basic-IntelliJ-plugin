@@ -27,6 +27,8 @@ private statement_internal ::= compound_statement | simple_statement
 fake statement ::=
 
 private meta list ::= <<p>> (COMMA <<p>>)*
+private optional_rparen ::= [RPAREN]
+private optional_end ::= [END]
 
 private NEWLINE ::= CRLF | COLON
 private statement_recover ::= !NEWLINE
@@ -113,17 +115,17 @@ transpose_expr ::= expr TRANSPOSE
 pow3_expr ::= expr POW3
 factorial_expr ::= expr FACTORIAL
 // Precedence 1
-paren_expr ::= LPAREN expr [RPAREN]
-func_expr ::= (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> [RPAREN] { pin=1 }
-func_optional_expr ::= EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> [RPAREN]] { pin=1 }
+paren_expr ::= LPAREN expr optional_rparen
+func_expr ::= (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> optional_rparen { pin=1 }
+func_optional_expr ::= EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> optional_rparen] { pin=1 }
 
 // Base literal
 literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
 {
     methods=[getReferences]
 }
-list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
-matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr [RPAREN] { pin=2 }
+list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen { pin=2 }
+matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr optional_rparen { pin=2 }
 anonymous_list ::= LCURLY <<list expr>> [RCURLY] { pin=1 }
 anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> [RBRACKET] { pin=1 }
 anonymous_matrix_row ::= LBRACKET <<list expr>> [RBRACKET] { pin=1 }
@@ -138,10 +140,10 @@ assignment_target ::= assignment_target_matrix_index | assignment_target_list_in
     implements="nl.petertillema.tibasic.psi.TIBasicNamedElement"
     methods=[getName setName getNameIdentifier]
 }
-private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr [RPAREN] { pin=2 }
-private assignment_target_list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr [RPAREN] { pin=2 }
+private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr optional_rparen { pin=2 }
+private assignment_target_list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen { pin=2 }
 private assignment_target_variable ::= LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
-private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) [RPAREN] { pin=1 }
+private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) optional_rparen { pin=1 }
 
 private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name
 private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_char] [custom_list_char] [custom_list_char]
@@ -167,31 +169,31 @@ prgm_statement ::= PRGM_CALL
 disp_statement ::= DISP [<<list disp_item>>]
 private disp_item ::= expr [EXPR_MODIFIER]
 
-menu_statement ::= "Menu" LPAREN expr COMMA <<list menu_option>> [RPAREN] { pin=1 }
+menu_statement ::= "Menu" LPAREN expr COMMA <<list menu_option>> optional_rparen { pin=1 }
 menu_option ::= expr COMMA goto_name { pin=1 }
 
 plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PLOT_MARK] [COMMA expr]
 
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [<<list expr>>] { pin=1 }
-private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> [RPAREN] { pin=1 }
+private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> optional_rparen { pin=1 }
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
-is_ds_statement ::= (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr [RPAREN] NEWLINE statement_internal { pin=1 }
+is_ds_statement ::= (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr optional_rparen NEWLINE statement_internal { pin=1 }
 
 if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] }
 private if_body ::= (then_block [else_block | END]) | statement_internal
 then_block ::= THEN then_block_ { methods=[getPresentation] }
-else_block ::= ELSE end_block_ [END] { methods=[getPresentation] }
+else_block ::= ELSE end_block_ optional_end { methods=[getPresentation] }
 
-while_statement ::= WHILE expr end_block_ [END] { methods=[getPresentation] }
+while_statement ::= WHILE expr end_block_ optional_end { methods=[getPresentation] }
 
-repeat_statement ::= REPEAT expr end_block_ [END] { methods=[getPresentation] }
+repeat_statement ::= REPEAT expr end_block_ optional_end { methods=[getPresentation] }
 
-for_statement ::= for_initializer end_block_ [END] { methods=[getPresentation] }
-for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] [RPAREN]
+for_statement ::= for_initializer end_block_ optional_end { methods=[getPresentation] }
+for_initializer ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen
 for_identifier ::= SIMPLE_VARIABLE
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
