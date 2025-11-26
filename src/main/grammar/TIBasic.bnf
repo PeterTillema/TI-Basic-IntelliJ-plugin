@@ -96,15 +96,14 @@ minus_expr ::= expr MINUS expr
 // Precedence 5
 mul_expr ::= expr TIMES expr
 div_expr ::= expr DIVIDE expr
-implied_mul_expr ::= implied_mul_arg implied_mul_arg+
-private implied_mul_arg ::= NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | COLOR_VARIABLE | paren_expr | func_optional_expr | func_expr
+implied_mul_expr ::= expr (modifiers_group | primary_group)
 // Precedence 4
 npr_expr ::= expr NPR expr
 ncr_expr ::= expr NCR expr
 // Precedence 3.5
 negation_expr ::= NEG expr
 // Precedence 3
-pow_expr ::= expr POW expr
+pow_expr ::= expr POW expr { rightAssociative=true }
 xroot_expr ::= expr XROOT expr
 // Precedence 2
 radian_expr ::= expr TO_RADIAN

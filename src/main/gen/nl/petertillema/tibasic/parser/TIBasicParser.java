@@ -768,27 +768,6 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NUMBER | MATH_VARIABLE | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | COLOR_VARIABLE | paren_expr | func_optional_expr | func_expr
-  static boolean implied_mul_arg(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "implied_mul_arg")) return false;
-    boolean r;
-    r = consumeToken(b, NUMBER);
-    if (!r) r = consumeToken(b, MATH_VARIABLE);
-    if (!r) r = consumeToken(b, EXPR_FUNCTIONS_NO_ARGS);
-    if (!r) r = consumeToken(b, ANS_VARIABLE);
-    if (!r) r = consumeToken(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
-    if (!r) r = consumeToken(b, EQUATION_VARIABLE);
-    if (!r) r = consumeToken(b, SIMPLE_VARIABLE);
-    if (!r) r = consumeToken(b, WINDOW_VARIABLE);
-    if (!r) r = consumeToken(b, COLOR_VARIABLE);
-    if (!r) r = paren_expr(b, l + 1);
-    if (!r) r = func_optional_expr(b, l + 1);
-    if (!r) r = func_expr(b, l + 1);
-    return r;
-  }
-
-  /* ********************************************************** */
   // (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr optional_rparen NEWLINE statement_internal
   public static boolean is_ds_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "is_ds_statement")) return false;
@@ -1371,7 +1350,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   // 2: BINARY(eq_expr) BINARY(ne_expr) BINARY(gt_expr) BINARY(ge_expr)
   //    BINARY(lt_expr) BINARY(le_expr)
   // 3: BINARY(plus_expr) BINARY(minus_expr)
-  // 4: BINARY(mul_expr) BINARY(div_expr) ATOM(implied_mul_expr)
+  // 4: BINARY(mul_expr) BINARY(div_expr) POSTFIX(implied_mul_expr)
   // 5: BINARY(npr_expr) BINARY(ncr_expr)
   // 6: PREFIX(negation_expr)
   // 7: BINARY(pow_expr) BINARY(xroot_expr)
@@ -1383,8 +1362,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     addVariant(b, "<expr>");
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, "<expr>");
-    r = implied_mul_expr(b, l + 1);
-    if (!r) r = negation_expr(b, l + 1);
+    r = negation_expr(b, l + 1);
     if (!r) r = literal_expr(b, l + 1);
     if (!r) r = func_expr(b, l + 1);
     if (!r) r = func_optional_expr(b, l + 1);
@@ -1452,6 +1430,10 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         r = expr(b, l, 4);
         exit_section_(b, l, m, DIV_EXPR, r, true, null);
       }
+      else if (g < 4 && implied_mul_expr_0(b, l + 1)) {
+        r = true;
+        exit_section_(b, l, m, IMPLIED_MUL_EXPR, r, true, null);
+      }
       else if (g < 5 && consumeTokenSmart(b, NPR)) {
         r = expr(b, l, 5);
         exit_section_(b, l, m, NPR_EXPR, r, true, null);
@@ -1461,7 +1443,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
         exit_section_(b, l, m, NCR_EXPR, r, true, null);
       }
       else if (g < 7 && consumeTokenSmart(b, POW)) {
-        r = expr(b, l, 7);
+        r = expr(b, l, 6);
         exit_section_(b, l, m, POW_EXPR, r, true, null);
       }
       else if (g < 7 && consumeTokenSmart(b, XROOT)) {
@@ -1504,29 +1486,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // implied_mul_arg implied_mul_arg+
-  public static boolean implied_mul_expr(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "implied_mul_expr")) return false;
+  // modifiers_group | primary_group
+  private static boolean implied_mul_expr_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "implied_mul_expr_0")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, IMPLIED_MUL_EXPR, "<implied mul expr>");
-    r = implied_mul_arg(b, l + 1);
-    r = r && implied_mul_expr_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // implied_mul_arg+
-  private static boolean implied_mul_expr_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "implied_mul_expr_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = implied_mul_arg(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!implied_mul_arg(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "implied_mul_expr_1", c)) break;
-    }
-    exit_section_(b, m, null, r);
+    r = expr(b, l + 1, 7);
+    if (!r) r = expr(b, l + 1, 8);
     return r;
   }
 
