@@ -1,0 +1,6 @@
+TI-Basic file(0,27)
+  TIBasicPrgmStatementImpl(PRGM_STATEMENT)(0,7)
+    PsiElement(PRGM_CALL)('prgmABC')(0,7)
+  PsiElement(CRLF)('\n')(7,8)
+  TIBasicPrgmStatementImpl(PRGM_STATEMENT)(8,27)
+    PsiElement(PRGM_CALL)('prgmtheta1ABCtheta2')(8,27)

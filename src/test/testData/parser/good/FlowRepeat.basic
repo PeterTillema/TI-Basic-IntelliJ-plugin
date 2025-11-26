@@ -1,0 +1,6 @@
+Repeat A>3
+    2->A
+    Repeat Ans
+        getKey
+    End
+    Disp A

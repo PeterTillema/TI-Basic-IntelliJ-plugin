@@ -1,0 +1,5 @@
+For(A,1,length(Str0
+    2->A
+End
+For(A,10,~8,~1)
+    2->A

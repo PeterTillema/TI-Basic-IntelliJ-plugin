@@ -1,0 +1,6 @@
+While A>3
+    2->A
+    While Ans
+        getKey
+    End
+    Disp A

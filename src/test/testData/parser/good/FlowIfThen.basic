@@ -1,0 +1,8 @@
+If A=2
+Then
+    2->A
+    If B<3
+    Then
+        2->A
+    End
+    4->A

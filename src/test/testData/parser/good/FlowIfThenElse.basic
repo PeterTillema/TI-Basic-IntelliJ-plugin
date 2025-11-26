@@ -1,0 +1,12 @@
+If A=2
+Then
+    2->A
+    If B<3
+    Then
+        2->A
+    Else
+        4->A
+    End
+Else
+    If B>1
+    2->A

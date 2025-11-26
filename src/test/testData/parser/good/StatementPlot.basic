@@ -1,0 +1,3 @@
+Plot1(Boxplot,A,B+1,plotcross,BLUE)
+Plot2(Histogram,A,B+1
+Plot3(xyLine,1,2,squareplot)
