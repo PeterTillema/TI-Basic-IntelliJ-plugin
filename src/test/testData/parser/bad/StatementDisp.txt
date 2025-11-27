@@ -1,0 +1,9 @@
+TI-Basic file(0,7)
+  TIBasicDispStatementImpl(DISP_STATEMENT)(0,6)
+    PsiElement(DISP)('Disp')(0,4)
+    PsiWhiteSpace(' ')(4,5)
+    TIBasicLiteralExprImpl(LITERAL_EXPR)(5,6)
+      PsiElement(NUMBER)('1')(5,6)
+  PsiElement(COMMA)(',')(6,7)
+  PsiErrorElement:<expr> expected(7,7)
+    <empty list>

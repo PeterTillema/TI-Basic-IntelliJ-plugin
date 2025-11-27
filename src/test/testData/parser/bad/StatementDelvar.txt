@@ -1,0 +1,13 @@
+TI-Basic file(0,21)
+  TIBasicDelvarStatementImpl(DELVAR_STATEMENT)(0,6)
+    PsiElement(DELVAR)('DelVar')(0,6)
+    PsiErrorElement:CUSTOM_LIST_L, EQUATION_VARIABLE, LIST_VARIABLE, MATRIX_VARIABLE, PICTURE_VARIABLE, SIMPLE_VARIABLE or STRING_VARIABLE expected(6,6)
+      <empty list>
+  PsiElement(CRLF)('\n')(6,7)
+  TIBasicDelvarStatementImpl(DELVAR_STATEMENT)(7,21)
+    PsiElement(DELVAR)('DelVar')(7,13)
+    PsiWhiteSpace(' ')(13,14)
+    PsiElement(SIMPLE_VARIABLE)('A')(14,15)
+    PsiElement(DELVAR)('DelVar')(15,21)
+    PsiErrorElement:CUSTOM_LIST_L, EQUATION_VARIABLE, LIST_VARIABLE, MATRIX_VARIABLE, PICTURE_VARIABLE, SIMPLE_VARIABLE or STRING_VARIABLE expected(21,21)
+      <empty list>

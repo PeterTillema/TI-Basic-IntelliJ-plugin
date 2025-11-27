@@ -1,0 +1,8 @@
+If
+Then
+    2->A
+    If A=2,
+    Then
+        3->A
+    Else
+        4->A

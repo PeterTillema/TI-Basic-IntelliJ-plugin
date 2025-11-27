@@ -1,0 +1,20 @@
+TI-Basic file(0,23)
+  TIBasicCommandStatementImpl(COMMAND_STATEMENT)(0,6)
+    PsiElement(COMMAND_WITH_PARENS)('Output')(0,6)
+    PsiErrorElement:LPAREN expected(6,6)
+      <empty list>
+  PsiElement(CRLF)('\n')(6,7)
+  TIBasicCommandStatementImpl(COMMAND_STATEMENT)(7,15)
+    PsiElement(COMMAND_WITH_PARENS)('setTime')(7,14)
+    PsiElement(LPAREN)('(')(14,15)
+    PsiErrorElement:<expr> expected(15,15)
+      <empty list>
+  PsiElement(CRLF)('\n')(15,16)
+  TIBasicCommandStatementImpl(COMMAND_STATEMENT)(16,22)
+    PsiElement(COMMAND_WITH_PARENS)('Line')(16,20)
+    PsiElement(LPAREN)('(')(20,21)
+    TIBasicLiteralExprImpl(LITERAL_EXPR)(21,22)
+      PsiElement(NUMBER)('1')(21,22)
+  PsiElement(COMMA)(',')(22,23)
+  PsiErrorElement:<expr> expected(23,23)
+    <empty list>

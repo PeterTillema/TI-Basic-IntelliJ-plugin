@@ -1,0 +1,5 @@
+TI-Basic file(0,9)
+  TIBasicPrgmStatementImpl(PRGM_STATEMENT)(0,8)
+    PsiElement(PRGM_CALL)('prgmTEST')(0,8)
+  PsiErrorElement:')' unexpected(8,9)
+    PsiElement(RPAREN)(')')(8,9)

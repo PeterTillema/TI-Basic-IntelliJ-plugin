@@ -1,0 +1,25 @@
+TI-Basic file(0,20)
+  TIBasicAsmStatementImpl(ASM_STATEMENT)(0,3)
+    PsiElement(ASM)('Asm')(0,3)
+    PsiErrorElement:LPAREN expected(3,3)
+      <empty list>
+  PsiElement(CRLF)('\n')(3,4)
+  TIBasicAsmStatementImpl(ASM_STATEMENT)(4,8)
+    PsiElement(ASM)('Asm')(4,7)
+    PsiElement(LPAREN)('(')(7,8)
+    PsiErrorElement:PRGM_CALL expected(8,8)
+      <empty list>
+  PsiElement(CRLF)('\n')(8,9)
+  TIBasicAsmStatementImpl(ASM_STATEMENT)(9,13)
+    PsiElement(ASM)('Asm')(9,12)
+    PsiElement(LPAREN)('(')(12,13)
+    PsiErrorElement:PRGM_CALL expected, got 'A'(13,13)
+      <empty list>
+  PsiElement(SIMPLE_VARIABLE)('A')(13,14)
+  PsiElement(CRLF)('\n')(14,15)
+  TIBasicAsmStatementImpl(ASM_STATEMENT)(15,20)
+    PsiElement(ASM)('Asm')(15,18)
+    PsiElement(LPAREN)('(')(18,19)
+    PsiErrorElement:PRGM_CALL expected, got ')'(19,19)
+      <empty list>
+    PsiElement(RPAREN)(')')(19,20)
