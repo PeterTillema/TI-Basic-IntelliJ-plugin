@@ -476,15 +476,14 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ELSE end_block_ optional_end
+  // ELSE loop_block
   public static boolean else_block(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "else_block")) return false;
     if (!nextTokenIs(b, ELSE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, ELSE);
-    r = r && end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
+    r = r && loop_block(b, l + 1);
     exit_section_(b, m, ELSE_BLOCK, r);
     return r;
   }
@@ -595,13 +594,38 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // end_block_ optional_end
-  static boolean for_body(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_body")) return false;
+  // LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen
+  static boolean for_header(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_header")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeToken(b, LPAREN);
+    p = r; // pin = 1
+    r = r && report_error_(b, for_identifier(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
+    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
+    r = p && report_error_(b, for_header_6(b, l + 1)) && r;
+    r = p && optional_rparen(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, TIBasicParser::recover_until_newline);
+    return r || p;
+  }
+
+  // [COMMA expr]
+  private static boolean for_header_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_header_6")) return false;
+    for_header_6_0(b, l + 1);
+    return true;
+  }
+
+  // COMMA expr
+  private static boolean for_header_6_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "for_header_6_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
+    r = consumeToken(b, COMMA);
+    r = r && expr(b, l + 1, -1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -619,42 +643,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen for_body
+  // FOR for_header loop_block
   public static boolean for_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "for_statement")) return false;
     if (!nextTokenIs(b, FOR)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, FOR_STATEMENT, null);
-    r = consumeTokens(b, 1, FOR, LPAREN);
+    r = consumeToken(b, FOR);
     p = r; // pin = 1
-    r = r && report_error_(b, for_identifier(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
-    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
-    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
-    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
-    r = p && report_error_(b, for_statement_7(b, l + 1)) && r;
-    r = p && report_error_(b, optional_rparen(b, l + 1)) && r;
-    r = p && for_body(b, l + 1) && r;
+    r = r && report_error_(b, for_header(b, l + 1));
+    r = p && loop_block(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // [COMMA expr]
-  private static boolean for_statement_7(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_statement_7")) return false;
-    for_statement_7_0(b, l + 1);
-    return true;
-  }
-
-  // COMMA expr
-  private static boolean for_statement_7_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "for_statement_7_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COMMA);
-    r = r && expr(b, l + 1, -1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   /* ********************************************************** */
@@ -749,7 +749,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF expr NEWLINE if_body
+  // IF loop_condition NEWLINE if_body
   public static boolean if_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_statement")) return false;
     if (!nextTokenIs(b, IF)) return false;
@@ -757,7 +757,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, IF_STATEMENT, null);
     r = consumeToken(b, IF);
     p = r; // pin = 1
-    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = r && report_error_(b, loop_condition(b, l + 1));
     r = p && report_error_(b, NEWLINE(b, l + 1)) && r;
     r = p && if_body(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -765,7 +765,20 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr optional_rparen NEWLINE statement_internal
+  // expr optional_rparen
+  static boolean is_ds_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "is_ds_condition")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = expr(b, l + 1, -1);
+    p = r; // pin = 1
+    r = r && optional_rparen(b, l + 1);
+    exit_section_(b, l, m, r, p, TIBasicParser::recover_until_newline);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // (IS | DS) LPAREN SIMPLE_VARIABLE COMMA is_ds_condition NEWLINE statement_internal
   public static boolean is_ds_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "is_ds_statement")) return false;
     if (!nextTokenIs(b, "<is ds statement>", DS, IS)) return false;
@@ -774,8 +787,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = is_ds_statement_0(b, l + 1);
     p = r; // pin = 1
     r = r && report_error_(b, consumeTokens(b, -1, LPAREN, SIMPLE_VARIABLE, COMMA));
-    r = p && report_error_(b, expr(b, l + 1, -1)) && r;
-    r = p && report_error_(b, optional_rparen(b, l + 1)) && r;
+    r = p && report_error_(b, is_ds_condition(b, l + 1)) && r;
     r = p && report_error_(b, NEWLINE(b, l + 1)) && r;
     r = p && statement_internal(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
@@ -899,6 +911,29 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LIST_VARIABLE);
     if (!r) r = consumeToken(b, ANS_VARIABLE);
     if (!r) r = custom_list_with_l(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // end_block_ optional_end
+  static boolean loop_block(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "loop_block")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = end_block_(b, l + 1);
+    r = r && optional_end(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // expr
+  static boolean loop_condition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "loop_condition")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = expr(b, l + 1, -1);
+    exit_section_(b, l, m, r, false, TIBasicParser::recover_until_newline);
     return r;
   }
 
@@ -1033,19 +1068,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // end_block_ optional_end
-  static boolean repeat_body(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "repeat_body")) return false;
+  // !NEWLINE
+  static boolean recover_until_newline(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "recover_until_newline")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
-    exit_section_(b, m, null, r);
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !NEWLINE(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // REPEAT expr repeat_body
+  // REPEAT loop_condition [NEWLINE loop_block]
   public static boolean repeat_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "repeat_statement")) return false;
     if (!nextTokenIs(b, REPEAT)) return false;
@@ -1053,10 +1087,28 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, REPEAT_STATEMENT, null);
     r = consumeToken(b, REPEAT);
     p = r; // pin = 1
-    r = r && report_error_(b, expr(b, l + 1, -1));
-    r = p && repeat_body(b, l + 1) && r;
+    r = r && report_error_(b, loop_condition(b, l + 1));
+    r = p && repeat_statement_2(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // [NEWLINE loop_block]
+  private static boolean repeat_statement_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "repeat_statement_2")) return false;
+    repeat_statement_2_0(b, l + 1);
+    return true;
+  }
+
+  // NEWLINE loop_block
+  private static boolean repeat_statement_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "repeat_statement_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = NEWLINE(b, l + 1);
+    r = r && loop_block(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1087,7 +1139,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
     r = small_statement(b, l + 1);
-    exit_section_(b, l, m, r, false, TIBasicParser::statement_recover);
+    exit_section_(b, l, m, r, false, TIBasicParser::recover_until_newline);
     return r;
   }
 
@@ -1127,17 +1179,6 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = compound_statement(b, l + 1);
     if (!r) r = simple_statement(b, l + 1);
     exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // !NEWLINE
-  static boolean statement_recover(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "statement_recover")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !NEWLINE(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -1334,19 +1375,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // end_block_ optional_end
-  static boolean while_body(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "while_body")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = end_block_(b, l + 1);
-    r = r && optional_end(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // WHILE expr while_body
+  // WHILE loop_condition [NEWLINE loop_block]
   public static boolean while_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "while_statement")) return false;
     if (!nextTokenIs(b, WHILE)) return false;
@@ -1354,10 +1383,28 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, WHILE_STATEMENT, null);
     r = consumeToken(b, WHILE);
     p = r; // pin = 1
-    r = r && report_error_(b, expr(b, l + 1, -1));
-    r = p && while_body(b, l + 1) && r;
+    r = r && report_error_(b, loop_condition(b, l + 1));
+    r = p && while_statement_2(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  // [NEWLINE loop_block]
+  private static boolean while_statement_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "while_statement_2")) return false;
+    while_statement_2_0(b, l + 1);
+    return true;
+  }
+
+  // NEWLINE loop_block
+  private static boolean while_statement_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "while_statement_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = NEWLINE(b, l + 1);
+    r = r && loop_block(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */

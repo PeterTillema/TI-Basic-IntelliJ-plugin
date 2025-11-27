@@ -31,12 +31,12 @@ private optional_rparen ::= [RPAREN]
 private optional_end ::= [END]
 
 private NEWLINE ::= CRLF | COLON
-private statement_recover ::= !NEWLINE
+private recover_until_newline ::= !NEWLINE
 
 private end_block_ ::= NEWLINE* (!END (statement_internal NEWLINE*))*
 private then_block_ ::= NEWLINE* (!ELSE !END (statement_internal NEWLINE*))*
 
-private simple_statement ::= small_statement { recoverWhile=statement_recover }
+private simple_statement ::= small_statement { recoverWhile=recover_until_newline }
 private small_statement ::= delvar_statement |
     goto_statement |
     lbl_statement |
@@ -180,21 +180,23 @@ private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> optional_
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
-is_ds_statement ::= (IS | DS) LPAREN SIMPLE_VARIABLE COMMA expr optional_rparen NEWLINE statement_internal { pin=1 }
+private loop_condition ::= expr { recoverWhile=recover_until_newline }
+private loop_block ::= end_block_ optional_end
 
-if_statement ::= IF expr NEWLINE if_body { methods=[getPresentation] pin=1 }
+is_ds_statement ::= (IS | DS) LPAREN SIMPLE_VARIABLE COMMA is_ds_condition NEWLINE statement_internal { pin=1 }
+private is_ds_condition ::= expr optional_rparen { pin=1 recoverWhile=recover_until_newline }
+
+if_statement ::= IF loop_condition NEWLINE if_body { methods=[getPresentation] pin=1 }
 private if_body ::= (then_block [else_block | END]) | statement_internal
 then_block ::= THEN then_block_ { methods=[getPresentation] }
-else_block ::= ELSE end_block_ optional_end { methods=[getPresentation] }
+else_block ::= ELSE loop_block { methods=[getPresentation] }
 
-while_statement ::= WHILE expr while_body { methods=[getPresentation] pin=1 }
-private while_body ::= end_block_ optional_end
+while_statement ::= WHILE loop_condition [NEWLINE loop_block] { methods=[getPresentation] pin=1 }
 
-repeat_statement ::= REPEAT expr repeat_body { methods=[getPresentation] pin=1 }
-private repeat_body ::= end_block_ optional_end
+repeat_statement ::= REPEAT loop_condition [NEWLINE loop_block] { methods=[getPresentation] pin=1 }
 
-for_statement ::= FOR LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen for_body { methods=[getPresentation] pin=1 }
-private for_body ::= end_block_ optional_end
+for_statement ::= FOR for_header loop_block { methods=[getPresentation] pin=1 }
+private for_header ::= LPAREN for_identifier COMMA expr COMMA expr [COMMA expr] optional_rparen { pin=1 recoverWhile=recover_until_newline }
 for_identifier ::= SIMPLE_VARIABLE
 {
     mixin="nl.petertillema.tibasic.psi.impl.TIBasicNamedElementImpl"
