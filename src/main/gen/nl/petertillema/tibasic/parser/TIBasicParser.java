@@ -409,7 +409,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE)
+  // DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE)
   static boolean delvar_variable(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_variable")) return false;
     if (!nextTokenIs(b, DELVAR)) return false;
@@ -422,7 +422,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | PICTURE_VARIABLE
+  // LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE
   private static boolean delvar_variable_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_variable_1")) return false;
     boolean r;
@@ -432,6 +432,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, STRING_VARIABLE);
     if (!r) r = consumeToken(b, SIMPLE_VARIABLE);
     if (!r) r = consumeToken(b, MATRIX_VARIABLE);
+    if (!r) r = consumeToken(b, WINDOW_VARIABLE);
     if (!r) r = consumeToken(b, PICTURE_VARIABLE);
     return r;
   }
