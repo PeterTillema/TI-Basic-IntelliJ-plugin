@@ -103,6 +103,9 @@
                 implementationClass="nl.petertillema.tibasic.structure.TIBasicStructureViewFactory"/>
         <breadcrumbsInfoProvider
                 implementation="nl.petertillema.tibasic.editor.TIBasicBreadCrumbsProvider"/>
+        <completion.contributor
+                implementationClass="nl.petertillema.tibasic.completion.TIBasicCompletionContributor"
+                language="TIBasic"/>
         <annotator
                 language="TIBasic"
                 implementationClass="nl.petertillema.tibasic.annotator.TIBasicUnnecessaryParenthesisAnnotator"/>
