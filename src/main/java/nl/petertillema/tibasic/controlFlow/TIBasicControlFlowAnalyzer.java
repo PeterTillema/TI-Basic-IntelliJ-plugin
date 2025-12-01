@@ -21,6 +21,8 @@ import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.FlushAllVariablesInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
@@ -225,31 +227,31 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     @Override
-    public void visitIsDsStatement(@NotNull TIBasicIsDsStatement o) {
-        startElement(o);
+    public void visitIsDsStatement(@NotNull TIBasicIsDsStatement statement) {
+        startElement(statement);
 
         // If the expression exists, the target variable certainly exists
-        if (o.getExpr() != null) {
-            PsiElement is_ds = o.getFirstChild();
+        if (statement.getExpr() != null) {
+            PsiElement is_ds = statement.getFirstChild();
             DfaVariableValue variable = createVariableFromElement(is_ds.getNextSibling().getNextSibling());
 
             addInstruction(new PushInstruction(variable, null));
             addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
             addInstruction(new NumericBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? BinaryOperator.PLUS : BinaryOperator.MINUS));
             addInstruction(new SimpleAssignmentInstruction(null, variable));
-            o.getExpr().accept(this);
+            statement.getExpr().accept(this);
             addInstruction(new BooleanBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? RelationType.LE : RelationType.GE));
         } else {
             pushUnknown();
         }
 
-        addInstruction(new ConditionalGotoInstruction(getEndOffset(o), new DfDoubleConstantType(0.0)));
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0)));
 
-        if (o.getStatement() != null) {
-            o.getStatement().accept(this);
+        if (statement.getStatement() != null) {
+            statement.getStatement().accept(this);
         }
 
-        finishElement(o);
+        finishElement(statement);
     }
 
     @Override
@@ -286,32 +288,33 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitCommandStatement(@NotNull TIBasicCommandStatement statement) {
-        // todo
+        statement.acceptChildren(this);
+        addInstruction(new CommandInstruction(statement.getFirstChild().getText(), statement.getExprList().size()));
     }
 
     @Override
     public void visitPrgmStatement(@NotNull TIBasicPrgmStatement statement) {
+        addInstruction(new FlushAllVariablesInstruction());
+    }
+
+    @Override
+    public void visitMenuStatement(@NotNull TIBasicMenuStatement statement) {
         // todo
     }
 
     @Override
-    public void visitMenuStatement(@NotNull TIBasicMenuStatement o) {
-        // todo
+    public void visitPlotStatement(@NotNull TIBasicPlotStatement statement) {
+        statement.acceptChildren(this);
     }
 
     @Override
-    public void visitPlotStatement(@NotNull TIBasicPlotStatement o) {
-        o.acceptChildren(this);
+    public void visitDispStatement(@NotNull TIBasicDispStatement statement) {
+        statement.acceptChildren(this);
     }
 
     @Override
-    public void visitDispStatement(@NotNull TIBasicDispStatement o) {
-        o.acceptChildren(this);
-    }
-
-    @Override
-    public void visitAsmStatement(@NotNull TIBasicAsmStatement o) {
-        // todo
+    public void visitAsmStatement(@NotNull TIBasicAsmStatement statement) {
+        addInstruction(new FlushAllVariablesInstruction());
     }
 
     @Override
@@ -421,13 +424,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     @Override
-    public void visitNegationExpr(@NotNull TIBasicNegationExpr o) {
-        if (o.getExpr() != null) {
-            o.getExpr().accept(this);
+    public void visitNegationExpr(@NotNull TIBasicNegationExpr expr) {
+        if (expr.getExpr() != null) {
+            expr.getExpr().accept(this);
         } else {
             pushUnknown();
         }
-        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(o), UnaryOperator.TRANSPOSE));
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.TRANSPOSE));
     }
 
     @Override
