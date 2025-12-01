@@ -21,6 +21,7 @@ import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
@@ -465,12 +466,16 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitNprExpr(@NotNull TIBasicNprExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new FunctionInstruction("nPr", expr.getExprList().size(), new TIBasicDfaAnchor(expr)));
     }
 
     @Override
     public void visitNcrExpr(@NotNull TIBasicNcrExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new FunctionInstruction("nPr", expr.getExprList().size(), new TIBasicDfaAnchor(expr)));
     }
 
     @Override
@@ -523,12 +528,14 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitFuncExpr(@NotNull TIBasicFuncExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        addInstruction(new FunctionInstruction(expr.getFirstChild().getText(), expr.getExprList().size(), new TIBasicDfaAnchor(expr)));
     }
 
     @Override
     public void visitFuncOptionalExpr(@NotNull TIBasicFuncOptionalExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        addInstruction(new FunctionInstruction(expr.getFirstChild().getText(), expr.getExprList().size(), new TIBasicDfaAnchor(expr)));
     }
 
     @Override

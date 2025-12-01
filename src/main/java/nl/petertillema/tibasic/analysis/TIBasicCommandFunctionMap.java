@@ -309,6 +309,8 @@ public class TIBasicCommandFunctionMap {
         FUNCTION_MAP.put("normalcdf", new NormalcdfFunction());
         FUNCTION_MAP.put("normalpdf", new NormalpdfFunction());
         FUNCTION_MAP.put("not", new NotFunction());
+        FUNCTION_MAP.put("nCr", new NcrFunction());
+        FUNCTION_MAP.put("nPr", new NprFunction());
         FUNCTION_MAP.put("poissoncdf", new PoissoncdfFunction());
         FUNCTION_MAP.put("poissonpdf", new PoissonpdfFunction());
         FUNCTION_MAP.put("prod", new ProdFunction());
