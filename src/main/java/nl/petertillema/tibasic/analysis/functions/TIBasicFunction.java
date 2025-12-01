@@ -1,8 +1,8 @@
 package nl.petertillema.tibasic.analysis.functions;
 
+import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
-import org.jetbrains.annotations.NotNull;
 
 public interface TIBasicFunction {
 
@@ -10,7 +10,7 @@ public interface TIBasicFunction {
 
     int getMaxNrArguments();
 
-    default DfType evalFunction(@NotNull DfaValue @NotNull ... arguments) {
+    default DfType evalFunction(DfaMemoryState state, DfaValue ... arguments) {
         return DfType.TOP;
     }
 

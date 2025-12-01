@@ -1,7 +1,7 @@
 package nl.petertillema.tibasic.analysis.commands;
 
+import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
-import org.jetbrains.annotations.NotNull;
 
 public interface TIBasicCommand {
 
@@ -9,7 +9,7 @@ public interface TIBasicCommand {
 
     int getMaxNrArguments();
 
-    default void evalCommand(@NotNull DfaValue @NotNull ... arguments) {
+    default void evalCommand(DfaMemoryState state, DfaValue ... arguments) {
     }
 
 }

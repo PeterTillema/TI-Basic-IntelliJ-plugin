@@ -34,7 +34,7 @@ public class CommandInstruction extends Instruction {
                     args[i] = stateBefore.pop();
                 }
             }
-            commandImpl.evalCommand(args);
+            commandImpl.evalCommand(stateBefore, args);
         }
         return nextStates(interpreter, stateBefore);
     }

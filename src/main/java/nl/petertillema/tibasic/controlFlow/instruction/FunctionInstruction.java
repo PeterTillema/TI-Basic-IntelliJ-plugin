@@ -25,7 +25,7 @@ public class FunctionInstruction extends EvalInstruction {
     public @NotNull DfaValue eval(@NotNull DfaValueFactory factory, @NotNull DfaMemoryState state, @NotNull DfaValue @NotNull ... arguments) {
         TIBasicFunction functionImpl = FUNCTION_MAP.get(functionName);
         if (functionImpl != null) {
-            DfType outDfType = functionImpl.evalFunction(arguments);
+            DfType outDfType = functionImpl.evalFunction(state, arguments);
             return factory.fromDfType(outDfType);
         } else {
             System.out.println("Unknown function!!! - " + functionName);
