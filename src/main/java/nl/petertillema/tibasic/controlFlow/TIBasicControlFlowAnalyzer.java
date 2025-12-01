@@ -15,6 +15,7 @@ import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
@@ -24,6 +25,7 @@ import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FlushAllVariablesInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
@@ -56,6 +58,7 @@ import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicLeExpr;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicLtExpr;
+import nl.petertillema.tibasic.psi.TIBasicMenuOption;
 import nl.petertillema.tibasic.psi.TIBasicMenuStatement;
 import nl.petertillema.tibasic.psi.TIBasicMinusExpr;
 import nl.petertillema.tibasic.psi.TIBasicMulExpr;
@@ -84,8 +87,10 @@ import nl.petertillema.tibasic.psi.TIBasicXrootExpr;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor.GETKEY_DOMAIN;
@@ -96,7 +101,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     private final DfaValueFactory factory;
     private final PsiElement psiBlock;
     private final Map<String, Integer> labelMap = new HashMap<>();
-    private final Map<String, ControlFlow.DeferredOffset> gotoMap = new HashMap<>();
+    private final List<Pair<String, ControlFlow.DeferredOffset>> gotoMap = new ArrayList<>();
     private ControlFlow currentFlow;
     private final DfaVariableValue ansVariable;
 
@@ -118,11 +123,11 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     private void updateGotoOffsets() {
-        for (Map.Entry<String, ControlFlow.DeferredOffset> gotoStatement : gotoMap.entrySet()) {
-            String gotoLabel = gotoStatement.getKey();
+        for (Pair<String, ControlFlow.DeferredOffset> gotoPair : gotoMap) {
+            String gotoLabel = gotoPair.getFirst();
             Integer foundLabel = labelMap.get(gotoLabel);
             if (foundLabel != null) {
-                gotoStatement.getValue().setOffset(foundLabel);
+                gotoPair.getSecond().setOffset(foundLabel);
             } else {
                 System.out.println("Corresponding label not found!");
             }
@@ -276,7 +281,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitGotoStatement(@NotNull TIBasicGotoStatement statement) {
         if (statement.getGotoName() == null) return;
         ControlFlow.DeferredOffset offset = new ControlFlow.DeferredOffset();
-        gotoMap.put(statement.getGotoName().getText(), offset);
+        gotoMap.add(new Pair<>(statement.getGotoName().getText(), offset));
         addInstruction(new GotoInstruction(offset));
     }
 
@@ -299,7 +304,15 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitMenuStatement(@NotNull TIBasicMenuStatement statement) {
-        // todo
+        ArrayList<ControlFlow.ControlFlowOffset> offsets = new ArrayList<>();
+
+        for (TIBasicMenuOption option : statement.getMenuOptionList()) {
+            if (option.getGotoName() == null) continue;
+            ControlFlow.DeferredOffset offset = new ControlFlow.DeferredOffset();
+            gotoMap.add(new Pair<>(option.getGotoName().getText(), offset));
+            offsets.add(offset);
+        }
+        addInstruction(new MultipleGotoInstruction(offsets));
     }
 
     @Override
