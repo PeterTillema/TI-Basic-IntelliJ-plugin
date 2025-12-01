@@ -2,6 +2,7 @@ package nl.petertillema.tibasic.controlFlow;
 
 import com.intellij.codeInspection.dataFlow.lang.ir.ConditionalGotoInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.ControlFlow;
+import com.intellij.codeInspection.dataFlow.lang.ir.FlushVariableInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.GotoInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PopInstruction;
@@ -195,7 +196,22 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitDelvarStatement(@NotNull TIBasicDelvarStatement statement) {
-        // todo
+        var child = statement.getFirstChild();
+        while (child != null) {
+            var type = child.getNode().getElementType();
+            if (type == TIBasicTypes.SIMPLE_VARIABLE) {
+                String name = child.getText();
+                SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
+                DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
+                addInstruction(new FlushVariableInstruction(variable));
+            }
+            // todo
+            child = child.getNextSibling();
+        }
+
+        if (statement.getStatement() != null) {
+            statement.getStatement().accept(this);
+        }
     }
 
     @Override
