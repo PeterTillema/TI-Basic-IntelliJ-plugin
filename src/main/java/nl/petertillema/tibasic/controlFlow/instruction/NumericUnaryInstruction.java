@@ -6,7 +6,7 @@ import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
-import nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType;
+import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,21 +24,12 @@ public class NumericUnaryInstruction extends EvalInstruction {
     public @NotNull DfaValue eval(@NotNull DfaValueFactory factory, @NotNull DfaMemoryState state, @NotNull DfaValue @NotNull ... arguments) {
         DfType numType = state.getDfType(arguments[0]);
 
-        if (numType instanceof DfDoubleConstantType d1) {
-            return factory.fromDfType(eval(operator, d1.getValue()));
-        }
-        return factory.getUnknown();
-    }
-
-    private static DfType eval(UnaryOperator op, double d1) {
-        return switch (op) {
-            case NEG -> new DfDoubleConstantType(-d1).makeWide();
+        if (numType instanceof DfBigDecimalType bigDecimalType) {
             // todo
-            case FACTORIAL -> DfType.TOP;
-            case TRANSPOSE -> DfType.TOP;
-            case TO_RADIAN -> DfType.TOP;
-            case TO_DEGREE -> DfType.TOP;
-        };
+            return factory.getUnknown();
+        }
+
+        return factory.getUnknown();
     }
 
     @Override

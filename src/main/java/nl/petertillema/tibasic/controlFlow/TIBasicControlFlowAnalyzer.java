@@ -19,7 +19,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
@@ -29,8 +28,8 @@ import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
-import nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicAsmStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
@@ -93,8 +92,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor.GETKEY_DOMAIN;
-import static nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor.RAND_DOMAIN;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
+import static nl.petertillema.tibasic.controlFlow.type.FunctionRangeSetDomain.GETKEY_DOMAIN;
+import static nl.petertillema.tibasic.controlFlow.type.FunctionRangeSetDomain.RAND_DOMAIN;
 
 public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
@@ -156,13 +158,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Single statement
         if (thenBlock == null && singleStatement != null) {
-            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0), statement));
+            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
             singleStatement.accept(this);
         }
 
         // Then block
         if (thenBlock != null && elseBlock == null) {
-            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0), statement));
+            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
 
             for (TIBasicStatement _statement : thenBlock.getStatementList()) {
                 _statement.accept(this);
@@ -171,7 +173,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Then-Else block
         if (thenBlock != null && elseBlock != null) {
-            addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), new DfDoubleConstantType(0.0), statement));
+            addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), fromValue(BigDecimal.ZERO), statement));
 
             for (TIBasicStatement _statement : thenBlock.getStatementList()) {
                 _statement.accept(this);
@@ -196,7 +198,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         } else {
             pushUnknown();
         }
-        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0), statement));
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
 
         for (TIBasicStatement _statement : statement.getStatementList()) {
             _statement.accept(this);
@@ -221,7 +223,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         } else {
             pushUnknown();
         }
-        addInstruction(new ConditionalGotoInstruction(getStartOffset(statement), new DfDoubleConstantType(0.0), statement));
+        addInstruction(new ConditionalGotoInstruction(getStartOffset(statement), fromValue(BigDecimal.ZERO), statement));
 
         finishElement(statement);
     }
@@ -241,7 +243,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             DfaVariableValue variable = createVariableFromElement(is_ds.getNextSibling().getNextSibling());
 
             addInstruction(new PushInstruction(variable, null));
-            addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
             addInstruction(new NumericBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? BinaryOperator.PLUS : BinaryOperator.MINUS));
             addInstruction(new SimpleAssignmentInstruction(null, variable));
             statement.getExpr().accept(this);
@@ -250,7 +252,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             pushUnknown();
         }
 
-        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0)));
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO)));
 
         if (statement.getStatement() != null) {
             statement.getStatement().accept(this);
@@ -459,7 +461,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (expr.getExprList().size() != 2) pushUnknown();
         // A xroot B = B^(1/A)
         addInstruction(new SwapInstruction());
-        addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+        addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
         addInstruction(new SwapInstruction());
         addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
         addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.POW));
@@ -509,7 +511,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitInverseExpr(@NotNull TIBasicInverseExpr expr) {
         expr.getExpr().accept(this);
-        addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+        addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
         addInstruction(new SwapInstruction());
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.DIVIDE));
     }
@@ -567,8 +569,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitLiteralExpr(@NotNull TIBasicLiteralExpr expr) {
         IElementType child = expr.getFirstChild().getNode().getElementType();
         if (child == TIBasicTypes.NUMBER) {
-            double value = new BigDecimal(expr.getText()).doubleValue();
-            DfDoubleConstantType dfType = new DfDoubleConstantType(value);
+            BigDecimal value = new BigDecimal(expr.getText());
+            DfType dfType = fromValue(value);
             addInstruction(new PushValueInstruction(dfType, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.SIMPLE_VARIABLE) {
             DfaVariableValue variable = createVariableFromElement(expr);
@@ -577,15 +579,15 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new PushInstruction(ansVariable, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
             String fname = expr.getText();
-            DfType domain = null;
+            BigDecimalRangeSet domain;
             if ("rand".equals(fname)) {
                 domain = RAND_DOMAIN;
             } else if ("getKey".equals(fname)) {
                 domain = GETKEY_DOMAIN;
+            } else {
+                domain = FULL_RANGE;
             }
-            ExpressionFunctionDescriptor funcDescriptor = new ExpressionFunctionDescriptor(fname, domain);
-            DfaVariableValue funcVar = factory.getVarFactory().createVariableValue(funcDescriptor);
-            addInstruction(new PushInstruction(funcVar, new TIBasicDfaAnchor(expr)));
+            addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(expr)));
         }
         // todo
     }

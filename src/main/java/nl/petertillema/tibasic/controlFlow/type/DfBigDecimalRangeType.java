@@ -1,0 +1,52 @@
+package nl.petertillema.tibasic.controlFlow.type;
+
+import com.intellij.codeInspection.dataFlow.types.DfType;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.math.BigDecimal;
+
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
+
+public record DfBigDecimalRangeType(@NotNull BigDecimalRangeSet range,
+                                    @Nullable BigDecimalRangeSet wideRange) implements DfBigDecimalType {
+
+    public static final BigDecimalRangeSet FULL_RANGE = BigDecimalRangeSet.all();
+
+    public static DfType fromRange(@NotNull BigDecimalRangeSet range) {
+        if (range.isEmpty()) return DfType.BOTTOM;
+        BigDecimal value = range.getConstantValue();
+        if (value != null) {
+            return fromValue(value);
+        }
+        return new DfBigDecimalRangeType(range, null);
+    }
+
+    public static DfType fromRange(@NotNull BigDecimalRangeSet range, @Nullable BigDecimalRangeSet wideRange) {
+        if (wideRange == null || wideRange.equals(range) || wideRange.isEmpty()) return fromRange(range);
+        if (range.isEmpty()) {
+            return DfType.BOTTOM;
+        }
+        BigDecimal value = range.getConstantValue();
+        if (value != null) {
+            return new DfBigDecimalConstantType(value, wideRange);
+        }
+        return new DfBigDecimalRangeType(range, wideRange);
+    }
+
+    @Override
+    public @NotNull BigDecimalRangeSet wideRange() {
+        return wideRange == null ? range : wideRange;
+    }
+
+    @Override
+    public int hashCode() {
+        return range.hashCode();
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "int " + range;
+    }
+}

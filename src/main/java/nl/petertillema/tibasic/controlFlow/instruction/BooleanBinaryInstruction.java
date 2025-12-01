@@ -8,13 +8,16 @@ import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.value.DfaCondition;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
-import nl.petertillema.tibasic.controlFlow.type.DfDoubleRangeType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Set;
 
-import static nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType.fromBoolean;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
 
 public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
 
@@ -35,11 +38,11 @@ public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
             DfaMemoryState equality = stateBefore.createCopy();
             DfaCondition condition = dfaLeft.eq(dfaRight);
             if (equality.applyCondition(condition)) {
-                pushResult(interpreter, equality, new DfDoubleRangeType(0.0, 1.0, false, false));
+                pushResult(interpreter, equality, fromRange(pointSet(Set.of(BigDecimal.ZERO, BigDecimal.ONE))));
                 states.add(nextState(interpreter, equality));
             }
             if (stateBefore.applyCondition(condition.negate())) {
-                pushResult(interpreter, stateBefore, fromBoolean(operator == RelationType.NE));
+                pushResult(interpreter, stateBefore, fromValue(operator == RelationType.NE ? BigDecimal.ONE : BigDecimal.ZERO));
                 states.add(nextState(interpreter, stateBefore));
             }
             return states.toArray(DfaInstructionState.EMPTY_ARRAY);
@@ -54,20 +57,20 @@ public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
             DfaCondition condition = dfaLeft.cond(relation, dfaRight).correctForRelationResult(result);
             if (condition == DfaCondition.getFalse()) continue;
             if (condition == DfaCondition.getTrue()) {
-                pushResult(interpreter, stateBefore, fromBoolean(result));
+                pushResult(interpreter, stateBefore, fromValue(result ? BigDecimal.ONE : BigDecimal.ZERO));
                 return nextStates(interpreter, stateBefore);
             }
             final DfaMemoryState copy = i == relations.length - 1 && !states.isEmpty() ? stateBefore : stateBefore.createCopy();
             if (copy.applyCondition(condition) &&
                     copy.meetDfType(dfaLeft, copy.getDfType(dfaLeft).correctForRelationResult(operator, result)) &&
                     copy.meetDfType(dfaRight, copy.getDfType(dfaRight).correctForRelationResult(operator, result))) {
-                pushResult(interpreter, copy, fromBoolean(result));
+                pushResult(interpreter, copy, fromValue(result ? BigDecimal.ONE : BigDecimal.ZERO));
                 states.add(nextState(interpreter, copy));
             }
         }
         if (states.isEmpty()) {
             // Neither of relations could be applied: likely comparison with NaN; do not split the state in this case, just push false
-            pushResult(interpreter, stateBefore, fromBoolean(false));
+            pushResult(interpreter, stateBefore, fromValue(BigDecimal.ZERO));
             return nextStates(interpreter, stateBefore);
         }
 

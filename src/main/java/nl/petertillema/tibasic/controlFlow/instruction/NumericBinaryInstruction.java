@@ -7,7 +7,7 @@ import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
-import nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType;
+import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,20 +25,11 @@ public class NumericBinaryInstruction extends EvalInstruction {
         DfType leftType = state.getDfType(arguments[0]);
         DfType rightType = state.getDfType(arguments[1]);
 
-        if (leftType instanceof DfDoubleConstantType d1 && rightType instanceof DfDoubleConstantType d2) {
-            return factory.fromDfType(eval(operator, d1.getValue(), d2.getValue()));
+        if (leftType instanceof DfBigDecimalType bd1 && rightType instanceof DfBigDecimalType bd2) {
+            return factory.fromDfType(bd1.eval(bd2, operator));
         }
-        return factory.getUnknown();
-    }
 
-    private static DfType eval(BinaryOperator op, double d1, double d2) {
-        return switch (op) {
-            case PLUS -> new DfDoubleConstantType(d1 + d2).makeWide();
-            case MINUS -> new DfDoubleConstantType(d1 - d2).makeWide();
-            case TIMES -> new DfDoubleConstantType(d1 * d2).makeWide();
-            case DIVIDE -> new DfDoubleConstantType(d1 / d2).makeWide();
-            case POW -> new DfDoubleConstantType(Math.pow(d1, d2)).makeWide();
-        };
+        return factory.getUnknown();
     }
 
     @Override
