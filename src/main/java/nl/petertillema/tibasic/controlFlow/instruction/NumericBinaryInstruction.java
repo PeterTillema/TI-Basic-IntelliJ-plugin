@@ -37,6 +37,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
             case MINUS -> new DfDoubleConstantType(d1 - d2).makeWide();
             case TIMES -> new DfDoubleConstantType(d1 * d2).makeWide();
             case DIVIDE -> new DfDoubleConstantType(d1 / d2).makeWide();
+            case POW -> new DfDoubleConstantType(Math.pow(d1, d2)).makeWide();
         };
     }
 

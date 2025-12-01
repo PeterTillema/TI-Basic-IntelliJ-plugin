@@ -2,6 +2,7 @@ package nl.petertillema.tibasic.controlFlow;
 
 import com.intellij.codeInspection.dataFlow.lang.ir.ConditionalGotoInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.ControlFlow;
+import com.intellij.codeInspection.dataFlow.lang.ir.DupInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.FlushVariableInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.GotoInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
@@ -9,6 +10,7 @@ import com.intellij.codeInspection.dataFlow.lang.ir.PopInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.SimpleAssignmentInstruction;
+import com.intellij.codeInspection.dataFlow.lang.ir.SwapInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
@@ -20,37 +22,62 @@ import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescript
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType;
+import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
+import nl.petertillema.tibasic.psi.TIBasicAndExpr;
+import nl.petertillema.tibasic.psi.TIBasicAsmStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
+import nl.petertillema.tibasic.psi.TIBasicDegreeExpr;
 import nl.petertillema.tibasic.psi.TIBasicDelvarStatement;
+import nl.petertillema.tibasic.psi.TIBasicDispStatement;
 import nl.petertillema.tibasic.psi.TIBasicDivExpr;
 import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicEqExpr;
 import nl.petertillema.tibasic.psi.TIBasicExpr;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
+import nl.petertillema.tibasic.psi.TIBasicFactorialExpr;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
+import nl.petertillema.tibasic.psi.TIBasicFuncExpr;
+import nl.petertillema.tibasic.psi.TIBasicFuncOptionalExpr;
 import nl.petertillema.tibasic.psi.TIBasicGeExpr;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicGtExpr;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
+import nl.petertillema.tibasic.psi.TIBasicImpliedMulExpr;
+import nl.petertillema.tibasic.psi.TIBasicInverseExpr;
 import nl.petertillema.tibasic.psi.TIBasicIsDsStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicLeExpr;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicLtExpr;
+import nl.petertillema.tibasic.psi.TIBasicMenuStatement;
 import nl.petertillema.tibasic.psi.TIBasicMinusExpr;
 import nl.petertillema.tibasic.psi.TIBasicMulExpr;
+import nl.petertillema.tibasic.psi.TIBasicNcrExpr;
 import nl.petertillema.tibasic.psi.TIBasicNeExpr;
+import nl.petertillema.tibasic.psi.TIBasicNegationExpr;
+import nl.petertillema.tibasic.psi.TIBasicNprExpr;
+import nl.petertillema.tibasic.psi.TIBasicOrExpr;
+import nl.petertillema.tibasic.psi.TIBasicParenExpr;
+import nl.petertillema.tibasic.psi.TIBasicPlotStatement;
 import nl.petertillema.tibasic.psi.TIBasicPlusExpr;
+import nl.petertillema.tibasic.psi.TIBasicPow2Expr;
+import nl.petertillema.tibasic.psi.TIBasicPow3Expr;
+import nl.petertillema.tibasic.psi.TIBasicPowExpr;
 import nl.petertillema.tibasic.psi.TIBasicPrgmStatement;
+import nl.petertillema.tibasic.psi.TIBasicRadianExpr;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
 import nl.petertillema.tibasic.psi.TIBasicStatement;
 import nl.petertillema.tibasic.psi.TIBasicThenBlock;
+import nl.petertillema.tibasic.psi.TIBasicTransposeExpr;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
+import nl.petertillema.tibasic.psi.TIBasicXorExpr;
+import nl.petertillema.tibasic.psi.TIBasicXrootExpr;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -267,6 +294,26 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     @Override
+    public void visitMenuStatement(@NotNull TIBasicMenuStatement o) {
+        // todo
+    }
+
+    @Override
+    public void visitPlotStatement(@NotNull TIBasicPlotStatement o) {
+        o.acceptChildren(this);
+    }
+
+    @Override
+    public void visitDispStatement(@NotNull TIBasicDispStatement o) {
+        o.acceptChildren(this);
+    }
+
+    @Override
+    public void visitAsmStatement(@NotNull TIBasicAsmStatement o) {
+        // todo
+    }
+
+    @Override
     public void visitExprStatement(@NotNull TIBasicExprStatement statement) {
         startElement(statement);
         if (statement.getExpr() != null) {
@@ -298,71 +345,199 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitPlusExpr(@NotNull TIBasicPlusExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.PLUS));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.PLUS));
     }
 
     @Override
     public void visitMinusExpr(@NotNull TIBasicMinusExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.MINUS));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.MINUS));
     }
 
     @Override
     public void visitMulExpr(@NotNull TIBasicMulExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.TIMES));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.TIMES));
     }
 
     @Override
     public void visitDivExpr(@NotNull TIBasicDivExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
+    }
+
+    @Override
+    public void visitImpliedMulExpr(@NotNull TIBasicImpliedMulExpr expr) {
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.TIMES));
     }
 
     @Override
     public void visitEqExpr(@NotNull TIBasicEqExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.EQ));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.EQ));
     }
 
     @Override
     public void visitNeExpr(@NotNull TIBasicNeExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.NE));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.NE));
     }
 
     @Override
     public void visitGtExpr(@NotNull TIBasicGtExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.GT));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.GT));
     }
 
     @Override
     public void visitGeExpr(@NotNull TIBasicGeExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.GE));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.GE));
     }
 
     @Override
     public void visitLtExpr(@NotNull TIBasicLtExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.LT));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.LT));
     }
 
     @Override
     public void visitLeExpr(@NotNull TIBasicLeExpr expr) {
         expr.acceptChildren(this);
-        if (expr.getExprList().size() == 2)
-            addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.LE));
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new BooleanBinaryInstruction(new TIBasicDfaAnchor(expr), RelationType.LE));
+    }
+
+    @Override
+    public void visitNegationExpr(@NotNull TIBasicNegationExpr o) {
+        if (o.getExpr() != null) {
+            o.getExpr().accept(this);
+        } else {
+            pushUnknown();
+        }
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(o), UnaryOperator.TRANSPOSE));
+    }
+
+    @Override
+    public void visitPowExpr(@NotNull TIBasicPowExpr expr) {
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.POW));
+    }
+
+    @Override
+    public void visitXrootExpr(@NotNull TIBasicXrootExpr expr) {
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        // A xroot B = B^(1/A)
+        addInstruction(new SwapInstruction());
+        addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+        addInstruction(new SwapInstruction());
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
+        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.POW));
+    }
+
+    @Override
+    public void visitAndExpr(@NotNull TIBasicAndExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitOrExpr(@NotNull TIBasicOrExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitXorExpr(@NotNull TIBasicXorExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitNprExpr(@NotNull TIBasicNprExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitNcrExpr(@NotNull TIBasicNcrExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitRadianExpr(@NotNull TIBasicRadianExpr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.TO_RADIAN));
+    }
+
+    @Override
+    public void visitDegreeExpr(@NotNull TIBasicDegreeExpr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.TO_DEGREE));
+    }
+
+    @Override
+    public void visitInverseExpr(@NotNull TIBasicInverseExpr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+        addInstruction(new SwapInstruction());
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.DIVIDE));
+    }
+
+    @Override
+    public void visitPow2Expr(@NotNull TIBasicPow2Expr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new DupInstruction());
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.TIMES));
+    }
+
+    @Override
+    public void visitTransposeExpr(@NotNull TIBasicTransposeExpr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.TRANSPOSE));
+    }
+
+    @Override
+    public void visitPow3Expr(@NotNull TIBasicPow3Expr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new DupInstruction());
+        addInstruction(new DupInstruction());
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.TIMES));
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.TIMES));
+    }
+
+    @Override
+    public void visitFactorialExpr(@NotNull TIBasicFactorialExpr expr) {
+        expr.getExpr().accept(this);
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.FACTORIAL));
+    }
+
+    @Override
+    public void visitFuncExpr(@NotNull TIBasicFuncExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitFuncOptionalExpr(@NotNull TIBasicFuncOptionalExpr expr) {
+        // todo
+    }
+
+    @Override
+    public void visitParenExpr(@NotNull TIBasicParenExpr expr) {
+        if (expr.getExpr() != null) {
+            expr.getExpr().accept(this);
+        } else {
+            pushUnknown();
+        }
     }
 
     @Override
