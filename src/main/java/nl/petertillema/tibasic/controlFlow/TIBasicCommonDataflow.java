@@ -4,6 +4,7 @@ import com.intellij.codeInspection.dataFlow.interpreter.ReachabilityCountingInte
 import com.intellij.codeInspection.dataFlow.interpreter.RunnerResult;
 import com.intellij.codeInspection.dataFlow.lang.DfaAnchor;
 import com.intellij.codeInspection.dataFlow.lang.DfaListener;
+import com.intellij.codeInspection.dataFlow.lang.ir.ControlFlow;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryStateImpl;
 import com.intellij.codeInspection.dataFlow.types.DfType;
@@ -126,8 +127,8 @@ public class TIBasicCommonDataflow {
     }
 
     public static DataflowResult getDataflowResult(PsiElement element) {
-        var fileMap = CachedValuesManager.getCachedValue(element, () ->
-                CachedValueProvider.Result.create(new ConcurrentHashMap<PsiElement, DataflowResult>(), PsiModificationTracker.MODIFICATION_COUNT));
+        ConcurrentHashMap<PsiElement, DataflowResult> fileMap = CachedValuesManager.getCachedValue(element, () ->
+                CachedValueProvider.Result.create(new ConcurrentHashMap<>(), PsiModificationTracker.MODIFICATION_COUNT));
 
         class ManagedCompute implements ForkJoinPool.ManagedBlocker {
             private DataflowResult result;
@@ -149,7 +150,7 @@ public class TIBasicCommonDataflow {
             }
         }
 
-        var managedCompute = new ManagedCompute();
+        ManagedCompute managedCompute = new ManagedCompute();
         try {
             ForkJoinPool.managedBlock(managedCompute);
         } catch (InterruptedException e) {
@@ -160,13 +161,13 @@ public class TIBasicCommonDataflow {
     }
 
     private static DataflowResult runDFA(PsiElement element) {
-        var listener = new TIBasicDataflowListener();
-        var factory = new DfaValueFactory(element.getProject());
-        var flow = new TIBasicControlFlowAnalyzer(factory, element).buildControlFlow();
-        var interpreter = new ReachabilityCountingInterpreter(flow, listener, false, false, 0);
-        var stateImpl = new DfaMemoryStateImpl(factory);
+        TIBasicDataflowListener listener = new TIBasicDataflowListener();
+        DfaValueFactory factory = new DfaValueFactory(element.getProject());
+        ControlFlow flow = new TIBasicControlFlowAnalyzer(factory, element).buildControlFlow();
+        ReachabilityCountingInterpreter interpreter = new ReachabilityCountingInterpreter(flow, listener, false, false, 0);
+        DfaMemoryStateImpl stateImpl = new DfaMemoryStateImpl(factory);
 
-        var result = interpreter.interpret(stateImpl);
+        RunnerResult result = interpreter.interpret(stateImpl);
         if (result != RunnerResult.OK) return new DataflowResult(result);
         listener.result.myUnreachable.addAll(interpreter.getUnreachable());
         return listener.result.copy();

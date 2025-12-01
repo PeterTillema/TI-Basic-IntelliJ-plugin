@@ -1,9 +1,12 @@
 package nl.petertillema.tibasic.annotator;
 
+import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class TIBasicUnnecessaryQuoteAnnotatorTestCase extends BasePlatformTestCase {
 
@@ -16,7 +19,7 @@ public class TIBasicUnnecessaryQuoteAnnotatorTestCase extends BasePlatformTestCa
         myFixture.configureByFile("UnnecessaryQuoteSampleCode.basic");
         myFixture.checkHighlighting(true, true, true);
 
-        var quickFixes = myFixture.getAllQuickFixes();
+        List<IntentionAction> quickFixes = myFixture.getAllQuickFixes();
         assertEquals(1, quickFixes.size());
 
         // Run all quick fixes

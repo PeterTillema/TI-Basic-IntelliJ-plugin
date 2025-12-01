@@ -1,6 +1,7 @@
 package nl.petertillema.tibasic.editor.formatting;
 
 import com.intellij.application.options.CodeStyle;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ public class TIBasicIndentationTestCase extends LightPlatformCodeInsightTestCase
     }
 
     private void setTabIndent() {
-        var indentOptions = CodeStyle.getLanguageSettings(getFile()).getIndentOptions();
+        CommonCodeStyleSettings.IndentOptions indentOptions = CodeStyle.getLanguageSettings(getFile()).getIndentOptions();
         if (indentOptions != null) {
             indentOptions.USE_TAB_CHARACTER = true;
         }
