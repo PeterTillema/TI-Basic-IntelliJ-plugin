@@ -9,9 +9,11 @@ import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
+import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
@@ -24,7 +26,9 @@ import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
 import nl.petertillema.tibasic.psi.TIBasicDelvarStatement;
 import nl.petertillema.tibasic.psi.TIBasicDivExpr;
+import nl.petertillema.tibasic.psi.TIBasicElseBlock;
 import nl.petertillema.tibasic.psi.TIBasicEqExpr;
+import nl.petertillema.tibasic.psi.TIBasicExpr;
 import nl.petertillema.tibasic.psi.TIBasicExprStatement;
 import nl.petertillema.tibasic.psi.TIBasicForStatement;
 import nl.petertillema.tibasic.psi.TIBasicGeExpr;
@@ -41,6 +45,8 @@ import nl.petertillema.tibasic.psi.TIBasicNeExpr;
 import nl.petertillema.tibasic.psi.TIBasicPlusExpr;
 import nl.petertillema.tibasic.psi.TIBasicPrgmStatement;
 import nl.petertillema.tibasic.psi.TIBasicRepeatStatement;
+import nl.petertillema.tibasic.psi.TIBasicStatement;
+import nl.petertillema.tibasic.psi.TIBasicThenBlock;
 import nl.petertillema.tibasic.psi.TIBasicTypes;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import nl.petertillema.tibasic.psi.TIBasicWhileStatement;
@@ -79,9 +85,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     private void updateGotoOffsets() {
-        for (var gotoStatement : gotoMap.entrySet()) {
-            var gotoLabel = gotoStatement.getKey();
-            var foundLabel = labelMap.get(gotoLabel);
+        for (Map.Entry<String, ControlFlow.DeferredOffset> gotoStatement : gotoMap.entrySet()) {
+            String gotoLabel = gotoStatement.getKey();
+            Integer foundLabel = labelMap.get(gotoLabel);
             if (foundLabel != null) {
                 gotoStatement.getValue().setOffset(foundLabel);
             } else {
@@ -99,11 +105,16 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitIfStatement(@NotNull TIBasicIfStatement statement) {
         startElement(statement);
 
-        statement.getExpr().accept(this);
+        TIBasicExpr condition = statement.getExpr();
+        if (condition != null) {
+            statement.getExpr().accept(this);
+        } else {
+            pushUnknown();
+        }
 
-        var thenBlock = statement.getThenBlock();
-        var elseBlock = statement.getElseBlock();
-        var singleStatement = statement.getStatement();
+        TIBasicThenBlock thenBlock = statement.getThenBlock();
+        TIBasicElseBlock elseBlock = statement.getElseBlock();
+        TIBasicStatement singleStatement = statement.getStatement();
 
         // Single statement
         if (thenBlock == null && singleStatement != null) {
@@ -115,7 +126,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (thenBlock != null && elseBlock == null) {
             addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0), statement));
 
-            for (var _statement : thenBlock.getStatementList()) {
+            for (TIBasicStatement _statement : thenBlock.getStatementList()) {
                 _statement.accept(this);
             }
         }
@@ -124,12 +135,12 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (thenBlock != null && elseBlock != null) {
             addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), new DfDoubleConstantType(0.0), statement));
 
-            for (var _statement : thenBlock.getStatementList()) {
+            for (TIBasicStatement _statement : thenBlock.getStatementList()) {
                 _statement.accept(this);
             }
             addInstruction(new GotoInstruction(getEndOffset(statement)));
 
-            for (var _statement : elseBlock.getStatementList()) {
+            for (TIBasicStatement _statement : elseBlock.getStatementList()) {
                 _statement.accept(this);
             }
         }
@@ -141,10 +152,15 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitWhileStatement(@NotNull TIBasicWhileStatement statement) {
         startElement(statement);
 
-        statement.getExpr().accept(this);
+        TIBasicExpr condition = statement.getExpr();
+        if (condition != null) {
+            statement.getExpr().accept(this);
+        } else {
+            pushUnknown();
+        }
         addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), new DfDoubleConstantType(0.0), statement));
 
-        for (var _statement : statement.getStatementList()) {
+        for (TIBasicStatement _statement : statement.getStatementList()) {
             _statement.accept(this);
         }
 
@@ -157,11 +173,16 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitRepeatStatement(@NotNull TIBasicRepeatStatement statement) {
         startElement(statement);
 
-        for (var _statement : statement.getStatementList()) {
+        for (TIBasicStatement _statement : statement.getStatementList()) {
             _statement.accept(this);
         }
 
-        statement.getExpr().accept(this);
+        TIBasicExpr condition = statement.getExpr();
+        if (condition != null) {
+            statement.getExpr().accept(this);
+        } else {
+            pushUnknown();
+        }
         addInstruction(new ConditionalGotoInstruction(getStartOffset(statement), new DfDoubleConstantType(0.0), statement));
 
         finishElement(statement);
@@ -180,7 +201,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitGotoStatement(@NotNull TIBasicGotoStatement statement) {
         if (statement.getGotoName() == null) return;
-        var offset = new ControlFlow.DeferredOffset();
+        ControlFlow.DeferredOffset offset = new ControlFlow.DeferredOffset();
         gotoMap.put(statement.getGotoName().getText(), offset);
         addInstruction(new GotoInstruction(offset));
     }
@@ -217,11 +238,11 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         statement.getExpr().accept(this);
         if (statement.getAssignmentTarget() != null) {
-            var targetPsi = statement.getAssignmentTarget().getFirstChild();
+            PsiElement targetPsi = statement.getAssignmentTarget().getFirstChild();
             if (targetPsi != null) {
-                var name = targetPsi.getText();
-                var descriptor = new SimpleVariableDescriptor(name);
-                var variable = factory.getVarFactory().createVariableValue(descriptor);
+                String name = targetPsi.getText();
+                SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
+                DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
                 addInstruction(new AssignVariableInstruction(new TIBasicDfaAnchor(statement), variable));
 //                addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
             }
@@ -303,26 +324,26 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitLiteralExpr(@NotNull TIBasicLiteralExpr expr) {
-        var child = expr.getFirstChild().getNode().getElementType();
+        IElementType child = expr.getFirstChild().getNode().getElementType();
         if (child == TIBasicTypes.NUMBER) {
-            var value = new BigDecimal(expr.getText()).doubleValue();
-            var dfType = new DfDoubleConstantType(value);
+            double value = new BigDecimal(expr.getText()).doubleValue();
+            DfDoubleConstantType dfType = new DfDoubleConstantType(value);
             addInstruction(new PushValueInstruction(dfType, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.SIMPLE_VARIABLE) {
-            var name = expr.getText();
-            var descriptor = new SimpleVariableDescriptor(name);
-            var variable = factory.getVarFactory().createVariableValue(descriptor);
+            String name = expr.getText();
+            SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
+            DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
             addInstruction(new ReadVariableInstruction(new TIBasicDfaAnchor(expr), variable));
         } else if (child == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
-            var fname = expr.getText();
+            String fname = expr.getText();
             DfType domain = null;
             if ("rand".equals(fname)) {
                 domain = RAND_DOMAIN;
             } else if ("getKey".equals(fname)) {
                 domain = GETKEY_DOMAIN;
             }
-            var funcDescriptor = new ExpressionFunctionDescriptor(fname, domain);
-            var funcVar = factory.getVarFactory().createVariableValue(funcDescriptor);
+            ExpressionFunctionDescriptor funcDescriptor = new ExpressionFunctionDescriptor(fname, domain);
+            DfaVariableValue funcVar = factory.getVarFactory().createVariableValue(funcDescriptor);
             addInstruction(new PushInstruction(funcVar, new TIBasicDfaAnchor(expr)));
         }
         // todo
