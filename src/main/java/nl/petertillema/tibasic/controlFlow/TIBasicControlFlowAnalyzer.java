@@ -35,6 +35,7 @@ import nl.petertillema.tibasic.psi.TIBasicGeExpr;
 import nl.petertillema.tibasic.psi.TIBasicGotoStatement;
 import nl.petertillema.tibasic.psi.TIBasicGtExpr;
 import nl.petertillema.tibasic.psi.TIBasicIfStatement;
+import nl.petertillema.tibasic.psi.TIBasicIsDsStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicLeExpr;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
@@ -196,14 +197,40 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     @Override
+    public void visitIsDsStatement(@NotNull TIBasicIsDsStatement o) {
+        startElement(o);
+
+        // If the expression exists, the target variable certainly exists
+        if (o.getExpr() != null) {
+            PsiElement is_ds = o.getFirstChild();
+            DfaVariableValue variable = createVariableFromElement(is_ds.getNextSibling().getNextSibling());
+
+            addInstruction(new PushInstruction(variable, null));
+            addInstruction(new PushValueInstruction(new DfDoubleConstantType(1.0)));
+            addInstruction(new NumericBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? BinaryOperator.PLUS : BinaryOperator.MINUS));
+            addInstruction(new SimpleAssignmentInstruction(null, variable));
+            o.getExpr().accept(this);
+            addInstruction(new BooleanBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? RelationType.LE : RelationType.GE));
+        } else {
+            pushUnknown();
+        }
+
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(o), new DfDoubleConstantType(0.0)));
+
+        if (o.getStatement() != null) {
+            o.getStatement().accept(this);
+        }
+
+        finishElement(o);
+    }
+
+    @Override
     public void visitDelvarStatement(@NotNull TIBasicDelvarStatement statement) {
-        var child = statement.getFirstChild();
+        PsiElement child = statement.getFirstChild();
         while (child != null) {
-            var type = child.getNode().getElementType();
+            IElementType type = child.getNode().getElementType();
             if (type == TIBasicTypes.SIMPLE_VARIABLE) {
-                String name = child.getText();
-                SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
-                DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
+                DfaVariableValue variable = createVariableFromElement(child);
                 addInstruction(new FlushVariableInstruction(variable));
             }
             // todo
@@ -258,9 +285,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (statement.getAssignmentTarget() != null) {
             PsiElement targetPsi = statement.getAssignmentTarget().getFirstChild();
             if (targetPsi != null) {
-                String name = targetPsi.getText();
-                SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
-                DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
+                DfaVariableValue variable = createVariableFromElement(targetPsi);
                 addInstruction(new SimpleAssignmentInstruction(new TIBasicDfaAnchor(statement), variable));
                 addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
             }
@@ -348,9 +373,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             DfDoubleConstantType dfType = new DfDoubleConstantType(value);
             addInstruction(new PushValueInstruction(dfType, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.SIMPLE_VARIABLE) {
-            String name = expr.getText();
-            SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
-            DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
+            DfaVariableValue variable = createVariableFromElement(expr);
             addInstruction(new PushInstruction(variable, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.ANS_VARIABLE) {
             addInstruction(new PushInstruction(ansVariable, new TIBasicDfaAnchor(expr)));
@@ -367,6 +390,12 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new PushInstruction(funcVar, new TIBasicDfaAnchor(expr)));
         }
         // todo
+    }
+
+    private DfaVariableValue createVariableFromElement(PsiElement element) {
+        String name = element.getText();
+        SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
+        return factory.getVarFactory().createVariableValue(descriptor);
     }
 
     private void addInstruction(Instruction i) {
