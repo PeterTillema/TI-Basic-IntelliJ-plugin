@@ -8,6 +8,7 @@ import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PopInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
+import com.intellij.codeInspection.dataFlow.lang.ir.SimpleAssignmentInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
@@ -17,10 +18,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import nl.petertillema.tibasic.controlFlow.descriptor.ExpressionFunctionDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
-import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
-import nl.petertillema.tibasic.controlFlow.instruction.ReadVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfDoubleConstantType;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
@@ -68,10 +67,12 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     private final Map<String, Integer> labelMap = new HashMap<>();
     private final Map<String, ControlFlow.DeferredOffset> gotoMap = new HashMap<>();
     private ControlFlow currentFlow;
+    private final DfaVariableValue ansVariable;
 
     public TIBasicControlFlowAnalyzer(@NotNull DfaValueFactory factory, @NotNull PsiElement psiBlock) {
         this.factory = factory;
         this.psiBlock = psiBlock;
+        this.ansVariable = factory.getVarFactory().createVariableValue(new SimpleVariableDescriptor("Ans"));
     }
 
     public ControlFlow buildControlFlow() {
@@ -243,6 +244,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         startElement(statement);
         if (statement.getExpr() != null) {
             statement.getExpr().accept(this);
+            addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
             addInstruction(new PopInstruction());
         }
         finishElement(statement);
@@ -259,8 +261,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 String name = targetPsi.getText();
                 SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
                 DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
-                addInstruction(new AssignVariableInstruction(new TIBasicDfaAnchor(statement), variable));
-//                addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
+                addInstruction(new SimpleAssignmentInstruction(new TIBasicDfaAnchor(statement), variable));
+                addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
             }
         }
         addInstruction(new PopInstruction());
@@ -349,7 +351,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             String name = expr.getText();
             SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
             DfaVariableValue variable = factory.getVarFactory().createVariableValue(descriptor);
-            addInstruction(new ReadVariableInstruction(new TIBasicDfaAnchor(expr), variable));
+            addInstruction(new PushInstruction(variable, new TIBasicDfaAnchor(expr)));
+        } else if (child == TIBasicTypes.ANS_VARIABLE) {
+            addInstruction(new PushInstruction(ansVariable, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
             String fname = expr.getText();
             DfType domain = null;
