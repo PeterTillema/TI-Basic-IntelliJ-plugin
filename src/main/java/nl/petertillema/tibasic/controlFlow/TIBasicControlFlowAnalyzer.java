@@ -603,6 +603,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 domain = FULL_RANGE;
             }
             addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(expr)));
+        } else {
+            pushUnknown();
         }
         // todo
     }
