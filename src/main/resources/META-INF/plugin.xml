@@ -155,8 +155,8 @@
                 language="TIBasic"
                 groupPath="TI-Basic"
                 groupKey="inspection.group.control.flow"
-                implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicTooMuchListArgumentsInspection"
-                key="inspection.too.much.arguments.display.name"
+                implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicTooManyListArgumentsInspection"
+                key="inspection.too.many.arguments.display.name"
                 bundle="messages.TIBasicBundle"/>
         <localInspection
                 enabledByDefault="true"

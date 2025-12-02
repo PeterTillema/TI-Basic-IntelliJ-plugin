@@ -9,9 +9,9 @@ import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
 import nl.petertillema.tibasic.psi.TIBasicVisitor;
 import org.jetbrains.annotations.NotNull;
 
-public final class TIBasicTooMuchListArgumentsInspection extends LocalInspectionTool {
+public final class TIBasicTooManyListArgumentsInspection extends LocalInspectionTool {
 
-    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.too.much.arguments.description");
+    private static final String ERROR_MESSAGE = TIBasicMessageBundle.message("inspection.too.many.arguments.description");
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {

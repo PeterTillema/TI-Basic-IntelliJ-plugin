@@ -48,7 +48,7 @@ public class TIBasicNrArgumentsAnnotator implements Annotator {
                 PsiElement startElement = exprList.get(functionImpl.getMaxNrArguments() - 1).getNextSibling();
                 TIBasicExpr endElement = exprList.getLast();
 
-                holder.newAnnotation(HighlightSeverity.ERROR, TIBasicMessageBundle.message("annotator.too.much.arguments.description"))
+                holder.newAnnotation(HighlightSeverity.ERROR, TIBasicMessageBundle.message("annotator.too.many.arguments.description"))
                         .range(exprList.get(i))
                         .withFix(new RemoveArgumentsQuickFix(startElement, endElement))
                         .create();
@@ -72,7 +72,7 @@ public class TIBasicNrArgumentsAnnotator implements Annotator {
             TIBasicExpr endElement = exprList.getLast();
 
             for (int i = commandImpl.getMaxNrArguments(); i < exprList.size(); i++) {
-                holder.newAnnotation(HighlightSeverity.ERROR, TIBasicMessageBundle.message("annotator.too.much.arguments.description"))
+                holder.newAnnotation(HighlightSeverity.ERROR, TIBasicMessageBundle.message("annotator.too.many.arguments.description"))
                         .range(exprList.get(i))
                         .withFix(new RemoveArgumentsQuickFix(startElement, endElement))
                         .create();
@@ -105,12 +105,12 @@ public class TIBasicNrArgumentsAnnotator implements Annotator {
 
         @Override
         public @NotNull @IntentionName String getText() {
-            return TIBasicMessageBundle.message("annotator.too.much.arguments.fix.text");
+            return TIBasicMessageBundle.message("annotator.too.many.arguments.fix.text");
         }
 
         @Override
         public @NotNull @IntentionFamilyName String getFamilyName() {
-            return TIBasicMessageBundle.message("annotator.too.much.arguments.fix.family.name");
+            return TIBasicMessageBundle.message("annotator.too.many.arguments.fix.family.name");
         }
     }
 
