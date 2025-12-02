@@ -14,35 +14,23 @@ import java.util.Objects;
 /**
  * Descriptor for single-character TI-BASIC variables (A–Z, theta/θ).
  * Uses the variable text as an identifier (e.g., "A", "B", "theta").
- * <p>
- * Now also optionally tracks a numeric domain for the variable as a {@link DfType}.
  */
 public final class SimpleVariableDescriptor implements VariableDescriptor {
 
     private final @NotNull String name;
-    private final @Nullable DfType domain;
 
     public SimpleVariableDescriptor(@NotNull String name) {
-        this(name, null);
-    }
-
-    public SimpleVariableDescriptor(@NotNull String name, @Nullable DfType domain) {
         if ("θ".equals(name)) name = "theta";
         this.name = name;
-        this.domain = domain;
     }
 
     public @NotNull String getName() {
         return name;
     }
 
-    public @Nullable DfType getDomain() {
-        return domain;
-    }
-
     @Override
     public @NotNull String toString() {
-        return domain == null ? name : name + ":" + domain;
+        return name;
     }
 
     @Override
@@ -67,13 +55,11 @@ public final class SimpleVariableDescriptor implements VariableDescriptor {
 
     @Override
     public @NotNull DfaValue createValue(@NotNull DfaValueFactory factory, @Nullable DfaValue qualifier) {
-        System.out.println("create value!" + factory + ", " + qualifier);
         return VariableDescriptor.super.createValue(factory, qualifier);
     }
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-//        System.out.println("getDfType: " + qualifier);
-        return domain != null ? domain : DfType.TOP;
+        return DfType.TOP;
     }
 }
