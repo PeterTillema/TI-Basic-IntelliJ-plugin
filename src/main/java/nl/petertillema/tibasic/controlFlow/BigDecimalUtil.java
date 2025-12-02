@@ -10,6 +10,13 @@ public class BigDecimalUtil {
     public static final BigDecimal MIN = new BigDecimal("-1e100");
     public static final BigDecimal MAX = new BigDecimal("1e100");
 
+    public static BigDecimal numToString(String num) {
+        num = num.replace("~", "-")
+                .replace("|E", "e")
+                .replace("ᴇ", "e");
+        return new BigDecimal(num);
+    }
+
     public static BigDecimal round(BigDecimal value) {
         return value.round(MC);
     }

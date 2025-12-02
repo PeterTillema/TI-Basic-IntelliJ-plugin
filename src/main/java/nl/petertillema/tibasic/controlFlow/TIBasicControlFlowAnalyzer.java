@@ -92,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.numToString;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
@@ -583,7 +584,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public void visitLiteralExpr(@NotNull TIBasicLiteralExpr expr) {
         IElementType child = expr.getFirstChild().getNode().getElementType();
         if (child == TIBasicTypes.NUMBER) {
-            BigDecimal value = new BigDecimal(expr.getText());
+            BigDecimal value = numToString(expr.getText());
             DfType dfType = fromValue(value);
             addInstruction(new PushValueInstruction(dfType, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.SIMPLE_VARIABLE) {
