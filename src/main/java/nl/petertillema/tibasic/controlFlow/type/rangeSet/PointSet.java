@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
@@ -174,5 +175,15 @@ public record PointSet(Set<BigDecimal> values) implements BigDecimalRangeSet {
         if (o == null || getClass() != o.getClass()) return false;
         PointSet pointSet = (PointSet) o;
         return Objects.equals(values, pointSet.values);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        String out = values.stream()
+                .limit(5)
+                .map(BigDecimal::toString)
+                .collect(Collectors.joining(", "));
+        if (values.size() > 5) out = out + "...";
+        return "[" + out + "]";
     }
 }

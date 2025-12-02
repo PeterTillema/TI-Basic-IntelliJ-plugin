@@ -53,4 +53,8 @@ public class DfBigDecimalConstantType extends DfConstantType<BigDecimal> impleme
         return this == obj || super.equals(obj) && Objects.equals(((DfBigDecimalConstantType) obj).wideRange, wideRange);
     }
 
+    @Override
+    public @NotNull String toString() {
+        return getValue().toString();
+    }
 }

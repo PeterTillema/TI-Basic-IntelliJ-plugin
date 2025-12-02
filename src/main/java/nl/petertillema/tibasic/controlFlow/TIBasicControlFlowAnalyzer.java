@@ -165,27 +165,41 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         // Then block
         if (thenBlock != null && elseBlock == null) {
             addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
-
-            for (TIBasicStatement _statement : thenBlock.getStatementList()) {
-                _statement.accept(this);
-            }
+            visitThenBlock(thenBlock);
         }
 
         // Then-Else block
         if (thenBlock != null && elseBlock != null) {
             addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), fromValue(BigDecimal.ZERO), statement));
-
-            for (TIBasicStatement _statement : thenBlock.getStatementList()) {
-                _statement.accept(this);
-            }
+            visitThenBlock(thenBlock);
             addInstruction(new GotoInstruction(getEndOffset(statement)));
 
-            for (TIBasicStatement _statement : elseBlock.getStatementList()) {
-                _statement.accept(this);
-            }
+            visitElseBlock(elseBlock);
         }
 
         finishElement(statement);
+    }
+
+    @Override
+    public void visitThenBlock(@NotNull TIBasicThenBlock thenBlock) {
+        startElement(thenBlock);
+
+        for (TIBasicStatement statement : thenBlock.getStatementList()) {
+            statement.accept(this);
+        }
+
+        finishElement(thenBlock);
+    }
+
+    @Override
+    public void visitElseBlock(@NotNull TIBasicElseBlock elseBlock) {
+        startElement(elseBlock);
+
+        for (TIBasicStatement statement : elseBlock.getStatementList()) {
+            statement.accept(this);
+        }
+
+        finishElement(elseBlock);
     }
 
     @Override

@@ -47,6 +47,6 @@ public record DfBigDecimalRangeType(@NotNull BigDecimalRangeSet range,
 
     @Override
     public @NotNull String toString() {
-        return "int " + range;
+        return range.toString();
     }
 }
