@@ -27,6 +27,12 @@ public class TIBasicAssignmentTargetImpl extends TIBasicNamedElementImpl impleme
   }
 
   @Override
+  @Nullable
+  public TIBasicCustomList getCustomList() {
+    return findChildByClass(TIBasicCustomList.class);
+  }
+
+  @Override
   @NotNull
   public List<TIBasicExpr> getExprList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, TIBasicExpr.class);

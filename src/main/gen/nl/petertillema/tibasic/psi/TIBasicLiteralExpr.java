@@ -15,6 +15,9 @@ public interface TIBasicLiteralExpr extends TIBasicExpr {
   TIBasicAnonymousMatrix getAnonymousMatrix();
 
   @Nullable
+  TIBasicCustomList getCustomList();
+
+  @Nullable
   TIBasicListIndex getListIndex();
 
   @Nullable

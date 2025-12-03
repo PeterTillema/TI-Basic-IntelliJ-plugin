@@ -185,7 +185,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) optional_rparen
+  // DIM LPAREN (LIST_VARIABLE | custom_list | MATRIX_VARIABLE) optional_rparen
   static boolean assignment_target_dim(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_dim")) return false;
     if (!nextTokenIs(b, DIM)) return false;
@@ -199,18 +199,18 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE
+  // LIST_VARIABLE | custom_list | MATRIX_VARIABLE
   private static boolean assignment_target_dim_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_dim_2")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     if (!r) r = consumeToken(b, MATRIX_VARIABLE);
     return r;
   }
 
   /* ********************************************************** */
-  // (LIST_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen
+  // (LIST_VARIABLE | custom_list) LPAREN expr optional_rparen
   static boolean assignment_target_list_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_list_index")) return false;
     if (!nextTokenIs(b, "", CUSTOM_LIST_L, LIST_VARIABLE)) return false;
@@ -225,12 +225,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LIST_VARIABLE | custom_list_with_l
+  // LIST_VARIABLE | custom_list
   private static boolean assignment_target_list_index_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_list_index_0")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     return r;
   }
 
@@ -252,12 +252,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
+  // LIST_VARIABLE | custom_list | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
   static boolean assignment_target_variable(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment_target_variable")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     if (!r) r = custom_list_name(b, l + 1);
     if (!r) r = consumeToken(b, EQUATION_VARIABLE);
     if (!r) r = consumeToken(b, STRING_VARIABLE);
@@ -294,6 +294,19 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = while_statement(b, l + 1);
     if (!r) r = repeat_statement(b, l + 1);
     if (!r) r = for_statement(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // CUSTOM_LIST_L custom_list_name
+  public static boolean custom_list(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "custom_list")) return false;
+    if (!nextTokenIs(b, CUSTOM_LIST_L)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, CUSTOM_LIST_L);
+    r = r && custom_list_name(b, l + 1);
+    exit_section_(b, m, CUSTOM_LIST, r);
     return r;
   }
 
@@ -361,19 +374,6 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CUSTOM_LIST_L custom_list_name
-  static boolean custom_list_with_l(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "custom_list_with_l")) return false;
-    if (!nextTokenIs(b, CUSTOM_LIST_L)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, CUSTOM_LIST_L);
-    r = r && custom_list_name(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
   // delvar_variable+ [statement_internal]
   public static boolean delvar_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_statement")) return false;
@@ -409,7 +409,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE)
+  // DELVAR (LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE)
   static boolean delvar_variable(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_variable")) return false;
     if (!nextTokenIs(b, DELVAR)) return false;
@@ -422,12 +422,12 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE
+  // LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE
   private static boolean delvar_variable_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "delvar_variable_1")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     if (!r) r = consumeToken(b, EQUATION_VARIABLE);
     if (!r) r = consumeToken(b, STRING_VARIABLE);
     if (!r) r = consumeToken(b, SIMPLE_VARIABLE);
@@ -891,7 +891,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen
+  // (LIST_VARIABLE | ANS_VARIABLE | custom_list) LPAREN expr optional_rparen
   public static boolean list_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "list_index")) return false;
     boolean r, p;
@@ -905,13 +905,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l
+  // LIST_VARIABLE | ANS_VARIABLE | custom_list
   private static boolean list_index_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "list_index_0")) return false;
     boolean r;
     r = consumeToken(b, LIST_VARIABLE);
     if (!r) r = consumeToken(b, ANS_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     return r;
   }
 
@@ -1573,7 +1573,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
+  // list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
   public static boolean literal_expr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "literal_expr")) return false;
     boolean r;
@@ -1583,7 +1583,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeTokenSmart(b, EXPR_FUNCTIONS_NO_ARGS);
     if (!r) r = consumeTokenSmart(b, ANS_VARIABLE);
     if (!r) r = consumeTokenSmart(b, LIST_VARIABLE);
-    if (!r) r = custom_list_with_l(b, l + 1);
+    if (!r) r = custom_list(b, l + 1);
     if (!r) r = consumeTokenSmart(b, EQUATION_VARIABLE);
     if (!r) r = consumeTokenSmart(b, STRING_VARIABLE);
     if (!r) r = consumeTokenSmart(b, SIMPLE_VARIABLE);

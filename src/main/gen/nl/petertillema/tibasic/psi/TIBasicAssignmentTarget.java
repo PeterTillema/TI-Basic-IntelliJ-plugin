@@ -7,6 +7,9 @@ import com.intellij.psi.PsiElement;
 
 public interface TIBasicAssignmentTarget extends TIBasicNamedElement {
 
+  @Nullable
+  TIBasicCustomList getCustomList();
+
   @NotNull
   List<TIBasicExpr> getExprList();
 

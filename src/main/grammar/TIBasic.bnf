@@ -120,11 +120,11 @@ func_expr ::= (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> optional_rpa
 func_optional_expr ::= EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> optional_rparen] { pin=1 }
 
 // Base literal
-literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
+literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
 {
     methods=[getReferences]
 }
-list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen { pin=2 }
+list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list) LPAREN expr optional_rparen { pin=2 }
 matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr optional_rparen { pin=2 }
 anonymous_list ::= LCURLY <<list expr>> [RCURLY] { pin=1 }
 anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> [RBRACKET] { pin=1 }
@@ -141,16 +141,16 @@ assignment_target ::= assignment_target_matrix_index | assignment_target_list_in
     methods=[getName setName getNameIdentifier]
 }
 private assignment_target_matrix_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr optional_rparen { pin=2 }
-private assignment_target_list_index ::= (LIST_VARIABLE | custom_list_with_l) LPAREN expr optional_rparen { pin=2 }
-private assignment_target_variable ::= LIST_VARIABLE | custom_list_with_l | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
-private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list_with_l | MATRIX_VARIABLE) optional_rparen { pin=1 }
+private assignment_target_list_index ::= (LIST_VARIABLE | custom_list) LPAREN expr optional_rparen { pin=2 }
+private assignment_target_variable ::= LIST_VARIABLE | custom_list | custom_list_name | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE
+private assignment_target_dim ::= DIM LPAREN (LIST_VARIABLE | custom_list | MATRIX_VARIABLE) optional_rparen { pin=1 }
 
-private custom_list_with_l ::= CUSTOM_LIST_L custom_list_name
+custom_list ::= CUSTOM_LIST_L custom_list_name
 private custom_list_name ::= SIMPLE_VARIABLE [custom_list_char] [custom_list_char] [custom_list_char] [custom_list_char]
 private custom_list_char ::= SIMPLE_VARIABLE | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 delvar_statement ::= delvar_variable+ [statement_internal]
-private delvar_variable ::= DELVAR (LIST_VARIABLE | custom_list_with_l | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE) { pin=1 }
+private delvar_variable ::= DELVAR (LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | MATRIX_VARIABLE | WINDOW_VARIABLE | PICTURE_VARIABLE) { pin=1 }
 
 goto_statement ::= GOTO goto_name { pin=1 }
 goto_name ::= (SIMPLE_VARIABLE | NUMBER) [SIMPLE_VARIABLE | NUMBER] { methods=[getReferences] }

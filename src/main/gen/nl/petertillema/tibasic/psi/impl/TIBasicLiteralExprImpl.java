@@ -42,6 +42,12 @@ public class TIBasicLiteralExprImpl extends TIBasicExprImpl implements TIBasicLi
 
   @Override
   @Nullable
+  public TIBasicCustomList getCustomList() {
+    return findChildByClass(TIBasicCustomList.class);
+  }
+
+  @Override
+  @Nullable
   public TIBasicListIndex getListIndex() {
     return findChildByClass(TIBasicListIndex.class);
   }

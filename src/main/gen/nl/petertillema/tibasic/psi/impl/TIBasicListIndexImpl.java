@@ -29,6 +29,12 @@ public class TIBasicListIndexImpl extends ASTWrapperPsiElement implements TIBasi
 
   @Override
   @Nullable
+  public TIBasicCustomList getCustomList() {
+    return findChildByClass(TIBasicCustomList.class);
+  }
+
+  @Override
+  @Nullable
   public TIBasicExpr getExpr() {
     return findChildByClass(TIBasicExpr.class);
   }

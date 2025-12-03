@@ -16,6 +16,7 @@ public interface TIBasicTypes {
   IElementType ASSIGNMENT_STATEMENT = new TIBasicElementType("ASSIGNMENT_STATEMENT");
   IElementType ASSIGNMENT_TARGET = new TIBasicElementType("ASSIGNMENT_TARGET");
   IElementType COMMAND_STATEMENT = new TIBasicElementType("COMMAND_STATEMENT");
+  IElementType CUSTOM_LIST = new TIBasicElementType("CUSTOM_LIST");
   IElementType DEGREE_EXPR = new TIBasicElementType("DEGREE_EXPR");
   IElementType DELVAR_STATEMENT = new TIBasicElementType("DELVAR_STATEMENT");
   IElementType DISP_STATEMENT = new TIBasicElementType("DISP_STATEMENT");
@@ -170,6 +171,9 @@ public interface TIBasicTypes {
       }
       else if (type == COMMAND_STATEMENT) {
         return new TIBasicCommandStatementImpl(node);
+      }
+      else if (type == CUSTOM_LIST) {
+        return new TIBasicCustomListImpl(node);
       }
       else if (type == DEGREE_EXPR) {
         return new TIBasicDegreeExprImpl(node);

@@ -39,6 +39,10 @@ public class TIBasicVisitor extends PsiElementVisitor {
     visitStatement(o);
   }
 
+  public void visitCustomList(@NotNull TIBasicCustomList o) {
+    visitPsiElement(o);
+  }
+
   public void visitDegreeExpr(@NotNull TIBasicDegreeExpr o) {
     visitExpr(o);
   }

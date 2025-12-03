@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface TIBasicListIndex extends PsiElement {
 
   @Nullable
+  TIBasicCustomList getCustomList();
+
+  @Nullable
   TIBasicExpr getExpr();
 
 }
