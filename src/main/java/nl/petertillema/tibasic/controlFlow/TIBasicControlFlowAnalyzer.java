@@ -27,12 +27,14 @@ import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FlushVariablesInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.GetListElementInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.LogicalBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
 import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
+import nl.petertillema.tibasic.controlFlow.type.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
@@ -498,17 +500,23 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitAndExpr(@NotNull TIBasicAndExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new LogicalBinaryInstruction(new TIBasicDfaAnchor(expr), LogicalOperator.AND));
     }
 
     @Override
     public void visitOrExpr(@NotNull TIBasicOrExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new LogicalBinaryInstruction(new TIBasicDfaAnchor(expr), LogicalOperator.OR));
     }
 
     @Override
     public void visitXorExpr(@NotNull TIBasicXorExpr expr) {
-        // todo
+        expr.acceptChildren(this);
+        if (expr.getExprList().size() != 2) pushUnknown();
+        addInstruction(new LogicalBinaryInstruction(new TIBasicDfaAnchor(expr), LogicalOperator.XOR));
     }
 
     @Override
