@@ -23,24 +23,20 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
         DfaValue destination = stateBefore.pop();
         DfaValue value = stateBefore.pop();
 
-        if (!(destination instanceof DfaVariableValue destinationVar)) {
-            pushResult(interpreter, stateBefore, destination);
-            return nextStates(interpreter, stateBefore);
+        if (destination instanceof DfaVariableValue destinationVar) {
+            interpreter.getListener().beforeAssignment(value, destination, stateBefore, getDfaAnchor());
+
+            stateBefore.flushVariable(destinationVar);
+            ((DfaMemoryStateImpl) stateBefore).recordVariableType(destinationVar, stateBefore.getDfType(value));
+            if (value instanceof DfaVariableValue var) {
+                var.getDependentVariables().forEach(depVar ->
+                        stateBefore.setVarValue(depVar.withQualifier(destinationVar), depVar));
+            }
+
+            interpreter.getListener().afterAssignment(value, destination, stateBefore, getDfaAnchor());
         }
 
-        interpreter.getListener().beforeAssignment(value, destination, stateBefore, getDfaAnchor());
-
-        stateBefore.flushVariable(destinationVar);
-        ((DfaMemoryStateImpl) stateBefore).recordVariableType(destinationVar, stateBefore.getDfType(value));
-        if (value instanceof DfaVariableValue var) {
-            var.getDependentVariables().forEach(depVar -> {
-                stateBefore.setVarValue(depVar.withQualifier(destinationVar), depVar);
-            });
-        }
-
-
-        interpreter.getListener().afterAssignment(value, destination, stateBefore, getDfaAnchor());
-        pushResult(interpreter, stateBefore, destination);
+        pushResult(interpreter, stateBefore, value);
         return nextStates(interpreter, stateBefore);
     }
 
