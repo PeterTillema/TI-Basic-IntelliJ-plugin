@@ -9,7 +9,6 @@ import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PopInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
-import com.intellij.codeInspection.dataFlow.lang.ir.SimpleAssignmentInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.SwapInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
@@ -19,21 +18,28 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import nl.petertillema.tibasic.controlFlow.descriptor.SimpleVariableDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
+import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
-import nl.petertillema.tibasic.controlFlow.instruction.FlushAllVariablesInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.FlushVariablesInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.GetListElementInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.type.DfListType;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
+import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
 import nl.petertillema.tibasic.psi.TIBasicAsmStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
+import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
+import nl.petertillema.tibasic.psi.TIBasicCustomList;
 import nl.petertillema.tibasic.psi.TIBasicDegreeExpr;
 import nl.petertillema.tibasic.psi.TIBasicDelvarStatement;
 import nl.petertillema.tibasic.psi.TIBasicDispStatement;
@@ -111,7 +117,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public TIBasicControlFlowAnalyzer(@NotNull DfaValueFactory factory, @NotNull PsiElement psiBlock) {
         this.factory = factory;
         this.psiBlock = psiBlock;
-        this.ansVariable = factory.getVarFactory().createVariableValue(new SimpleVariableDescriptor("Ans"));
+        this.ansVariable = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor("Ans"));
     }
 
     public ControlFlow buildControlFlow() {
@@ -260,7 +266,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new PushInstruction(variable, null));
             addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
             addInstruction(new NumericBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? BinaryOperator.PLUS : BinaryOperator.MINUS));
-            addInstruction(new SimpleAssignmentInstruction(null, variable));
+            addInstruction(new PushInstruction(variable, null));
+            addInstruction(new AssignVariableInstruction(null));
             statement.getExpr().accept(this);
             addInstruction(new BooleanBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? RelationType.LE : RelationType.GE));
         } else {
@@ -316,7 +323,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitPrgmStatement(@NotNull TIBasicPrgmStatement statement) {
-        addInstruction(new FlushAllVariablesInstruction());
+        addInstruction(new FlushVariablesInstruction(v -> true));
     }
 
     @Override
@@ -344,7 +351,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitAsmStatement(@NotNull TIBasicAsmStatement statement) {
-        addInstruction(new FlushAllVariablesInstruction());
+        addInstruction(new FlushVariablesInstruction(v -> true));
     }
 
     @Override
@@ -352,7 +359,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         startElement(statement);
         if (statement.getExpr() != null) {
             statement.getExpr().accept(this);
-            addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
+            addInstruction(new PushInstruction(ansVariable, null));
+            addInstruction(new AssignVariableInstruction(null));
             addInstruction(new PopInstruction());
         }
         finishElement(statement);
@@ -364,16 +372,48 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         statement.getExpr().accept(this);
         if (statement.getAssignmentTarget() != null) {
-            PsiElement targetPsi = statement.getAssignmentTarget().getFirstChild();
-            if (targetPsi != null) {
-                DfaVariableValue variable = createVariableFromElement(targetPsi);
-                addInstruction(new SimpleAssignmentInstruction(new TIBasicDfaAnchor(statement), variable));
-                addInstruction(new SimpleAssignmentInstruction(null, ansVariable));
-            }
+            visitAssignmentTarget(statement.getAssignmentTarget());
+            addInstruction(new AssignVariableInstruction(null));
         }
+        addInstruction(new PushInstruction(ansVariable, null));
+        addInstruction(new AssignVariableInstruction(null));
         addInstruction(new PopInstruction());
 
         finishElement(statement);
+    }
+
+    @Override
+    public void visitAssignmentTarget(@NotNull TIBasicAssignmentTarget target) {
+        PsiElement child = target.getFirstChild();
+        if (child instanceof TIBasicCustomList || child.getNode().getElementType() == TIBasicTypes.LIST_VARIABLE) {
+            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+
+            if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
+                // List index
+                addInstruction(new PushInstruction(listVar, null));
+
+                if (!target.getExprList().isEmpty()) {
+                    target.getExprList().getFirst().accept(this);
+                } else {
+                    pushUnknown();
+                }
+
+                addInstruction(new GetListElementInstruction(null));
+            } else {
+                // Normal list
+                addInstruction(new PushInstruction(listVar, null));
+            }
+        } else if (child.getNode().getElementType() == TIBasicTypes.SIMPLE_VARIABLE) {
+            if (child.getNextSibling() != null) {
+                // Custom list without |L prefix
+                DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor("|L" + target.getText()));
+                addInstruction(new PushInstruction(listVar, null));
+            } else {
+                // Simple variable
+                DfaVariableValue simpleVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+                addInstruction(new PushInstruction(simpleVar, null));
+            }
+        }
     }
 
     @Override
@@ -592,6 +632,23 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new PushInstruction(variable, new TIBasicDfaAnchor(expr)));
         } else if (child == TIBasicTypes.ANS_VARIABLE) {
             addInstruction(new PushInstruction(ansVariable, new TIBasicDfaAnchor(expr)));
+        } else if (child == TIBasicTypes.LIST_VARIABLE || child == TIBasicTypes.CUSTOM_LIST_L) {
+            String listName = expr.getText();
+            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(listName));
+            addInstruction(new PushInstruction(listVar, new TIBasicDfaAnchor(expr)));
+        } else if (expr.getListIndex() != null) {
+            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(expr.getListIndex().getFirstChild().getText()));
+            addInstruction(new PushInstruction(listVar, null));
+
+            if (expr.getListIndex().getExpr() != null) {
+                expr.getListIndex().getExpr().accept(this);
+            } else {
+                pushUnknown();
+            }
+
+            addInstruction(new GetListElementInstruction(null));
+        } else if (expr.getAnonymousList() != null) {
+            addAnonymousListInstructions(expr.getAnonymousList());
         } else if (child == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
             String fname = expr.getText();
             BigDecimalRangeSet domain;
@@ -609,10 +666,31 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         // todo
     }
 
+    private void addAnonymousListInstructions(TIBasicAnonymousList anonymousList) {
+        DfaVariableValue tempListVar = createTempVariable();
+
+        addInstruction(new PushValueInstruction(new DfListType()));
+        addInstruction(new PushInstruction(tempListVar, null));
+        addInstruction(new AssignVariableInstruction(null));
+        addInstruction(new PopInstruction());
+
+        int idx = 1;
+        for (TIBasicExpr expr : anonymousList.getExprList()) {
+            expr.accept(this);
+            ListElementDescriptor descriptor = new ListElementDescriptor(idx);
+            DfaVariableValue listElemVar = factory.getVarFactory().createVariableValue(descriptor, tempListVar);
+            addInstruction(new PushInstruction(listElemVar, null));
+            addInstruction(new AssignVariableInstruction(null));
+            addInstruction(new PopInstruction());
+            idx++;
+        }
+
+        addInstruction(new PushInstruction(tempListVar, null));
+    }
+
     private DfaVariableValue createVariableFromElement(PsiElement element) {
         String name = element.getText();
-        SimpleVariableDescriptor descriptor = new SimpleVariableDescriptor(name);
-        return factory.getVarFactory().createVariableValue(descriptor);
+        return factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(name));
     }
 
     private void addInstruction(Instruction i) {
@@ -631,12 +709,19 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         return currentFlow.getStartOffset(element);
     }
 
+    private DfaVariableValue createTempVariable() {
+        return currentFlow.createTempVariable(DfType.TOP);
+    }
+
     private void startElement(@NotNull PsiElement element) {
         currentFlow.startElement(element);
     }
 
     private void finishElement(@NotNull PsiElement element) {
         currentFlow.finishElement(element);
+        if (element instanceof TIBasicStatement) {
+            addInstruction(new FlushVariablesInstruction(v -> v.getDescriptor() instanceof ControlFlow.Synthetic));
+        }
     }
 
     private void pushUnknown() {
