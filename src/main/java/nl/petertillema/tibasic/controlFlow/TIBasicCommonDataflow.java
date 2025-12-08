@@ -168,6 +168,7 @@ public class TIBasicCommonDataflow {
         DfaMemoryStateImpl stateImpl = new DfaMemoryStateImpl(factory);
 
         RunnerResult result = interpreter.interpret(stateImpl);
+        System.out.println(stateImpl);
         if (result != RunnerResult.OK) return new DataflowResult(result);
         listener.result.myUnreachable.addAll(interpreter.getUnreachable());
         return listener.result.copy();

@@ -28,9 +28,8 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
 
             stateBefore.flushVariable(destinationVar);
             ((DfaMemoryStateImpl) stateBefore).recordVariableType(destinationVar, stateBefore.getDfType(value));
-            if (value instanceof DfaVariableValue var) {
-                var.getDependentVariables().forEach(depVar ->
-                        stateBefore.setVarValue(depVar.withQualifier(destinationVar), depVar));
+            if (value instanceof DfaVariableValue srcVar) {
+                copyDependentTree(stateBefore, srcVar, destinationVar);
             }
 
             interpreter.getListener().afterAssignment(value, destination, stateBefore, getDfaAnchor());
@@ -38,6 +37,16 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
 
         pushResult(interpreter, stateBefore, value);
         return nextStates(interpreter, stateBefore);
+    }
+
+    private static void copyDependentTree(@NotNull DfaMemoryState state,
+                                          @NotNull DfaVariableValue source,
+                                          @NotNull DfaVariableValue destination) {
+        for (DfaVariableValue child : source.getDependentVariables()) {
+            DfaVariableValue mappedChild = child.withQualifier(destination);
+            ((DfaMemoryStateImpl) state).recordVariableType(mappedChild, state.getDfType(child));
+            copyDependentTree(state, child, mappedChild);
+        }
     }
 
     @Override

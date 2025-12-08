@@ -32,11 +32,13 @@ import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
+import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousMatrix;
+import nl.petertillema.tibasic.psi.TIBasicAnonymousMatrixRow;
 import nl.petertillema.tibasic.psi.TIBasicAsmStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
@@ -629,15 +631,45 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         }
 
         // Matrix index
-        else if (child instanceof TIBasicMatrixIndex) {
-            // todo
-            pushUnknown();
+        else if (child instanceof TIBasicMatrixIndex matrixIndex) {
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(matrixIndex.getFirstChild().getText()));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(matrixIndex.getFirstChild())));
+
+            if (!matrixIndex.getExprList().isEmpty()) {
+                matrixIndex.getExprList().getFirst().accept(this);
+            } else {
+                pushUnknown();
+            }
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+
+            if (matrixIndex.getExprList().size() > 1) {
+                matrixIndex.getExprList().get(1).accept(this);
+            } else {
+                pushUnknown();
+            }
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
         }
 
         // Matrix
         else if (childType == TIBasicTypes.MATRIX_VARIABLE) {
-            // todo
-            pushUnknown();
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+
+            if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
+                if (expressions.isEmpty()) {
+                    pushUnknown();
+                } else {
+                    expressions.getFirst().accept(this);
+                }
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+
+                if (expressions.size() < 2) {
+                    pushUnknown();
+                } else {
+                    expressions.get(1).accept(this);
+                }
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+            }
         }
 
         // Anonymous list
@@ -664,9 +696,39 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         }
 
         // Anonymous matrix
-        else if (child instanceof TIBasicAnonymousMatrix) {
-            // todo
-            pushUnknown();
+        else if (child instanceof TIBasicAnonymousMatrix anonymousMatrix) {
+            DfaVariableValue tempMatrixVar = createTempVariable();
+
+            addInstruction(new PushValueInstruction(new DfMatrixType()));
+            addInstruction(new PushInstruction(tempMatrixVar, null));
+            addInstruction(new AssignVariableInstruction(null));
+            addInstruction(new PopInstruction());
+
+            int rowNr = 1;
+            for (TIBasicAnonymousMatrixRow row : anonymousMatrix.getAnonymousMatrixRowList()) {
+                ListElementDescriptor rowDescriptor = new ListElementDescriptor(rowNr);
+                DfaVariableValue tempMatrixRowVar = factory.getVarFactory().createVariableValue(rowDescriptor, tempMatrixVar);
+
+                addInstruction(new PushValueInstruction(new DfListType()));
+                addInstruction(new PushInstruction(tempMatrixRowVar, null));
+                addInstruction(new AssignVariableInstruction(null));
+                addInstruction(new PopInstruction());
+
+                int colNr = 1;
+                for (TIBasicExpr expr : row.getExprList()) {
+                    expr.accept(this);
+                    ListElementDescriptor colDescriptor = new ListElementDescriptor(colNr);
+                    DfaVariableValue listElemVar = factory.getVarFactory().createVariableValue(colDescriptor, tempMatrixRowVar);
+                    addInstruction(new PushInstruction(listElemVar, new TIBasicDfaAnchor(expr)));
+                    addInstruction(new AssignVariableInstruction(null));
+                    addInstruction(new PopInstruction());
+                    colNr++;
+                }
+
+                rowNr++;
+            }
+
+            addInstruction(new PushInstruction(tempMatrixVar, new TIBasicDfaAnchor(child)));
         }
 
         // Number, math variables
