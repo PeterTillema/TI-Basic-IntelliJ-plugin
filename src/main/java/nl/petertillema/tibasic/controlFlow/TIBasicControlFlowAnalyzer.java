@@ -18,6 +18,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
@@ -35,6 +36,7 @@ import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
+import nl.petertillema.tibasic.psi.TIBasicAnonymousMatrix;
 import nl.petertillema.tibasic.psi.TIBasicAsmStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentStatement;
 import nl.petertillema.tibasic.psi.TIBasicAssignmentTarget;
@@ -61,8 +63,10 @@ import nl.petertillema.tibasic.psi.TIBasicInverseExpr;
 import nl.petertillema.tibasic.psi.TIBasicIsDsStatement;
 import nl.petertillema.tibasic.psi.TIBasicLblStatement;
 import nl.petertillema.tibasic.psi.TIBasicLeExpr;
+import nl.petertillema.tibasic.psi.TIBasicListIndex;
 import nl.petertillema.tibasic.psi.TIBasicLiteralExpr;
 import nl.petertillema.tibasic.psi.TIBasicLtExpr;
+import nl.petertillema.tibasic.psi.TIBasicMatrixIndex;
 import nl.petertillema.tibasic.psi.TIBasicMenuOption;
 import nl.petertillema.tibasic.psi.TIBasicMenuStatement;
 import nl.petertillema.tibasic.psi.TIBasicMinusExpr;
@@ -98,6 +102,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.petertillema.tibasic.TIBasicPaletteColors.TIBASIC_COLOR_NUMS;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.numToString;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
@@ -371,8 +376,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         startElement(statement);
 
         statement.getExpr().accept(this);
-        if (statement.getAssignmentTarget() != null) {
-            visitAssignmentTarget(statement.getAssignmentTarget());
+        TIBasicAssignmentTarget target = statement.getAssignmentTarget();
+        if (target != null) {
+            addInstructionsForLiteral(target, PsiTreeUtil.getChildrenOfTypeAsList(target, TIBasicExpr.class));
             addInstruction(new AssignVariableInstruction(null));
         }
         addInstruction(new PushInstruction(ansVariable, null));
@@ -380,40 +386,6 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         addInstruction(new PopInstruction());
 
         finishElement(statement);
-    }
-
-    @Override
-    public void visitAssignmentTarget(@NotNull TIBasicAssignmentTarget target) {
-        PsiElement child = target.getFirstChild();
-        if (child instanceof TIBasicCustomList || child.getNode().getElementType() == TIBasicTypes.LIST_VARIABLE) {
-            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
-
-            if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
-                // List index
-                addInstruction(new PushInstruction(listVar, null));
-
-                if (!target.getExprList().isEmpty()) {
-                    target.getExprList().getFirst().accept(this);
-                } else {
-                    pushUnknown();
-                }
-
-                addInstruction(new GetListElementInstruction(null));
-            } else {
-                // Normal list
-                addInstruction(new PushInstruction(listVar, null));
-            }
-        } else if (child.getNode().getElementType() == TIBasicTypes.SIMPLE_VARIABLE) {
-            if (child.getNextSibling() != null) {
-                // Custom list without |L prefix
-                DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor("|L" + target.getText()));
-                addInstruction(new PushInstruction(listVar, null));
-            } else {
-                // Simple variable
-                DfaVariableValue simpleVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
-                addInstruction(new PushInstruction(simpleVar, null));
-            }
-        }
     }
 
     @Override
@@ -622,35 +594,96 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitLiteralExpr(@NotNull TIBasicLiteralExpr expr) {
-        IElementType child = expr.getFirstChild().getNode().getElementType();
-        if (child == TIBasicTypes.NUMBER) {
-            BigDecimal value = numToString(expr.getText());
-            DfType dfType = fromValue(value);
-            addInstruction(new PushValueInstruction(dfType, new TIBasicDfaAnchor(expr)));
-        } else if (child == TIBasicTypes.SIMPLE_VARIABLE) {
-            DfaVariableValue variable = createVariableFromElement(expr);
-            addInstruction(new PushInstruction(variable, new TIBasicDfaAnchor(expr)));
-        } else if (child == TIBasicTypes.ANS_VARIABLE) {
-            addInstruction(new PushInstruction(ansVariable, new TIBasicDfaAnchor(expr)));
-        } else if (child == TIBasicTypes.LIST_VARIABLE || child == TIBasicTypes.CUSTOM_LIST_L) {
-            String listName = expr.getText();
-            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(listName));
-            addInstruction(new PushInstruction(listVar, new TIBasicDfaAnchor(expr)));
-        } else if (expr.getListIndex() != null) {
-            DfaVariableValue listVar = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(expr.getListIndex().getFirstChild().getText()));
-            addInstruction(new PushInstruction(listVar, null));
+        addInstructionsForLiteral(expr, PsiTreeUtil.getChildrenOfTypeAsList(expr, TIBasicExpr.class));
+    }
 
-            if (expr.getListIndex().getExpr() != null) {
-                expr.getListIndex().getExpr().accept(this);
+    private void addInstructionsForLiteral(PsiElement element, List<TIBasicExpr> expressions) {
+        PsiElement child = element.getFirstChild();
+        IElementType childType = child.getNode().getElementType();
+
+        // List index
+        if (child instanceof TIBasicListIndex listIndex) {
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(listIndex.getFirstChild().getText()));
+            addInstruction(new PushInstruction(var, null));
+
+            if (listIndex.getExpr() != null) {
+                listIndex.getExpr().accept(this);
             } else {
                 pushUnknown();
             }
-
             addInstruction(new GetListElementInstruction(null));
-        } else if (expr.getAnonymousList() != null) {
-            addAnonymousListInstructions(expr.getAnonymousList());
-        } else if (child == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
-            String fname = expr.getText();
+        }
+
+        // List
+        else if (child instanceof TIBasicCustomList || childType == TIBasicTypes.LIST_VARIABLE || childType == TIBasicTypes.ANS_VARIABLE) {
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            addInstruction(new PushInstruction(var, null));
+            if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
+                if (expressions.isEmpty()) {
+                    pushUnknown();
+                } else {
+                    expressions.getFirst().accept(this);
+                }
+                addInstruction(new GetListElementInstruction(null));
+            }
+        }
+
+        // Matrix index
+        else if (child instanceof TIBasicMatrixIndex) {
+            // todo
+            pushUnknown();
+        }
+
+        // Matrix
+        else if (childType == TIBasicTypes.MATRIX_VARIABLE) {
+            // todo
+            pushUnknown();
+        }
+
+        // Anonymous list
+        else if (child instanceof TIBasicAnonymousList anonymousList) {
+            DfaVariableValue tempListVar = createTempVariable();
+
+            addInstruction(new PushValueInstruction(new DfListType()));
+            addInstruction(new PushInstruction(tempListVar, null));
+            addInstruction(new AssignVariableInstruction(null));
+            addInstruction(new PopInstruction());
+
+            int idx = 1;
+            for (TIBasicExpr expr : anonymousList.getExprList()) {
+                expr.accept(this);
+                ListElementDescriptor descriptor = new ListElementDescriptor(idx);
+                DfaVariableValue listElemVar = factory.getVarFactory().createVariableValue(descriptor, tempListVar);
+                addInstruction(new PushInstruction(listElemVar, null));
+                addInstruction(new AssignVariableInstruction(null));
+                addInstruction(new PopInstruction());
+                idx++;
+            }
+
+            addInstruction(new PushInstruction(tempListVar, null));
+        }
+
+        // Anonymous matrix
+        else if (child instanceof TIBasicAnonymousMatrix) {
+            // todo
+            pushUnknown();
+        }
+
+        // Number, math variables
+        else if (childType == TIBasicTypes.NUMBER || childType == TIBasicTypes.MATH_VARIABLE) {
+            String text = child.getText();
+            String num;
+            if (text.equals("pi") || text.equals("π")) num = "3.1415926535898";
+            else if (text.equals("[e]") || text.equals("\uD835\uDC52")) num = "2.7182818284590";
+            else num = element.getText();
+
+            DfType numberType = fromValue(numToString(num));
+            addInstruction(new PushValueInstruction(numberType, null));
+        }
+
+        // Expression function
+        else if (childType == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
+            String fname = child.getText();
             BigDecimalRangeSet domain;
             if ("rand".equals(fname)) {
                 domain = RAND_DOMAIN;
@@ -659,33 +692,26 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             } else {
                 domain = FULL_RANGE;
             }
-            addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(expr)));
-        } else {
+            addInstruction(new PushValueInstruction(fromRange(domain), null));
+        }
+
+        // Color variable
+        else if (childType == TIBasicTypes.COLOR_VARIABLE) {
+            DfType colorType = fromValue(BigDecimal.valueOf(TIBASIC_COLOR_NUMS.get(child.getText())));
+            addInstruction(new PushValueInstruction(colorType, null));
+        }
+
+        // String
+        else if (childType == TIBasicTypes.STRING) {
+            // todo
             pushUnknown();
         }
-        // todo
-    }
 
-    private void addAnonymousListInstructions(TIBasicAnonymousList anonymousList) {
-        DfaVariableValue tempListVar = createTempVariable();
-
-        addInstruction(new PushValueInstruction(new DfListType()));
-        addInstruction(new PushInstruction(tempListVar, null));
-        addInstruction(new AssignVariableInstruction(null));
-        addInstruction(new PopInstruction());
-
-        int idx = 1;
-        for (TIBasicExpr expr : anonymousList.getExprList()) {
-            expr.accept(this);
-            ListElementDescriptor descriptor = new ListElementDescriptor(idx);
-            DfaVariableValue listElemVar = factory.getVarFactory().createVariableValue(descriptor, tempListVar);
-            addInstruction(new PushInstruction(listElemVar, null));
-            addInstruction(new AssignVariableInstruction(null));
-            addInstruction(new PopInstruction());
-            idx++;
+        // All the other simple variables: EQUATION_VARIABLE, STRING_VARIABLE, SIMPLE_VARIABLE, WINDOW_VARIABLE
+        else {
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            addInstruction(new PushInstruction(var, null));
         }
-
-        addInstruction(new PushInstruction(tempListVar, null));
     }
 
     private DfaVariableValue createVariableFromElement(PsiElement element) {

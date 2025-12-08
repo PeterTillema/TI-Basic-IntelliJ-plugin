@@ -66,6 +66,47 @@ public final class TIBasicPaletteColors {
             Map.entry("DarkGrey", DARK_GRAY)
     );
 
+    public static final Map<String, Integer> TIBASIC_COLOR_NUMS = Map.ofEntries(
+            Map.entry("BLUE", 10),
+            Map.entry("Blue", 10),
+            Map.entry("RED", 11),
+            Map.entry("Red", 11),
+            Map.entry("BLACK", 12),
+            Map.entry("Black", 12),
+            Map.entry("MAGENTA", 13),
+            Map.entry("Magenta", 13),
+            Map.entry("GREEN", 14),
+            Map.entry("Green", 14),
+            Map.entry("ORANGE", 15),
+            Map.entry("Orange", 15),
+            Map.entry("BROWN", 16),
+            Map.entry("Brown", 16),
+            Map.entry("NAVY", 17),
+            Map.entry("Navy", 17),
+            Map.entry("LTBLUE", 18),
+            Map.entry("LtBlue", 18),
+            Map.entry("YELLOW", 19),
+            Map.entry("Yellow", 19),
+            Map.entry("WHITE", 20),
+            Map.entry("White", 20),
+            Map.entry("LTGRAY", 21),
+            Map.entry("LtGray", 21),
+            Map.entry("LTGREY", 21),
+            Map.entry("LtGrey", 21),
+            Map.entry("MEDGRAY", 22),
+            Map.entry("MedGray", 22),
+            Map.entry("MEDGREY", 22),
+            Map.entry("MedGrey", 22),
+            Map.entry("GRAY", 23),
+            Map.entry("Gray", 23),
+            Map.entry("GREY", 23),
+            Map.entry("Grey", 23),
+            Map.entry("DARKGRAY", 24),
+            Map.entry("DarkGray", 24),
+            Map.entry("DARKGREY", 24),
+            Map.entry("DarkGrey", 24)
+    );
+
     public static final List<Color> TIBASIC_PALETTE = List.of(
             TRANSPARENT,
             BLUE,

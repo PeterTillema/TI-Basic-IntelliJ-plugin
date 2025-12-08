@@ -33,6 +33,6 @@ public class DfListType implements DfType {
 
     @Override
     public @NotNull String toString() {
-        return "$LIST$";
+        return "list";
     }
 }
