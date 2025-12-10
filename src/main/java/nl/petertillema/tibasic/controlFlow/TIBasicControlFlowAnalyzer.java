@@ -159,7 +159,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         }
     }
 
-    private static class AnalyzerException extends RuntimeException {}
+    private static class AnalyzerException extends RuntimeException {
+    }
 
     @Override
     public void visitErrorElement(@NotNull PsiErrorElement element) {
@@ -274,7 +275,124 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
     @Override
     public void visitForStatement(@NotNull TIBasicForStatement statement) {
-        // todo
+        startElement(statement);
+
+        int instructionCountNow = currentFlow.getInstructionCount();
+        String tempForLoopName = "for$" + instructionCountNow + "$";
+
+        // Get the main identifier
+        String name = tempForLoopName + "id";
+        if (statement.getForIdentifier() != null) {
+            name = statement.getForIdentifier().getText();
+        }
+        DfaVariableValue forLoopVariable = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(name));
+
+        // Assign the start to the loop variable
+        if (!statement.getExprList().isEmpty()) {
+            statement.getExprList().getFirst().accept(this);
+        } else {
+            pushUnknown();
+        }
+        addInstruction(new PushInstruction(forLoopVariable, null));
+        addInstruction(new AssignVariableInstruction(null));
+        addInstruction(new PopInstruction());
+
+        // Get the stop value and assign to a temporary variable
+        DfaVariableValue forLoopStop = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(tempForLoopName + "stop"));
+        if (statement.getExprList().size() > 1) {
+            statement.getExprList().get(1).accept(this);
+        } else {
+            pushUnknown();
+        }
+        addInstruction(new PushInstruction(forLoopStop, null));
+        addInstruction(new AssignVariableInstruction(null));
+        addInstruction(new PopInstruction());
+
+        // Get the step value and assign to a temporary variable eventually
+        DfaVariableValue forLoopStep = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(tempForLoopName + "step"));
+        boolean hasCustomStep = false;
+        if (statement.getExprList().size() > 2) {
+            statement.getExprList().get(2).accept(this);
+            addInstruction(new PushInstruction(forLoopStep, null));
+            addInstruction(new AssignVariableInstruction(null));
+            addInstruction(new PopInstruction());
+
+            hasCustomStep = true;
+        }
+
+        int instructionCountBeforeCheck = currentFlow.getInstructionCount();
+
+        // if ((step > 0 && start > end) || (step < 0 && start < end)) {
+        //   goto end_loop;
+        // }
+        //
+        // Inversed:
+        //
+        // if ((step <= 0 || start <= end) && (step >= 0 || start >= end)) {
+        // } else {
+        //   goto end_loop;
+        // }
+
+        if (hasCustomStep) {
+            // step <= 0
+            addInstruction(new PushInstruction(forLoopStep, null));
+            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ZERO)));
+            addInstruction(new BooleanBinaryInstruction(null, RelationType.LE));
+
+            // start <= end
+            addInstruction(new PushInstruction(forLoopVariable, null));
+            addInstruction(new PushInstruction(forLoopStop, null));
+            addInstruction(new BooleanBinaryInstruction(null, RelationType.LE));
+
+            addInstruction(new LogicalBinaryInstruction(null, LogicalOperator.OR));
+
+            // step >= 0
+            addInstruction(new PushInstruction(forLoopStep, null));
+            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ZERO)));
+            addInstruction(new BooleanBinaryInstruction(null, RelationType.GE));
+
+            // start >= end
+            addInstruction(new PushInstruction(forLoopVariable, null));
+            addInstruction(new PushInstruction(forLoopStop, null));
+            addInstruction(new BooleanBinaryInstruction(null, RelationType.GE));
+
+            addInstruction(new LogicalBinaryInstruction(null, LogicalOperator.OR));
+
+            addInstruction(new LogicalBinaryInstruction(null, LogicalOperator.AND));
+        } else {
+            // If the step is missing, only start <= end needs to be checked
+            addInstruction(new PushInstruction(forLoopVariable, null));
+            addInstruction(new PushInstruction(forLoopStop, null));
+            addInstruction(new BooleanBinaryInstruction(null, RelationType.LE));
+        }
+        ControlFlow.DeferredOffset endOffset = new ControlFlow.DeferredOffset();
+        addInstruction(new ConditionalGotoInstruction(endOffset, fromValue(BigDecimal.ZERO)));
+
+        // Visit the body
+        for (TIBasicStatement _statement : statement.getStatementList()) {
+            _statement.accept(this);
+        }
+
+        // id + step -> id
+        addInstruction(new PushInstruction(forLoopVariable, null));
+        if (hasCustomStep) {
+            addInstruction(new PushInstruction(forLoopStep, null));
+        } else {
+            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
+        }
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.PLUS));
+        addInstruction(new PushInstruction(forLoopVariable, null));
+        addInstruction(new AssignVariableInstruction(null));
+        addInstruction(new PopInstruction());
+        addInstruction(new GotoInstruction(new ControlFlow.FixedOffset(instructionCountBeforeCheck)));
+        endOffset.setOffset(currentFlow.getInstructionCount());
+
+        // Flush eventual variables
+        if (statement.getForIdentifier() == null) addInstruction(new FlushVariableInstruction(forLoopVariable));
+        addInstruction(new FlushVariableInstruction(forLoopStop));
+        if (hasCustomStep) addInstruction(new FlushVariableInstruction(forLoopStep));
+
+        finishElement(statement);
     }
 
     @Override
