@@ -24,6 +24,7 @@ import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
+import nl.petertillema.tibasic.controlFlow.instruction.DisplayStateInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FlushVariablesInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.FunctionInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.GetListElementInstruction;
@@ -135,6 +136,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         gotoMap.clear();
         psiBlock.accept(this);
         updateGotoOffsets();
+        addInstruction(new DisplayStateInstruction());
         currentFlow.finish();
         System.out.println(Arrays.toString(currentFlow.getInstructions()));
         return currentFlow;
