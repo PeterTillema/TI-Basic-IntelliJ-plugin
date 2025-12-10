@@ -164,6 +164,8 @@ public class TIBasicCommonDataflow {
         TIBasicDataflowListener listener = new TIBasicDataflowListener();
         DfaValueFactory factory = new DfaValueFactory(element.getProject());
         ControlFlow flow = new TIBasicControlFlowAnalyzer(factory, element).buildControlFlow();
+        if (flow == null) return new DataflowResult(RunnerResult.ABORTED);
+
         ReachabilityCountingInterpreter interpreter = new ReachabilityCountingInterpreter(flow, listener, false, false, 0);
         DfaMemoryStateImpl stateImpl = new DfaMemoryStateImpl(factory);
 

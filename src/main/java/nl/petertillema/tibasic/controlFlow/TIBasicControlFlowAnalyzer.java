@@ -16,6 +16,7 @@ import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -134,9 +135,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         currentFlow = new ControlFlow(factory, psiBlock);
         labelMap.clear();
         gotoMap.clear();
-        psiBlock.accept(this);
-        updateGotoOffsets();
-        addInstruction(new DisplayStateInstruction());
+        try {
+            psiBlock.accept(this);
+            updateGotoOffsets();
+            addInstruction(new DisplayStateInstruction());
+        } catch (AnalyzerException exception) {
+            return null;
+        }
         currentFlow.finish();
         System.out.println(Arrays.toString(currentFlow.getInstructions()));
         return currentFlow;
@@ -152,6 +157,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 System.out.println("Corresponding label not found!");
             }
         }
+    }
+
+    private static class AnalyzerException extends RuntimeException {}
+
+    @Override
+    public void visitErrorElement(@NotNull PsiErrorElement element) {
+        throw new AnalyzerException();
     }
 
     @Override
