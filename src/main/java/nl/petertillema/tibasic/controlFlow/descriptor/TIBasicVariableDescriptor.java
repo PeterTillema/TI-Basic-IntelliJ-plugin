@@ -8,6 +8,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
+
 /**
  * This is a descriptor for all built-in TI-BASIC variables as well as custom lists. All the variables have a name,
  * such as "A", "L1", "Str0" or "|LABC". The names are always normalized to the default ASCII representation, so "₁"
@@ -46,7 +49,7 @@ public class TIBasicVariableDescriptor implements VariableDescriptor {
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return DfType.TOP;
+        return fromRange(FULL_RANGE);
     }
 
     @Override

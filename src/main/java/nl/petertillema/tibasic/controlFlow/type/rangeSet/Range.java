@@ -17,7 +17,7 @@ import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeS
 
 public record Range(BigDecimal from, BigDecimal to) implements BigDecimalRangeSet {
 
-    public static final BigDecimalRangeSet FULL_RANGE = new Range(nextUp(MIN), nextDown(MAX));
+    public static final BigDecimalRangeSet FULL_RANGE = new Range(MIN, MAX);
 
     @Override
     public boolean contains(@NotNull BigDecimal value) {

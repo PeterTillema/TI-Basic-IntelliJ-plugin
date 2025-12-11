@@ -7,8 +7,8 @@ import java.math.RoundingMode;
 public class BigDecimalUtil {
 
     public static final MathContext MC = new MathContext(14, RoundingMode.HALF_EVEN);
-    public static final BigDecimal MIN = new BigDecimal("-1e100");
-    public static final BigDecimal MAX = new BigDecimal("1e100");
+    public static final BigDecimal MIN = nextUp(new BigDecimal("-1e100"));
+    public static final BigDecimal MAX = nextDown(new BigDecimal("1e100"));
 
     public static BigDecimal numToString(String num) {
         num = num.replace("~", "-")

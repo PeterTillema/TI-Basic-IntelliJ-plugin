@@ -3,7 +3,6 @@ package nl.petertillema.tibasic.controlFlow.descriptor;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
-import com.intellij.psi.PsiElement;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +14,8 @@ import java.util.Set;
 
 import static java.math.RoundingMode.CEILING;
 import static java.math.RoundingMode.FLOOR;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
 /**
  * Descriptor for a single element within a list. The actual list is provided
@@ -39,13 +40,8 @@ public final class ListElementDescriptor implements VariableDescriptor {
     }
 
     @Override
-    public @NotNull DfType getInitialDfType(@NotNull DfaVariableValue thisValue, @Nullable PsiElement context) {
-        return DfType.TOP;
-    }
-
-    @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return DfType.TOP;
+        return fromRange(FULL_RANGE);
     }
 
     @Override

@@ -20,7 +20,10 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.MatrixDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
@@ -34,8 +37,6 @@ import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
-import nl.petertillema.tibasic.controlFlow.type.DfListType;
-import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
@@ -745,7 +746,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // List index
         if (child instanceof TIBasicListIndex listIndex) {
-            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(listIndex.getFirstChild().getText()));
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new ListDescriptor(listIndex.getFirstChild().getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(listIndex.getFirstChild())));
 
             if (listIndex.getExpr() != null) {
@@ -758,7 +759,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // List
         else if (child instanceof TIBasicCustomList || childType == TIBasicTypes.LIST_VARIABLE || childType == TIBasicTypes.ANS_VARIABLE) {
-            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new ListDescriptor(child.getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
             if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
                 if (expressions.isEmpty()) {
@@ -772,7 +773,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Matrix index
         else if (child instanceof TIBasicMatrixIndex matrixIndex) {
-            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(matrixIndex.getFirstChild().getText()));
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new MatrixDescriptor(matrixIndex.getFirstChild().getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(matrixIndex.getFirstChild())));
 
             if (!matrixIndex.getExprList().isEmpty()) {
@@ -792,7 +793,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Matrix
         else if (childType == TIBasicTypes.MATRIX_VARIABLE) {
-            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new MatrixDescriptor(child.getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
 
             if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
@@ -816,7 +817,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousList anonymousList) {
             DfaVariableValue tempListVar = createTempVariable();
 
-            addInstruction(new PushValueInstruction(new DfListType()));
+            DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(anonymousList.getExprList().size())));
+
+            addInstruction(new PushValueInstruction(listLengthType));
             addInstruction(new PushInstruction(tempListVar, null));
             addInstruction(new AssignVariableInstruction(null));
             addInstruction(new PopInstruction());
@@ -839,7 +842,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousMatrix anonymousMatrix) {
             DfaVariableValue tempMatrixVar = createTempVariable();
 
-            addInstruction(new PushValueInstruction(new DfMatrixType()));
+            DfType matrixLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(anonymousMatrix.getAnonymousMatrixRowList().size())));
+
+            addInstruction(new PushValueInstruction(matrixLengthType));
             addInstruction(new PushInstruction(tempMatrixVar, null));
             addInstruction(new AssignVariableInstruction(null));
             addInstruction(new PopInstruction());
@@ -849,7 +854,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 ListElementDescriptor rowDescriptor = new ListElementDescriptor(rowNr);
                 DfaVariableValue tempMatrixRowVar = factory.getVarFactory().createVariableValue(rowDescriptor, tempMatrixVar);
 
-                addInstruction(new PushValueInstruction(new DfListType()));
+                DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(row.getExprList().size())));
+
+                addInstruction(new PushValueInstruction(listLengthType));
                 addInstruction(new PushInstruction(tempMatrixRowVar, null));
                 addInstruction(new AssignVariableInstruction(null));
                 addInstruction(new PopInstruction());
