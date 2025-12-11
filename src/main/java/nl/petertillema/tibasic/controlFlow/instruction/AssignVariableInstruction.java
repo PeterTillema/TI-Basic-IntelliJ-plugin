@@ -51,6 +51,8 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
         } else {
             ((DfaMemoryStateImpl) state).recordVariableType(destination, state.getDfType(source));
             for (DfaVariableValue child : sourceVar.getDependentVariables()) {
+                // Filter out multi-level dependants, as those are copied recursively
+                if (!sourceVar.equals(child.getQualifier())) continue;
                 DfaVariableValue mappedChild = child.withQualifier(destination);
                 copy(state, child, mappedChild);
             }
