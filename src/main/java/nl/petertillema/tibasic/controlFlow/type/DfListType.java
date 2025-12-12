@@ -1,9 +1,13 @@
 package nl.petertillema.tibasic.controlFlow.type;
 
 import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DerivedVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 public class DfListType implements DfType {
 
@@ -40,12 +44,18 @@ public class DfListType implements DfType {
         return this;
     }
 
-    public DfType getSpecialFieldType() {
-        return specialFieldType;
+    @Override
+    public @NotNull List<@NotNull DerivedVariableDescriptor> getDerivedVariables() {
+        return List.of(specialField);
+    }
+
+    @Override
+    public @NotNull Map<@NotNull DerivedVariableDescriptor, @NotNull DfType> getDerivedValues() {
+        return Map.of(specialField, specialFieldType);
     }
 
     @Override
     public @NotNull String toString() {
-        return "list";
+        return "list with length=" + specialFieldType;
     }
 }

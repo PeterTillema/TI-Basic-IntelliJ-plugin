@@ -6,10 +6,14 @@ import com.intellij.codeInspection.dataFlow.lang.ir.DfaInstructionState;
 import com.intellij.codeInspection.dataFlow.lang.ir.ExpressionPushingInstruction;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryStateImpl;
+import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DerivedVariableDescriptor;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public class AssignVariableInstruction extends ExpressionPushingInstruction {
 
@@ -41,6 +45,7 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
     private static void copy(@NotNull DfaMemoryState state,
                              @NotNull DfaValue source,
                              @NotNull DfaVariableValue destination) {
+        DfaMemoryStateImpl stateImpl = (DfaMemoryStateImpl) state;
         if (!(source instanceof DfaVariableValue sourceVar) || sourceVar.getDependentVariables().isEmpty()) {
             // A simple variable could be copied directly, such that it keeps the equivalence between the source
             // and the destination. The advantage is that within a loop, if a state is removed, the state is removed
@@ -49,7 +54,16 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
             // 0 (should be false) or one of the other non-zero values.
             state.setVarValue(destination, source);
         } else {
-            ((DfaMemoryStateImpl) state).recordVariableType(destination, state.getDfType(source));
+            stateImpl.recordVariableType(destination, state.getDfType(source));
+
+            // Copy all the derived values
+            for (Map.Entry<DerivedVariableDescriptor, DfType> entry : source.getDfType().getDerivedValues().entrySet()) {
+                DerivedVariableDescriptor desc = entry.getKey();
+                if (desc.createValue(stateImpl.getFactory(), destination) instanceof DfaVariableValue derivedVar) {
+                    state.setVarValue(derivedVar, stateImpl.getFactory().fromDfType(entry.getValue().meet(desc.getDefaultValue())));
+                }
+            }
+
             for (DfaVariableValue child : sourceVar.getDependentVariables()) {
                 // Filter out multi-level dependants, as those are copied recursively
                 if (!sourceVar.equals(child.getQualifier())) continue;
