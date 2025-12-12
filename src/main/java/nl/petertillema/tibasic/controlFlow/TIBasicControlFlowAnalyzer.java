@@ -37,6 +37,7 @@ import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.type.DfStringType;
 import nl.petertillema.tibasic.controlFlow.type.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
@@ -912,8 +913,12 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // String
         else if (childType == TIBasicTypes.STRING) {
-            // todo
-            pushUnknown();
+            // todo: tokenize and store to individual tokens with a length
+            String text = child.getText().substring(1);
+            if (text.endsWith("\"")) text = text.substring(0, text.length() - 1);
+            DfStringType stringType = (DfStringType) SpecialFieldDescriptor.STRING_LENGTH.asDfType(fromValue(BigDecimal.valueOf(text.length())));
+            stringType.setText(text);
+            addInstruction(new PushValueInstruction(stringType));
         }
 
         // All the other simple variables: EQUATION_VARIABLE, STRING_VARIABLE, SIMPLE_VARIABLE, WINDOW_VARIABLE
