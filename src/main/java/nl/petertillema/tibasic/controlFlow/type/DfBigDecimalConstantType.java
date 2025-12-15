@@ -19,6 +19,10 @@ public class DfBigDecimalConstantType extends DfConstantType<BigDecimal> impleme
         this.wideRange = wideRange;
     }
 
+    public static DfType fromValue(long value) {
+        return new DfBigDecimalConstantType(BigDecimal.valueOf(value), null);
+    }
+
     public static DfType fromValue(BigDecimal value) {
         return new DfBigDecimalConstantType(value, null);
     }

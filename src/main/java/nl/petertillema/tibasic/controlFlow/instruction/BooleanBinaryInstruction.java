@@ -42,7 +42,7 @@ public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
                 states.add(nextState(interpreter, equality));
             }
             if (stateBefore.applyCondition(condition.negate())) {
-                pushResult(interpreter, stateBefore, fromValue(operator == RelationType.NE ? BigDecimal.ONE : BigDecimal.ZERO));
+                pushResult(interpreter, stateBefore, fromValue(operator == RelationType.NE ? 1 : 0));
                 states.add(nextState(interpreter, stateBefore));
             }
             return states.toArray(DfaInstructionState.EMPTY_ARRAY);
@@ -57,20 +57,20 @@ public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
             DfaCondition condition = dfaLeft.cond(relation, dfaRight).correctForRelationResult(result);
             if (condition == DfaCondition.getFalse()) continue;
             if (condition == DfaCondition.getTrue()) {
-                pushResult(interpreter, stateBefore, fromValue(result ? BigDecimal.ONE : BigDecimal.ZERO));
+                pushResult(interpreter, stateBefore, fromValue(result ? 1 : 0));
                 return nextStates(interpreter, stateBefore);
             }
             final DfaMemoryState copy = i == relations.length - 1 && !states.isEmpty() ? stateBefore : stateBefore.createCopy();
             if (copy.applyCondition(condition) &&
                     copy.meetDfType(dfaLeft, copy.getDfType(dfaLeft).correctForRelationResult(operator, result)) &&
                     copy.meetDfType(dfaRight, copy.getDfType(dfaRight).correctForRelationResult(operator, result))) {
-                pushResult(interpreter, copy, fromValue(result ? BigDecimal.ONE : BigDecimal.ZERO));
+                pushResult(interpreter, copy, fromValue(result ? 1 : 0));
                 states.add(nextState(interpreter, copy));
             }
         }
         if (states.isEmpty()) {
             // Neither of relations could be applied: likely comparison with NaN; do not split the state in this case, just push false
-            pushResult(interpreter, stateBefore, fromValue(BigDecimal.ZERO));
+            pushResult(interpreter, stateBefore, fromValue(0));
             return nextStates(interpreter, stateBefore);
         }
 

@@ -43,33 +43,33 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
         switch (operator) {
             case AND -> {
                 if (l.isAlwaysFalse() || r.isAlwaysFalse()) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ZERO));
+                    pushResult(interpreter, stateBefore, fromValue(0));
                     return nextStates(interpreter, stateBefore);
                 }
                 if (l.isAlwaysTrue() && r.isAlwaysTrue()) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ONE));
+                    pushResult(interpreter, stateBefore, fromValue(1));
                     return nextStates(interpreter, stateBefore);
                 }
                 return splitUnknown(interpreter, stateBefore);
             }
             case OR -> {
                 if (l.isAlwaysTrue() || r.isAlwaysTrue()) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ONE));
+                    pushResult(interpreter, stateBefore, fromValue(1));
                     return nextStates(interpreter, stateBefore);
                 }
                 if (l.isAlwaysFalse() && r.isAlwaysFalse()) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ZERO));
+                    pushResult(interpreter, stateBefore, fromValue(0));
                     return nextStates(interpreter, stateBefore);
                 }
                 return splitUnknown(interpreter, stateBefore);
             }
             case XOR -> {
                 if ((l.isAlwaysFalse() && r.isAlwaysFalse()) || (l.isAlwaysTrue() && r.isAlwaysTrue())) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ZERO));
+                    pushResult(interpreter, stateBefore, fromValue(0));
                     return nextStates(interpreter, stateBefore);
                 }
                 if ((l.isAlwaysTrue() && r.isAlwaysFalse()) || (l.isAlwaysFalse() && r.isAlwaysTrue())) {
-                    pushResult(interpreter, stateBefore, fromValue(BigDecimal.ONE));
+                    pushResult(interpreter, stateBefore, fromValue(1));
                     return nextStates(interpreter, stateBefore);
                 }
                 return splitUnknown(interpreter, stateBefore);
@@ -81,9 +81,9 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
     private DfaInstructionState[] splitUnknown(@NotNull DataFlowInterpreter interpreter, @NotNull DfaMemoryState stateBefore) {
         ArrayList<DfaInstructionState> states = new ArrayList<>(2);
         DfaMemoryState zeroState = stateBefore.createCopy();
-        pushResult(interpreter, zeroState, fromValue(BigDecimal.ZERO));
+        pushResult(interpreter, zeroState, fromValue(0));
         states.add(nextState(interpreter, zeroState));
-        pushResult(interpreter, stateBefore, fromValue(BigDecimal.ONE));
+        pushResult(interpreter, stateBefore, fromValue(1));
         states.add(nextState(interpreter, stateBefore));
         return states.toArray(DfaInstructionState.EMPTY_ARRAY);
     }

@@ -104,7 +104,6 @@ import nl.petertillema.tibasic.psi.TIBasicXorExpr;
 import nl.petertillema.tibasic.psi.TIBasicXrootExpr;
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -192,19 +191,19 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Single statement
         if (thenBlock == null && singleStatement != null) {
-            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
+            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(0), statement));
             singleStatement.accept(this);
         }
 
         // Then block
         if (thenBlock != null && elseBlock == null) {
-            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
+            addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(0), statement));
             visitThenBlock(thenBlock);
         }
 
         // Then-Else block
         if (thenBlock != null && elseBlock != null) {
-            addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), fromValue(BigDecimal.ZERO), statement));
+            addInstruction(new ConditionalGotoInstruction(getStartOffset(elseBlock), fromValue(0), statement));
             visitThenBlock(thenBlock);
             addInstruction(new GotoInstruction(getEndOffset(statement)));
 
@@ -246,7 +245,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         } else {
             pushUnknown();
         }
-        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO), statement));
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(0), statement));
 
         for (TIBasicStatement _statement : statement.getStatementList()) {
             _statement.accept(this);
@@ -271,7 +270,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         } else {
             pushUnknown();
         }
-        addInstruction(new ConditionalGotoInstruction(getStartOffset(statement), fromValue(BigDecimal.ZERO), statement));
+        addInstruction(new ConditionalGotoInstruction(getStartOffset(statement), fromValue(0), statement));
 
         finishElement(statement);
     }
@@ -339,7 +338,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (hasCustomStep) {
             // step <= 0
             addInstruction(new PushInstruction(forLoopStep, null));
-            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ZERO)));
+            addInstruction(new PushValueInstruction(fromValue(0)));
             addInstruction(new BooleanBinaryInstruction(null, RelationType.LE));
 
             // start <= end
@@ -351,7 +350,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
             // step >= 0
             addInstruction(new PushInstruction(forLoopStep, null));
-            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ZERO)));
+            addInstruction(new PushValueInstruction(fromValue(0)));
             addInstruction(new BooleanBinaryInstruction(null, RelationType.GE));
 
             // start >= end
@@ -369,7 +368,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new BooleanBinaryInstruction(null, RelationType.LE));
         }
         ControlFlow.DeferredOffset endOffset = new ControlFlow.DeferredOffset();
-        addInstruction(new ConditionalGotoInstruction(endOffset, fromValue(BigDecimal.ZERO)));
+        addInstruction(new ConditionalGotoInstruction(endOffset, fromValue(0)));
 
         // Visit the body
         for (TIBasicStatement _statement : statement.getStatementList()) {
@@ -381,7 +380,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (hasCustomStep) {
             addInstruction(new PushInstruction(forLoopStep, null));
         } else {
-            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
+            addInstruction(new PushValueInstruction(fromValue(1)));
         }
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.PLUS));
         addInstruction(new PushInstruction(forLoopVariable, null));
@@ -408,7 +407,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             DfaVariableValue variable = createVariableFromElement(is_ds.getNextSibling().getNextSibling());
 
             addInstruction(new PushInstruction(variable, null));
-            addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
+            addInstruction(new PushValueInstruction(fromValue(1)));
             addInstruction(new NumericBinaryInstruction(null, is_ds.getNode().getElementType() == TIBasicTypes.IS ? BinaryOperator.PLUS : BinaryOperator.MINUS));
             addInstruction(new PushInstruction(variable, null));
             addInstruction(new AssignVariableInstruction(null));
@@ -418,7 +417,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             pushUnknown();
         }
 
-        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(BigDecimal.ZERO)));
+        addInstruction(new ConditionalGotoInstruction(getEndOffset(statement), fromValue(0)));
 
         if (statement.getStatement() != null) {
             statement.getStatement().accept(this);
@@ -627,7 +626,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (expr.getExprList().size() != 2) pushUnknown();
         // A xroot B = B^(1/A)
         addInstruction(new SwapInstruction());
-        addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
+        addInstruction(new PushValueInstruction(fromValue(1)));
         addInstruction(new SwapInstruction());
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.DIVIDE));
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.POW));
@@ -683,7 +682,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitInverseExpr(@NotNull TIBasicInverseExpr expr) {
         expr.getExpr().accept(this);
-        addInstruction(new PushValueInstruction(fromValue(BigDecimal.ONE)));
+        addInstruction(new PushValueInstruction(fromValue(1)));
         addInstruction(new SwapInstruction());
         addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
     }
@@ -819,7 +818,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousList anonymousList) {
             DfaVariableValue tempListVar = createTempVariable();
 
-            DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(anonymousList.getExprList().size())));
+            DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousList.getExprList().size()));
 
             addInstruction(new PushValueInstruction(listLengthType));
             addInstruction(new PushInstruction(tempListVar, null));
@@ -844,7 +843,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousMatrix anonymousMatrix) {
             DfaVariableValue tempMatrixVar = createTempVariable();
 
-            DfType matrixLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(anonymousMatrix.getAnonymousMatrixRowList().size())));
+            DfType matrixLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousMatrix.getAnonymousMatrixRowList().size()));
 
             addInstruction(new PushValueInstruction(matrixLengthType));
             addInstruction(new PushInstruction(tempMatrixVar, null));
@@ -856,7 +855,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 ListElementDescriptor rowDescriptor = new ListElementDescriptor(rowNr);
                 DfaVariableValue tempMatrixRowVar = factory.getVarFactory().createVariableValue(rowDescriptor, tempMatrixVar);
 
-                DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(BigDecimal.valueOf(row.getExprList().size())));
+                DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(row.getExprList().size()));
 
                 addInstruction(new PushValueInstruction(listLengthType));
                 addInstruction(new PushInstruction(tempMatrixRowVar, null));
@@ -908,7 +907,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Color variable
         else if (childType == TIBasicTypes.COLOR_VARIABLE) {
-            DfType colorType = fromValue(BigDecimal.valueOf(TIBASIC_COLOR_NUMS.get(child.getText())));
+            DfType colorType = fromValue(TIBASIC_COLOR_NUMS.get(child.getText()));
             addInstruction(new PushValueInstruction(colorType, new TIBasicDfaAnchor(child)));
         }
 
@@ -917,7 +916,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             // todo: tokenize and store to individual tokens with a length
             String text = child.getText().substring(1);
             if (text.endsWith("\"")) text = text.substring(0, text.length() - 1);
-            DfStringType stringType = (DfStringType) SpecialFieldDescriptor.STRING_LENGTH.asDfType(fromValue(BigDecimal.valueOf(text.length())));
+            DfStringType stringType = (DfStringType) SpecialFieldDescriptor.STRING_LENGTH.asDfType(fromValue(text.length()));
             stringType.setText(text);
             addInstruction(new PushValueInstruction(stringType));
         }
