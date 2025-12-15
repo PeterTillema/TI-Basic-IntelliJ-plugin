@@ -24,6 +24,7 @@ import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.MatrixDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
 import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
@@ -950,7 +951,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     }
 
     private DfaVariableValue createTempVariable() {
-        return currentFlow.createTempVariable(DfType.TOP);
+        return factory.getVarFactory().createVariableValue(new Synthetic(currentFlow.getInstructionCount(), DfType.TOP));
     }
 
     private void startElement(@NotNull PsiElement element) {
@@ -960,7 +961,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     private void finishElement(@NotNull PsiElement element) {
         currentFlow.finishElement(element);
         if (element instanceof TIBasicStatement) {
-            addInstruction(new FlushVariablesInstruction(v -> v.getDescriptor() instanceof ControlFlow.Synthetic));
+            addInstruction(new FlushVariablesInstruction(v -> v.getDescriptor() instanceof Synthetic));
         }
     }
 

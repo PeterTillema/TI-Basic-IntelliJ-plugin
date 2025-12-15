@@ -12,6 +12,7 @@ import java.util.Map;
 public class DfListType implements DfType {
 
     private final SpecialFieldDescriptor specialField;
+
     private final DfType specialFieldType;
 
     public DfListType(SpecialFieldDescriptor specialField, DfType specialFieldType) {
@@ -52,6 +53,10 @@ public class DfListType implements DfType {
     @Override
     public @NotNull Map<@NotNull DerivedVariableDescriptor, @NotNull DfType> getDerivedValues() {
         return Map.of(specialField, specialFieldType);
+    }
+
+    public DfType getSpecialFieldType() {
+        return specialFieldType;
     }
 
     @Override
