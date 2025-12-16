@@ -682,9 +682,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitInverseExpr(@NotNull TIBasicInverseExpr expr) {
         expr.getExpr().accept(this);
-        addInstruction(new PushValueInstruction(fromValue(1)));
-        addInstruction(new SwapInstruction());
-        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.DIVIDE));
+        addInstruction(new NumericUnaryInstruction(new TIBasicDfaAnchor(expr), UnaryOperator.INVERSE));
     }
 
     @Override

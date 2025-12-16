@@ -137,6 +137,33 @@ public class DfElementMap {
         return new DfElementMap(2, newLengths, result);
     }
 
+    public DfElementMap transpose() {
+        if (this.dimensions != 2) {
+            return new DfElementMap(this.dimensions, new ArrayList<>(this.dimensionLengths), new HashMap<>());
+        }
+
+        Map<Integer, Map<Integer, DfBigDecimalType>> newElements = new HashMap<>();
+        for (Map.Entry<Integer, Map<Integer, DfBigDecimalType>> rowEntry : elements.entrySet()) {
+            int rowIndex = rowEntry.getKey();
+            for (Map.Entry<Integer, DfBigDecimalType> colEntry : rowEntry.getValue().entrySet()) {
+                int colIndex = colEntry.getKey();
+                DfBigDecimalType value = colEntry.getValue();
+                Map<Integer, DfBigDecimalType> tRow = newElements.computeIfAbsent(colIndex, k -> new HashMap<>());
+                tRow.put(rowIndex, value);
+            }
+        }
+
+        List<DfType> newLengths = new ArrayList<>(2);
+        if (this.dimensionLengths.size() == 2) {
+            newLengths.add(this.dimensionLengths.get(1));
+            newLengths.add(this.dimensionLengths.get(0));
+        } else {
+            newLengths.addAll(this.dimensionLengths);
+        }
+
+        return new DfElementMap(2, newLengths, newElements);
+    }
+
     public DfElementMap inverse() {
         if (this.dimensions != 2) {
             return new DfElementMap(this.dimensions, new ArrayList<>(this.dimensionLengths), new HashMap<>());

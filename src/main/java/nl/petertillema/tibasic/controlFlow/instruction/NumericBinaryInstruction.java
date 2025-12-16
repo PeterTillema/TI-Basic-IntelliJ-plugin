@@ -18,14 +18,12 @@ import nl.petertillema.tibasic.controlFlow.type.DfStringType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
 import java.util.function.Function;
 
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 
 public class NumericBinaryInstruction extends EvalInstruction {
 
-    private static final Random random = new Random();
     private final BinaryOperator operator;
 
     public NumericBinaryInstruction(@Nullable DfaAnchor anchor, @NotNull BinaryOperator operator) {
@@ -60,8 +58,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
         if (leftType instanceof DfListType && rightType instanceof DfListType) {
             DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[0]);
             DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[1]);
-            int location = random.nextInt(Integer.MAX_VALUE - 10_000) + 10_000;
-            DfaVariableValue outputList = factory.getVarFactory().createVariableValue(new Synthetic(location, DfType.TOP));
+            DfaVariableValue outputList = factory.getVarFactory().createVariableValue(Synthetic.create());
             leftMap.execOperator(rightMap, operator).exportTo((DfaMemoryStateImpl) state, outputList);
             return outputList;
         }
@@ -75,8 +72,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
     }
 
     private DfaVariableValue evalList(DfaValueFactory factory, DfaMemoryState state, DfElementMap elementMap, Function<DfBigDecimalType, DfType> op) {
-        int location = random.nextInt(Integer.MAX_VALUE - 10_000) + 10_000;
-        DfaVariableValue outputList = factory.getVarFactory().createVariableValue(new Synthetic(location, DfType.TOP));
+        DfaVariableValue outputList = factory.getVarFactory().createVariableValue(Synthetic.create());
         elementMap.execElementWiseOperator(op).exportTo((DfaMemoryStateImpl) state, outputList);
         return outputList;
     }
