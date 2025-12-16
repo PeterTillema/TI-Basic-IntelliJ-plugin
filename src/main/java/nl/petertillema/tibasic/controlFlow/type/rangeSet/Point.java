@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Set;
 
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
@@ -41,7 +40,7 @@ public record Point(BigDecimal value) implements BigDecimalRangeSet {
         if (other.isEmpty() || other == this) return this;
         if (other.contains(value)) return other;
         if (other instanceof Point(BigDecimal value1)) {
-            return pointSet(Set.of(value, value1));
+            return pointSet(value, value1);
         }
         if (other instanceof PointSet) {
             return other.join(this);

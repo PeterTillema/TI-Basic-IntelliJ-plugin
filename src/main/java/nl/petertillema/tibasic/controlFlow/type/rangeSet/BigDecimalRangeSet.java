@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MAX;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MC;
@@ -30,14 +30,8 @@ public interface BigDecimalRangeSet {
         return new Point(BigDecimalUtil.round(value));
     }
 
-    /**
-     * Creates a set containing multiple given values
-     *
-     * @param values The values to be included in the set
-     * @return A new set
-     */
-    static BigDecimalRangeSet pointSet(@NotNull Set<@NotNull BigDecimal> values) {
-        return values.isEmpty() ? Empty.EMPTY : (values.size() == 1 ? new Point(values.iterator().next()) : new PointSet(values));
+    static BigDecimalRangeSet pointSet(@NotNull BigDecimal... values) {
+        return values.length == 0 ? Empty.EMPTY : (values.length == 1 ? new Point(values[0]) : new PointSet(new HashSet<>(Arrays.asList(values))));
     }
 
     static BigDecimalRangeSet range(@NotNull BigDecimal from, @NotNull BigDecimal to) {

@@ -3,7 +3,6 @@ package nl.petertillema.tibasic.controlFlow.type;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.range;
@@ -11,7 +10,7 @@ import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeS
 public interface FunctionRangeSetDomain {
 
     BigDecimalRangeSet RAND_DOMAIN = range(BigDecimal.ZERO, BigDecimal.ONE);
-    BigDecimalRangeSet GETKEY_DOMAIN = pointSet(Set.of(
+    BigDecimalRangeSet GETKEY_DOMAIN = pointSet(
             BigDecimal.ZERO,
             BigDecimal.valueOf(11),
             BigDecimal.valueOf(12),
@@ -62,6 +61,6 @@ public interface FunctionRangeSetDomain {
             BigDecimal.valueOf(103),
             BigDecimal.valueOf(104),
             BigDecimal.valueOf(105)
-    ));
+    );
 
 }

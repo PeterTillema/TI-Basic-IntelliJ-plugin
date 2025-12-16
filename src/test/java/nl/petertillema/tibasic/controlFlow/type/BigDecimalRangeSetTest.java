@@ -6,8 +6,6 @@ import nl.petertillema.tibasic.controlFlow.type.rangeSet.Empty;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
 
@@ -214,7 +212,7 @@ public class BigDecimalRangeSetTest extends TestCase {
         assertEquals(range(3, 10), pointSet.mul(range(3, 5)));
         assertEquals(range(3, 14), pointSet.mul(rangeSet(3, 5, 6, 7)));
         assertEquals(empty(), pointSet.div(empty()));
-        assertEquals(BigDecimalRangeSet.pointSet(Set.of(new BigDecimal("-0.25"), new BigDecimal("-0.5"))), pointSet.div(point(-4)));
+        assertEquals(BigDecimalRangeSet.pointSet(new BigDecimal("-0.25"), new BigDecimal("-0.5")), pointSet.div(point(-4)));
         assertEquals(BigDecimalRangeSet.range(new BigDecimal("0.125"), new BigDecimal("0.5")), pointSet.div(pointSet(4, 8)));
         assertEquals(BigDecimalRangeSet.range(new BigDecimal("0.125"), new BigDecimal("0.5")), pointSet.div(range(4, 8)));
         assertEquals(rangeSet("-2e13", "-0.25", "0.125", "2e13"), pointSet.div(rangeSet(-4, 5, 7, 8)));
@@ -402,11 +400,11 @@ public class BigDecimalRangeSetTest extends TestCase {
     }
 
     private static BigDecimalRangeSet pointSet(long... values) {
-        HashSet<BigDecimal> set = new HashSet<>();
-        for (long l : values) {
-            set.add(new BigDecimal(l));
+        BigDecimal[] out = new BigDecimal[values.length];
+        for (int i = 0; i < values.length; i++) {
+            out[i] = new BigDecimal(values[i]);
         }
-        return BigDecimalRangeSet.pointSet(set);
+        return BigDecimalRangeSet.pointSet(out);
     }
 
     private static BigDecimalRangeSet range(long from, long to) {

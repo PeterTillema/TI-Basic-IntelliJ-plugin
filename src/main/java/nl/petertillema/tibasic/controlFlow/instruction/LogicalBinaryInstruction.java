@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
@@ -118,7 +117,7 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
         }
 
         public DfType applyOperator(Truth other, LogicalOperator operator) {
-            DfType unknown = fromRange(pointSet(Set.of(ZERO, ONE)));
+            DfType unknown = fromRange(pointSet(ZERO, ONE));
             return switch (operator) {
                 case AND ->
                         (isAlwaysFalse() || other.isAlwaysFalse()) ? fromValue(0) : (isAlwaysTrue() && other.isAlwaysTrue()) ? fromValue(1) : unknown;
