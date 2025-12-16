@@ -166,6 +166,14 @@
                 implementationClass="nl.petertillema.tibasic.inspections.codeStyle.TIBasicConstantExpressionInspection"
                 key="inspection.constant.expression.display.name"
                 bundle="messages.TIBasicBundle"/>
+        <localInspection
+                enabledByDefault="true"
+                language="TIBasic"
+                groupPath="TI-Basic"
+                groupKey="inspection.group.code.style"
+                implementationClass="nl.petertillema.tibasic.inspections.controlFlow.TIBasicCodeAnalyzerInspection"
+                key="inspection.constant.expression.display.name"
+                bundle="messages.TIBasicBundle"/>
     </extensions>
     <resource-bundle>messages.TIBasicBundle</resource-bundle>
 </idea-plugin>
