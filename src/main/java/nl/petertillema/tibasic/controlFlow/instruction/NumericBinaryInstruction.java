@@ -59,7 +59,16 @@ public class NumericBinaryInstruction extends EvalInstruction {
             DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[0]);
             DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[1]);
             DfaVariableValue outputList = factory.getVarFactory().createVariableValue(Synthetic.create());
-            leftMap.execOperator(rightMap, operator).exportTo((DfaMemoryStateImpl) state, outputList);
+            // Special operations for TIMES and DIVIDE
+            DfElementMap outputMap;
+            if (leftMap.getDimensions() == 2 && operator == BinaryOperator.TIMES) {
+                outputMap = leftMap.matrixMultiply(rightMap);
+            } else if (leftMap.getDimensions() == 2 && operator == BinaryOperator.DIVIDE) {
+                outputMap = leftMap.matrixMultiply(rightMap.inverse());
+            } else {
+                outputMap = leftMap.execBiOperator(rightMap, (v1, v2) -> v1.eval(v2, operator));
+            }
+            outputMap.exportTo((DfaMemoryStateImpl) state, outputList);
             return outputList;
         }
 
@@ -73,7 +82,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
 
     private DfaVariableValue evalList(DfaValueFactory factory, DfaMemoryState state, DfElementMap elementMap, Function<DfBigDecimalType, DfType> op) {
         DfaVariableValue outputList = factory.getVarFactory().createVariableValue(Synthetic.create());
-        elementMap.execElementWiseOperator(op).exportTo((DfaMemoryStateImpl) state, outputList);
+        elementMap.execOperator(op).exportTo((DfaMemoryStateImpl) state, outputList);
         return outputList;
     }
 

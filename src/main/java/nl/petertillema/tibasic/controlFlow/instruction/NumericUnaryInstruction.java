@@ -57,20 +57,20 @@ public class NumericUnaryInstruction extends EvalInstruction {
             switch (operator) {
                 case NEG: {
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execElementWiseOperator(v -> v.eval(fromValue(-1), BinaryOperator.TIMES));
+                    DfElementMap res = elementMap.execOperator(v -> v.eval(fromValue(-1), BinaryOperator.TIMES));
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }
                 case INVERSE: {
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execElementWiseOperator(v -> ((DfBigDecimalType) fromValue(1)).eval(v, BinaryOperator.DIVIDE));
+                    DfElementMap res = elementMap.execOperator(v -> ((DfBigDecimalType) fromValue(1)).eval(v, BinaryOperator.DIVIDE));
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }
                 case FACTORIAL: {
                     if (dims != 1) return factory.getUnknown();
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execElementWiseOperator(v -> fromRange(FULL_RANGE));
+                    DfElementMap res = elementMap.execOperator(v -> fromRange(FULL_RANGE));
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }

@@ -31,7 +31,7 @@ public class DfElementMap {
         return dimensions;
     }
 
-    public DfElementMap execElementWiseOperator(Function<DfBigDecimalType, DfType> operator) {
+    public DfElementMap execOperator(@NotNull Function<DfBigDecimalType, DfType> operator) {
         Map<Integer, Map<Integer, DfBigDecimalType>> newElements = new HashMap<>();
         for (Map.Entry<Integer, Map<Integer, DfBigDecimalType>> rowEntry : elements.entrySet()) {
             Map<Integer, DfBigDecimalType> newRow = new HashMap<>();
@@ -47,17 +47,9 @@ public class DfElementMap {
         return new DfElementMap(dimensions, new ArrayList<>(dimensionLengths), newElements);
     }
 
-    public DfElementMap execOperator(@NotNull DfElementMap other, @NotNull BinaryOperator operator) {
+    public DfElementMap execBiOperator(@NotNull DfElementMap other, @NotNull BiFunction<DfBigDecimalType, DfBigDecimalType, DfType> operator) {
         if (this.dimensions != other.dimensions) {
             return new DfElementMap(this.dimensions, new ArrayList<>(this.dimensionLengths), new HashMap<>());
-        }
-
-        // Patch times and division to behave differently
-        if (this.dimensions == 2 && operator == BinaryOperator.TIMES) {
-            return matrixMultiply(other);
-        } else if (this.dimensions == 2 && operator == BinaryOperator.DIVIDE) {
-            DfElementMap inverse = other.inverse();
-            return matrixMultiply(inverse);
         }
 
         Map<Integer, Map<Integer, DfBigDecimalType>> newElements = new HashMap<>();
@@ -74,7 +66,7 @@ public class DfElementMap {
                 DfBigDecimalType left = leftColEntry.getValue();
                 DfBigDecimalType right = rightRow.get(colIndex);
                 if (right == null) continue;
-                DfType result = left.eval(right, operator);
+                DfType result = operator.apply(left, right);
                 if (result instanceof DfBigDecimalType bigDecimalType) {
                     outRow.put(colIndex, bigDecimalType);
                 }
