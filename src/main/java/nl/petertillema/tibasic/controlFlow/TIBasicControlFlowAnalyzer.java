@@ -37,10 +37,10 @@ import nl.petertillema.tibasic.controlFlow.instruction.LogicalBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.MultipleGotoInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
-import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.operator.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.operator.LogicalOperator;
+import nl.petertillema.tibasic.controlFlow.operator.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfStringType;
-import nl.petertillema.tibasic.controlFlow.type.LogicalOperator;
-import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
@@ -115,8 +115,8 @@ import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.numToString;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
-import static nl.petertillema.tibasic.controlFlow.type.FunctionRangeSetDomain.GETKEY_DOMAIN;
-import static nl.petertillema.tibasic.controlFlow.type.FunctionRangeSetDomain.RAND_DOMAIN;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.FunctionRangeSetDomain.GETKEY_DOMAIN;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.FunctionRangeSetDomain.RAND_DOMAIN;
 
 public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
@@ -816,9 +816,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousList anonymousList) {
             DfaVariableValue tempListVar = createTempVariable();
 
-            DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousList.getExprList().size()));
+            DfType listType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousList.getExprList().size()));
 
-            addInstruction(new PushValueInstruction(listLengthType));
+            addInstruction(new PushValueInstruction(listType));
             addInstruction(new PushInstruction(tempListVar, null));
             addInstruction(new AssignVariableInstruction(null));
             addInstruction(new PopInstruction());
@@ -841,9 +841,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         else if (child instanceof TIBasicAnonymousMatrix anonymousMatrix) {
             DfaVariableValue tempMatrixVar = createTempVariable();
 
-            DfType matrixLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousMatrix.getAnonymousMatrixRowList().size()));
+            DfType matrixType = SpecialFieldDescriptor.MATRIX_LENGTH.asDfType(fromValue(anonymousMatrix.getAnonymousMatrixRowList().size()));
 
-            addInstruction(new PushValueInstruction(matrixLengthType));
+            addInstruction(new PushValueInstruction(matrixType));
             addInstruction(new PushInstruction(tempMatrixVar, null));
             addInstruction(new AssignVariableInstruction(null));
             addInstruction(new PopInstruction());
@@ -853,9 +853,9 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 ListElementDescriptor rowDescriptor = new ListElementDescriptor(rowNr);
                 DfaVariableValue tempMatrixRowVar = factory.getVarFactory().createVariableValue(rowDescriptor, tempMatrixVar);
 
-                DfType listLengthType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(row.getExprList().size()));
+                DfType listType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(row.getExprList().size()));
 
-                addInstruction(new PushValueInstruction(listLengthType));
+                addInstruction(new PushValueInstruction(listType));
                 addInstruction(new PushInstruction(tempMatrixRowVar, null));
                 addInstruction(new AssignVariableInstruction(null));
                 addInstruction(new PopInstruction());

@@ -9,11 +9,11 @@ import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
-import nl.petertillema.tibasic.controlFlow.type.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.operator.BinaryOperator;
+import nl.petertillema.tibasic.controlFlow.operator.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import nl.petertillema.tibasic.controlFlow.type.DfElementMap;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
-import nl.petertillema.tibasic.controlFlow.type.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

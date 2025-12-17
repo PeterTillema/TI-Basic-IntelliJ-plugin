@@ -5,17 +5,13 @@ import com.intellij.codeInspection.dataFlow.lang.DfaAnchor;
 import com.intellij.codeInspection.dataFlow.lang.ir.DfaInstructionState;
 import com.intellij.codeInspection.dataFlow.lang.ir.ExpressionPushingInstruction;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
-import com.intellij.codeInspection.dataFlow.memory.DfaMemoryStateImpl;
 import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DfaTypeValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
-import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
-import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
-import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
+import nl.petertillema.tibasic.controlFlow.operator.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
-import nl.petertillema.tibasic.controlFlow.type.DfElementMap;
-import nl.petertillema.tibasic.controlFlow.type.DfListType;
-import nl.petertillema.tibasic.controlFlow.type.LogicalOperator;
+import nl.petertillema.tibasic.controlFlow.type.TypeEvaluator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,53 +42,19 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
         DfType leftType = stateBefore.getDfType(dfaLeft);
         DfType rightType = stateBefore.getDfType(dfaRight);
 
-        if (leftType instanceof DfListType && rightType instanceof DfListType) {
-            DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) stateBefore, (DfaVariableValue) dfaLeft);
-            DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) stateBefore, (DfaVariableValue) dfaRight);
-            DfaValueFactory factory = interpreter.getFactory();
-            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-            leftMap.execBiOperator(rightMap, (leftValue, rightValue) -> {
-                Truth l = Truth.fromDfType(leftValue);
-                Truth r = Truth.fromDfType(rightValue);
-                return l.applyOperator(r, operator);
-            }).exportTo((DfaMemoryStateImpl) stateBefore, out);
-            pushResult(interpreter, stateBefore, out);
-            return nextStates(interpreter, stateBefore);
+        DfaValue out = TypeEvaluator.evaluateBinaryOperator(interpreter.getFactory(), stateBefore, dfaLeft, dfaRight, (leftValue, rightValue) -> {
+            Truth l = Truth.fromDfType(leftValue);
+            Truth r = Truth.fromDfType(rightValue);
+            return l.applyOperator(r, operator);
+        });
+        // If the exact result between two numbers couldn't be determined, create two states with both outcomes rather
+        // than having a pointSet with 0 and 1.
+        if ((leftType instanceof DfBigDecimalType && rightType instanceof DfBigDecimalType) &&
+                (!(out instanceof DfaTypeValue typeValue) || !(typeValue.getDfType() instanceof DfBigDecimalConstantType))) {
+            return splitUnknown(interpreter, stateBefore);
         }
-        if (leftType instanceof DfListType && rightType instanceof DfBigDecimalType rightNum) {
-            DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) stateBefore, (DfaVariableValue) dfaLeft);
-            Truth r = Truth.fromDfType(rightNum);
-            DfaValueFactory factory = interpreter.getFactory();
-            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-            leftMap.execOperator(v -> {
-                Truth l = Truth.fromDfType(v);
-                return l.applyOperator(r, operator);
-            }).exportTo((DfaMemoryStateImpl) stateBefore, out);
-            pushResult(interpreter, stateBefore, out);
-            return nextStates(interpreter, stateBefore);
-        }
-        if (leftType instanceof DfBigDecimalType leftNum && rightType instanceof DfListType) {
-            DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) stateBefore, (DfaVariableValue) dfaRight);
-            Truth l = Truth.fromDfType(leftNum);
-            DfaValueFactory factory = interpreter.getFactory();
-            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-            rightMap.execOperator(v -> {
-                Truth r = Truth.fromDfType(v);
-                return l.applyOperator(r, operator);
-            }).exportTo((DfaMemoryStateImpl) stateBefore, out);
-            pushResult(interpreter, stateBefore, out);
-            return nextStates(interpreter, stateBefore);
-        }
-
-        Truth l = Truth.fromDfType(leftType);
-        Truth r = Truth.fromDfType(rightType);
-
-        DfType result = l.applyOperator(r, operator);
-        if (result instanceof DfBigDecimalConstantType) {
-            pushResult(interpreter, stateBefore, result);
-            return nextStates(interpreter, stateBefore);
-        }
-        return splitUnknown(interpreter, stateBefore);
+        pushResult(interpreter, stateBefore, out);
+        return nextStates(interpreter, stateBefore);
     }
 
     private DfaInstructionState[] splitUnknown(@NotNull DataFlowInterpreter interpreter, @NotNull DfaMemoryState stateBefore) {
@@ -128,15 +90,12 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
             };
         }
 
-        static Truth fromDfType(DfType type) {
-            if (type instanceof DfBigDecimalType bd) {
-                BigDecimalRangeSet range = bd.range();
-                boolean canBeZero = range.contains(ZERO);
-                boolean canBeNonZero = !range.subtract(point(ZERO)).isEmpty();
-                if (canBeZero && !canBeNonZero) return ALWAYS_FALSE;
-                if (!canBeZero && canBeNonZero) return ALWAYS_TRUE;
-                return MAYBE;
-            }
+        static Truth fromDfType(DfBigDecimalType bd) {
+            BigDecimalRangeSet range = bd.range();
+            boolean canBeZero = range.contains(ZERO);
+            boolean canBeNonZero = !range.subtract(point(ZERO)).isEmpty();
+            if (canBeZero && !canBeNonZero) return ALWAYS_FALSE;
+            if (!canBeZero && canBeNonZero) return ALWAYS_TRUE;
             return MAYBE;
         }
     }

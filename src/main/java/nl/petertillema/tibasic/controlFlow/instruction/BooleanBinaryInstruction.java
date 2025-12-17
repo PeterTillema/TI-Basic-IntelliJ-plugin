@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Set;
 
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
@@ -38,7 +37,7 @@ public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
             DfaMemoryState equality = stateBefore.createCopy();
             DfaCondition condition = dfaLeft.eq(dfaRight);
             if (equality.applyCondition(condition)) {
-                pushResult(interpreter, equality, fromRange(pointSet(Set.of(BigDecimal.ZERO, BigDecimal.ONE))));
+                pushResult(interpreter, equality, fromRange(pointSet(BigDecimal.ZERO, BigDecimal.ONE)));
                 states.add(nextState(interpreter, equality));
             }
             if (stateBefore.applyCondition(condition.negate())) {

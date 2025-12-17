@@ -2,7 +2,7 @@ package nl.petertillema.tibasic.controlFlow.descriptor;
 
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
-import nl.petertillema.tibasic.controlFlow.type.DfListType;
+import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +18,6 @@ public class MatrixDescriptor extends TIBasicVariableDescriptor {
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return new DfListType(SpecialFieldDescriptor.LIST_LENGTH, fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
+        return new DfMatrixType(SpecialFieldDescriptor.LIST_LENGTH, fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
     }
 }

@@ -6,6 +6,7 @@ import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
+import nl.petertillema.tibasic.controlFlow.operator.BinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -334,11 +335,11 @@ public class DfElementMap {
     }
 
     public void exportTo(@NotNull DfaMemoryStateImpl state, @NotNull DfaVariableValue destination) {
-        DfType mainLength = dimensionLengths.isEmpty() ? SpecialFieldDescriptor.LIST_LENGTH.getDfType(null) : dimensionLengths.getFirst();
-        DfType destType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(mainLength);
-        state.recordVariableType(destination, destType);
-
         if (dimensions == 1) {
+            DfType mainLength = dimensionLengths.isEmpty() ? SpecialFieldDescriptor.LIST_LENGTH.getDfType(null) : dimensionLengths.getFirst();
+            DfType destType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(mainLength);
+            state.recordVariableType(destination, destType);
+
             for (Map.Entry<Integer, Map<Integer, DfBigDecimalType>> rowEntry : elements.entrySet()) {
                 int index = rowEntry.getKey();
                 DfaValue elementValue = new ListElementDescriptor(index).createValue(state.getFactory(), destination);
@@ -350,6 +351,10 @@ public class DfElementMap {
                 }
             }
         } else if (dimensions == 2) {
+            DfType mainLength = dimensionLengths.isEmpty() ? SpecialFieldDescriptor.MATRIX_LENGTH.getDfType(null) : dimensionLengths.getFirst();
+            DfType destType = SpecialFieldDescriptor.MATRIX_LENGTH.asDfType(mainLength);
+            state.recordVariableType(destination, destType);
+
             DfType length2 = dimensionLengths.size() > 1 ? dimensionLengths.get(1) : SpecialFieldDescriptor.LIST_LENGTH.getDfType(null);
             for (Map.Entry<Integer, Map<Integer, DfBigDecimalType>> rowEntry : elements.entrySet()) {
                 int rowIndex = rowEntry.getKey();

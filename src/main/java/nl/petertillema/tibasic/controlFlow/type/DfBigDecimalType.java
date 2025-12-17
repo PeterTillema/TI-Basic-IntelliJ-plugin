@@ -2,6 +2,7 @@ package nl.petertillema.tibasic.controlFlow.type;
 
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
+import nl.petertillema.tibasic.controlFlow.operator.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

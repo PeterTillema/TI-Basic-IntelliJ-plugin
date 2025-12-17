@@ -1,4 +1,4 @@
-package nl.petertillema.tibasic.controlFlow.type;
+package nl.petertillema.tibasic.controlFlow.operator;
 
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import org.jetbrains.annotations.NotNull;

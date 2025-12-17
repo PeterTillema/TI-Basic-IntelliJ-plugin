@@ -1,6 +1,4 @@
-package nl.petertillema.tibasic.controlFlow.type;
-
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+package nl.petertillema.tibasic.controlFlow.type.rangeSet;
 
 import java.math.BigDecimal;
 
