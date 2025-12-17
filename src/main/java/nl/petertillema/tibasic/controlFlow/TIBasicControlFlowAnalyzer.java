@@ -432,11 +432,15 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         PsiElement child = statement.getFirstChild();
         while (child != null) {
             IElementType type = child.getNode().getElementType();
+            DfaVariableValue variable = createVariableFromElement(child);
             if (type == TIBasicTypes.SIMPLE_VARIABLE) {
-                DfaVariableValue variable = createVariableFromElement(child);
+                addInstruction(new PushValueInstruction(fromValue(0)));
+                addInstruction(new PushInstruction(variable, new TIBasicDfaAnchor(child)));
+                addInstruction(new AssignVariableInstruction(null));
+                addInstruction(new PopInstruction());
+            } else {
                 addInstruction(new FlushVariableInstruction(variable));
             }
-            // todo
             child = child.getNextSibling();
         }
 
