@@ -2,23 +2,21 @@ package nl.petertillema.tibasic.controlFlow.descriptor;
 
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
-
+import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
-public class MatrixDescriptor extends TIBasicVariableDescriptor {
+public class NumericDescriptor extends TIBasicVariableDescriptor {
 
-    public MatrixDescriptor(@NotNull String name) {
+    public NumericDescriptor(@NotNull String name) {
         super(name);
     }
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return SpecialFieldDescriptor.MATRIX_LENGTH.asDfType(fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
+        return fromRange(FULL_RANGE);
     }
 
 }

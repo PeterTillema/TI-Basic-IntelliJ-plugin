@@ -12,11 +12,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
-import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MAX;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
+/**
+ * These values are special descriptors, in the sense that those are not actual variable types which you will see in
+ * TI-BASIC. However, they are derived from another type and could be used as such, for example, the length of a list
+ * or a string.
+ */
 public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
+
     LIST_LENGTH {
+        @Override
+        public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
+            int length = qualifier != null && qualifier.getDfType() instanceof DfMatrixType ? 99 : 999;
+            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(length)));
+        }
+
         @Override
         public @NotNull DfType asDfType(@NotNull DfType fieldValue) {
             return new DfListType(this, fieldValue);
@@ -25,12 +36,22 @@ public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
 
     MATRIX_LENGTH {
         @Override
+        public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
+            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99)));
+        }
+
+        @Override
         public @NotNull DfType asDfType(@NotNull DfType fieldValue) {
             return new DfMatrixType(this, fieldValue);
         }
     },
 
     STRING_LENGTH {
+        @Override
+        public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
+            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(999)));
+        }
+
         @Override
         public @NotNull DfType asDfType(@NotNull DfType fieldValue) {
             return new DfStringType(this, fieldValue);
@@ -48,8 +69,7 @@ public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
     }
 
     @Override
-    public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return fromRange(new Range(BigDecimal.ZERO, MAX));
+    public boolean isImplicitReadPossible() {
+        return true;
     }
-
 }

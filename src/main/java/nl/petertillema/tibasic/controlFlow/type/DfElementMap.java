@@ -312,7 +312,7 @@ public class DfElementMap {
         for (DfaVariableValue child : source.getDependentVariables()) {
             if (!source.equals(child.getQualifier())) continue;
             if (!(child.getDescriptor() instanceof ListElementDescriptor childElementDescriptor)) continue;
-            int index = childElementDescriptor.getIndex();
+            int index = childElementDescriptor.index();
             DfType childType = state.getDfType(child);
             if (childType instanceof DfListType rowListType) {
                 if (dimensions < 2) {
@@ -325,7 +325,7 @@ public class DfElementMap {
                     if (!(grandChild.getDescriptor() instanceof ListElementDescriptor led2)) continue;
                     DfType elType = state.getDfType(grandChild);
                     if (elType instanceof DfBigDecimalType bigDecimalType) {
-                        row.put(led2.getIndex(), bigDecimalType);
+                        row.put(led2.index(), bigDecimalType);
                     }
                 }
             } else if (childType instanceof DfBigDecimalType bigDecimalType) {

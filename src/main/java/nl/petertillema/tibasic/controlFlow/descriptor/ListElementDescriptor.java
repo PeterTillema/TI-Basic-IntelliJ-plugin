@@ -4,7 +4,6 @@ import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
-import nl.petertillema.tibasic.controlFlow.type.DfListType;
 import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
@@ -21,21 +20,11 @@ import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FUL
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
 /**
- * Descriptor for a single element within a list. The actual list is provided
- * as a qualifier to the {@link DfaVariableValue}. This allows the DFA engine
- * to distinguish the same index belonging to different lists.
+ * A descriptor for a list element, which could be a single element within a normal list, or a row in a matrix.
+ * This row in itself contains other ListElementDescriptor's for the actual elements. The returned DfType is determined
+ * whether this descriptor is part of a matrix or a regular list.
  */
-public final class ListElementDescriptor implements VariableDescriptor {
-
-    private final int index;
-
-    public ListElementDescriptor(int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
-    }
+public record ListElementDescriptor(int index) implements VariableDescriptor {
 
     @Override
     public boolean isStable() {
@@ -44,8 +33,10 @@ public final class ListElementDescriptor implements VariableDescriptor {
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
+        // Is it a row in a matrix? If so, it should be a list. If not, it's a regular numeric value within the
+        // TI-BASIC range.
         if (qualifier != null && qualifier.getDfType() instanceof DfMatrixType) {
-            return new DfListType(SpecialFieldDescriptor.LIST_LENGTH, fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(999))));
+            return SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
         }
         return fromRange(FULL_RANGE);
     }
@@ -53,17 +44,12 @@ public final class ListElementDescriptor implements VariableDescriptor {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (!(o instanceof ListElementDescriptor that)) return false;
-        return that.index == this.index;
+        if (!(o instanceof ListElementDescriptor(int index1))) return false;
+        return index1 == this.index;
     }
 
     @Override
-    public int hashCode() {
-        return index + 12345678;
-    }
-
-    @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "[" + index + "]";
     }
 
@@ -102,4 +88,5 @@ public final class ListElementDescriptor implements VariableDescriptor {
     private static int floorToInt(BigDecimal val) {
         return val.setScale(0, FLOOR).intValue();
     }
+
 }

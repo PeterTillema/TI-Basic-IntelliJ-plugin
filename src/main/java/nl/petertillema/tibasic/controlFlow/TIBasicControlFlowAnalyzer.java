@@ -23,10 +23,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.MatrixDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.NumericDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.StringDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
-import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.BooleanBinaryInstruction;
 import nl.petertillema.tibasic.controlFlow.instruction.CommandInstruction;
@@ -131,7 +131,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public TIBasicControlFlowAnalyzer(@NotNull DfaValueFactory factory, @NotNull PsiElement psiBlock) {
         this.factory = factory;
         this.psiBlock = psiBlock;
-        this.ansVariable = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor("Ans"));
+        this.ansVariable = factory.getVarFactory().createVariableValue(new NumericDescriptor("Ans"));
     }
 
     public ControlFlow buildControlFlow() {
@@ -288,7 +288,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         if (statement.getForIdentifier() != null) {
             name = statement.getForIdentifier().getText();
         }
-        DfaVariableValue forLoopVariable = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(name));
+        DfaVariableValue forLoopVariable = factory.getVarFactory().createVariableValue(new NumericDescriptor(name));
 
         // Assign the start to the loop variable
         if (!statement.getExprList().isEmpty()) {
@@ -301,7 +301,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         addInstruction(new PopInstruction());
 
         // Get the stop value and assign to a temporary variable
-        DfaVariableValue forLoopStop = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(tempForLoopName + "stop"));
+        DfaVariableValue forLoopStop = factory.getVarFactory().createVariableValue(new NumericDescriptor(tempForLoopName + "stop"));
         if (statement.getExprList().size() > 1) {
             statement.getExprList().get(1).accept(this);
         } else {
@@ -312,7 +312,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         addInstruction(new PopInstruction());
 
         // Get the step value and assign to a temporary variable eventually
-        DfaVariableValue forLoopStep = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(tempForLoopName + "step"));
+        DfaVariableValue forLoopStep = factory.getVarFactory().createVariableValue(new NumericDescriptor(tempForLoopName + "step"));
         boolean hasCustomStep = false;
         if (statement.getExprList().size() > 2) {
             statement.getExprList().get(2).accept(this);
@@ -490,11 +490,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     @Override
     public void visitPlotStatement(@NotNull TIBasicPlotStatement statement) {
         statement.acceptChildren(this);
+        addInstruction(new CommandInstruction(statement.getFirstChild().getText(), statement.getExprList().size()));
     }
 
     @Override
     public void visitDispStatement(@NotNull TIBasicDispStatement statement) {
         statement.acceptChildren(this);
+        addInstruction(new CommandInstruction(statement.getFirstChild().getText(), statement.getExprList().size()));
     }
 
     @Override
@@ -930,14 +932,14 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Numeric variables: SIMPLE_VARIABLE, WINDOW_VARIABLE
         else {
-            DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new NumericDescriptor(child.getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
         }
     }
 
     private DfaVariableValue createVariableFromElement(PsiElement element) {
         String name = element.getText();
-        return factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(name));
+        return factory.getVarFactory().createVariableValue(new NumericDescriptor(name));
     }
 
     private void addInstruction(Instruction i) {

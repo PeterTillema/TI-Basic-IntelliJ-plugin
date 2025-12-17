@@ -1,6 +1,8 @@
 package nl.petertillema.tibasic.controlFlow.descriptor;
 
 import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DfaValue;
+import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
 import org.jetbrains.annotations.NotNull;
@@ -8,24 +10,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
-import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
-
 /**
- * This is a descriptor for all built-in TI-BASIC variables as well as custom lists. All the variables have a name,
- * such as "A", "L1", "Str0" or "|LABC". The names are always normalized to the default ASCII representation, so "₁"
- * will be replaced with "1", and custom lists should always have a "|L" prefix. The descriptor itself
- * can serve as a qualifier for related nested variables, for example, the length of a list, or the row of a matrix.
- * The DFA engine can track these as separate {@link DfaVariableValue}s.
+ * A descriptor describes a variable within the DFA engine. TI-BASIC variables are always distinguished by their name,
+ * and multiple types of descriptors are possible within the language, namely all the subclasses from this abstract
+ * class. Each type of descriptor should implement the getDfType() function, which returns one of the possible types in
+ * TI-BASIC, represented by any variable described by the descriptor. For example, a variable with a numeric descriptor
+ * holds a DfType of any value between -9.99999999999e99 and +9.99999999999e99. Some descriptors have a more precise
+ * range. For example, a list descriptor always has a length between 0 and 999, since larger is not allowed in the
+ * language. Since variable names can be written in different ways, the name is normalized to the ASCII range, such
+ * that different writings of a variable are always equal to each other.
  */
-public class TIBasicVariableDescriptor implements VariableDescriptor {
+public abstract class TIBasicVariableDescriptor implements VariableDescriptor {
 
     private final @NotNull String name;
 
-    /**
-     * @param name The name of the TI-BASIC variable. Non-ascii characters are replaced by the ASCII representation,
-     *             and the text is eventually extracted from inside {} braces.
-     */
     public TIBasicVariableDescriptor(@NotNull String name) {
         name = name.replace("₁", "1")
                 .replace("₂", "2")
@@ -48,8 +46,11 @@ public class TIBasicVariableDescriptor implements VariableDescriptor {
     }
 
     @Override
-    public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-        return fromRange(FULL_RANGE);
+    public abstract @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier);
+
+    @Override
+    public @NotNull DfaValue createValue(@NotNull DfaValueFactory factory, @Nullable DfaValue qualifier) {
+        return factory.getVarFactory().createVariableValue(this);
     }
 
     @Override
