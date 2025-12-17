@@ -45,7 +45,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
             }
 
             // Number/matrix is not allowed
-            case DfBigDecimalType ignored when rightType instanceof DfMatrixType -> {
+            case DfBigDecimalType ignored when (rightType instanceof DfMatrixType && operator == BinaryOperator.DIVIDE) -> {
                 return factory.getUnknown();
             }
 

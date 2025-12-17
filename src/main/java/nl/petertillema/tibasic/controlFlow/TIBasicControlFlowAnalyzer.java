@@ -814,9 +814,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Anonymous list
         else if (child instanceof TIBasicAnonymousList anonymousList) {
-            DfaVariableValue tempListVar = createTempVariable();
-
             DfType listType = SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromValue(anonymousList.getExprList().size()));
+            DfaVariableValue tempListVar = createTempVariable(listType);
 
             addInstruction(new PushValueInstruction(listType));
             addInstruction(new PushInstruction(tempListVar, null));
@@ -839,9 +838,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Anonymous matrix
         else if (child instanceof TIBasicAnonymousMatrix anonymousMatrix) {
-            DfaVariableValue tempMatrixVar = createTempVariable();
-
             DfType matrixType = SpecialFieldDescriptor.MATRIX_LENGTH.asDfType(fromValue(anonymousMatrix.getAnonymousMatrixRowList().size()));
+            DfaVariableValue tempMatrixVar = createTempVariable(matrixType);
 
             addInstruction(new PushValueInstruction(matrixType));
             addInstruction(new PushInstruction(tempMatrixVar, null));
@@ -947,8 +945,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         return currentFlow.getStartOffset(element);
     }
 
-    private DfaVariableValue createTempVariable() {
-        return factory.getVarFactory().createVariableValue(new Synthetic(currentFlow.getInstructionCount(), DfType.TOP));
+    private DfaVariableValue createTempVariable(DfType type) {
+        return factory.getVarFactory().createVariableValue(new Synthetic(currentFlow.getInstructionCount(), type));
     }
 
     private void startElement(@NotNull PsiElement element) {

@@ -21,33 +21,26 @@ public class TypeEvaluator {
         DfType leftType = state.getDfType(leftValue);
         DfType rightType = state.getDfType(rightValue);
 
-        switch (leftType) {
-            case DfListType ignored when rightType instanceof DfListType -> {
-                DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) leftValue);
-                DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) rightValue);
-                DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                leftMap.execBiOperator(rightMap, function).exportTo((DfaMemoryStateImpl) state, out);
-                return out;
-            }
-            case DfListType ignored when rightType instanceof DfBigDecimalType bigDecimalType -> {
-                DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) leftValue);
-                DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                leftMap.execOperator(value -> function.apply(value, bigDecimalType)).exportTo((DfaMemoryStateImpl) state, out);
-                return out;
-            }
-            case DfBigDecimalType bigDecimalType when rightType instanceof DfListType -> {
-                DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) rightValue);
-                DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                rightMap.execOperator(value -> function.apply(bigDecimalType, value)).exportTo((DfaMemoryStateImpl) state, out);
-                return out;
-            }
-            case DfBigDecimalType bigDecimalType1 when rightType instanceof DfBigDecimalType bigDecimalType2 -> {
-                return factory.fromDfType(function.apply(bigDecimalType1, bigDecimalType2));
-            }
-            default -> {
-                return factory.getUnknown();
-            }
+        if ((leftType instanceof DfListType || leftType instanceof DfMatrixType) && (rightType instanceof DfListType || rightType instanceof DfMatrixType)) {
+            DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) leftValue);
+            DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) rightValue);
+            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
+            leftMap.execBiOperator(rightMap, function).exportTo((DfaMemoryStateImpl) state, out);
+            return out;
+        } else if ((leftType instanceof DfListType || leftType instanceof DfMatrixType) && rightType instanceof DfBigDecimalType bigDecimalType) {
+            DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) leftValue);
+            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
+            leftMap.execOperator(value -> function.apply(value, bigDecimalType)).exportTo((DfaMemoryStateImpl) state, out);
+            return out;
+        } else if (leftType instanceof DfBigDecimalType bigDecimalType && (rightType instanceof DfListType || rightType instanceof DfMatrixType)) {
+            DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) rightValue);
+            DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
+            rightMap.execOperator(value -> function.apply(bigDecimalType, value)).exportTo((DfaMemoryStateImpl) state, out);
+            return out;
+        } else if (leftType instanceof DfBigDecimalType bigDecimalType1 && rightType instanceof DfBigDecimalType bigDecimalType2) {
+            return factory.fromDfType(function.apply(bigDecimalType1, bigDecimalType2));
         }
+        return factory.getUnknown();
     }
 
 }

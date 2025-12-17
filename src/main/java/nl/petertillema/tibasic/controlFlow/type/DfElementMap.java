@@ -19,6 +19,7 @@ import java.util.function.Function;
 public class DfElementMap {
 
     private final int dimensions;
+
     private final List<DfType> dimensionLengths;
     private final Map<Integer, Map<Integer, DfBigDecimalType>> elements;
 
@@ -30,6 +31,10 @@ public class DfElementMap {
 
     public int getDimensions() {
         return dimensions;
+    }
+
+    public List<DfType> getDimensionLengths() {
+        return dimensionLengths;
     }
 
     public DfElementMap execOperator(@NotNull Function<DfBigDecimalType, DfType> operator) {
@@ -296,6 +301,8 @@ public class DfElementMap {
         DfType sourceType = state.getDfType(source);
         if (sourceType instanceof DfListType listType) {
             lengths.add(listType.getSpecialFieldType());
+        } else if (sourceType instanceof DfMatrixType matrixType) {
+            lengths.add(matrixType.getSpecialFieldType());
         } else {
             lengths.add(SpecialFieldDescriptor.LIST_LENGTH.getDfType(null));
         }

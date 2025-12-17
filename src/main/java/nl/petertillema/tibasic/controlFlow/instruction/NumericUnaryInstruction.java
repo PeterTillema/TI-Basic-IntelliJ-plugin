@@ -14,6 +14,7 @@ import nl.petertillema.tibasic.controlFlow.operator.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import nl.petertillema.tibasic.controlFlow.type.DfElementMap;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
+import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class NumericUnaryInstruction extends EvalInstruction {
             return evalNumber(factory, bigDecimalType);
         }
 
-        if (numType instanceof DfListType) {
+        if (numType instanceof DfListType || numType instanceof DfMatrixType) {
             DfElementMap elementMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[0]);
 
             if (operator == UnaryOperator.TRANSPOSE && elementMap.getDimensions() == 2) {

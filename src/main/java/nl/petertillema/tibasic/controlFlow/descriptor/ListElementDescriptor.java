@@ -4,7 +4,10 @@ import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
+import nl.petertillema.tibasic.controlFlow.type.DfListType;
+import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,6 +44,9 @@ public final class ListElementDescriptor implements VariableDescriptor {
 
     @Override
     public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
+        if (qualifier != null && qualifier.getDfType() instanceof DfMatrixType) {
+            return new DfListType(SpecialFieldDescriptor.LIST_LENGTH, fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(999))));
+        }
         return fromRange(FULL_RANGE);
     }
 
