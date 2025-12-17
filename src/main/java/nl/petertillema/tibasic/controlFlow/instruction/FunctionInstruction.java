@@ -11,6 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.FUNCTION_MAP;
 
+/**
+ * Executes a built-in function with the given arguments. The minimum number of arguments is checked against, it's up to
+ * the individual functions to check the correct number of arguments. The result of the function is pushed to the stack.
+ */
 public class FunctionInstruction extends EvalInstruction {
 
     private final String functionName;

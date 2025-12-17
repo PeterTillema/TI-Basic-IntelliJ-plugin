@@ -15,6 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+/**
+ * This instruction performs a deep copy from the source to the destination. This is not possible with a default method
+ * within the DfaMemoryState, hence a custom implementation which also copies all the dependent variables.
+ */
 public class AssignVariableInstruction extends ExpressionPushingInstruction {
 
     public AssignVariableInstruction(@Nullable DfaAnchor anchor) {

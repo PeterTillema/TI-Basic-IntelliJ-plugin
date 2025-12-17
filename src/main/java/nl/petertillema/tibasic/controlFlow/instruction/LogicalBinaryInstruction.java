@@ -25,6 +25,12 @@ import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fro
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.point;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
 
+/**
+ * An instruction which performs a logical binary comparison against two values. These include the standard logical
+ * operators, including "and", "or" and "xor". When the result couldn't be determined against two numerical values,
+ * the state is split with both outcomes possible. With any other type, the result will be both 0 and 1 for each
+ * numerical comparison without a determined result.
+ */
 public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
 
     private final LogicalOperator operator;

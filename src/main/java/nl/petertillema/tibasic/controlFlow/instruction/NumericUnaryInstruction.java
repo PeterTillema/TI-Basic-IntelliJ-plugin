@@ -22,6 +22,16 @@ import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
+/**
+ * An instruction which performs a unary binary operation against the value. Not all the operators apply to all kinds of
+ * input types, but these are allowed:
+ *  - ~ -> number, list, and matrix
+ *  - ! -> number and list
+ *  - ^^-1 -> number, list, and matrix. The list is inverted element-wise, the matrix performs the 1/matrix operation.
+ *  - ^^T -> matrix
+ *  - ^^r -> number, list, and matrix
+ *  - ^^o -> number, list, and matrix
+ */
 public class NumericUnaryInstruction extends EvalInstruction {
 
     private final UnaryOperator operator;

@@ -10,6 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.COMMAND_MAP;
 
+/**
+ * Executes a built-in command with the given arguments. Most commands don't do anything, some commands edit built-in
+ * variables. If an unknown command is passed, nothing is done. No result is pushed at all, since this is supposed to
+ * be a terminal operation.
+ */
 public class CommandInstruction extends Instruction {
 
     private final String commandName;

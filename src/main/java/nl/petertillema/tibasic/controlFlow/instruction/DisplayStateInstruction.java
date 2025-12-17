@@ -6,6 +6,9 @@ import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Temporary instruction for debugging purposed. Prints the state after the entire flow is run.
+ */
 public class DisplayStateInstruction extends Instruction {
 
     public DisplayStateInstruction() {

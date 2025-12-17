@@ -16,16 +16,9 @@ import java.util.Set;
 import static nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor.extractIntegerIndexCandidates;
 
 /**
- * IR instruction that conceptually reads an element from a TI-BASIC list using a dynamic index.
- *
- * Stack contract (arity = 2):
- *   - consumes: [listVar, index]
- *   - pushes: element value (conservative for now)
- *
- * Notes:
- *   Performs bounds-aware extraction using the list length and index type. For singleton
- *   index candidates, a concrete element variable is pushed; for a small finite set, the
- *   joined type of candidate elements is pushed; otherwise, TOP is pushed.
+ * Instruction which fetches an element with a given index from a list. The length of the list must be known before
+ * executing this instruction, otherwise the result will be an unknown value. If multiple integer indexes are candidate,
+ * the result will be joined from all found values.
  */
 public class GetListElementInstruction extends EvalInstruction {
 
@@ -44,23 +37,7 @@ public class GetListElementInstruction extends EvalInstruction {
             return factory.getUnknown();
         }
 
-        // Determine length upper bound if available
-        Integer maxLen = null;
-//        DfaVariableValue lenVar = factory.getVarFactory().createVariableValue(new ListLengthDescriptor(), listVar);
-//        DfType lenType = state.getDfType(lenVar);
-//        if (lenType instanceof DfBigDecimalType lenNum) {
-//            try {
-//                BigDecimal max = lenNum.range().max();
-//                // clip to a reasonable int bound
-//                if (max.compareTo(BigDecimal.ZERO) >= 0 && max.compareTo(new BigDecimal(Integer.MAX_VALUE)) <= 0) {
-//                    maxLen = max.intValue();
-//                }
-//            } catch (Exception ignored) {
-//                // unknown/empty length
-//            }
-//        }
-
-        Set<Integer> candidates = extractIntegerIndexCandidates(state.getDfType(indexVal), maxLen, 16);
+        Set<Integer> candidates = extractIntegerIndexCandidates(state.getDfType(indexVal), null, 16);
 
         if (candidates.isEmpty()) {
             return factory.getUnknown();

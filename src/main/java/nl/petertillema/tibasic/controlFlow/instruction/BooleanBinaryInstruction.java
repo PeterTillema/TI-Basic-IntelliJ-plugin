@@ -21,6 +21,12 @@ import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
 
+/**
+ * An instruction which performs a boolean binary comparison against two values. These include the standard relation
+ * operators, including =, !=, >, >=, < and <=. When the result couldn't be determined against two numerical values,
+ * the state is split with both outcomes possible. With any other type, the result will be both 0 and 1 for each
+ * numerical comparison without a determined result.
+ */
 public class BooleanBinaryInstruction extends ExpressionPushingInstruction {
 
     private final RelationType relation;

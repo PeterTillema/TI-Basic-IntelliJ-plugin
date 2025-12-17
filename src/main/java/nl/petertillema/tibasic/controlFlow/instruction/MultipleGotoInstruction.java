@@ -10,6 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A simple instruction with splits the state into multiple other instructions, based on the given offsets. Its sole
+ * purpose is for Menu( statements.
+ */
 public class MultipleGotoInstruction extends Instruction {
 
     private final List<ControlFlow.ControlFlowOffset> offsets;

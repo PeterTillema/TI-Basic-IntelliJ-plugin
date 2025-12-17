@@ -21,6 +21,15 @@ import org.jetbrains.annotations.Nullable;
 
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 
+/**
+ * An instruction which performs a numeric binary operation against two values. These include the standard operators,
+ * including "+", "-", "*", "/" and "^". Some special cases that are different from the default operators:
+ *  - string + string -> string concatenation
+ *  - number / matrix -> not allowed
+ *  - matrix * matrix -> matrix multiplication
+ *  - matrix / matrix -> matrix division
+ * All the other operators are applied normally, or element-wise for lists and matrices.
+ */
 public class NumericBinaryInstruction extends EvalInstruction {
 
     private final BinaryOperator operator;
