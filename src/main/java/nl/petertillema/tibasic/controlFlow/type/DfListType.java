@@ -22,7 +22,10 @@ public class DfListType implements DfType {
 
     @Override
     public boolean isSuperType(@NotNull DfType other) {
-        return false;
+        if (other == DfType.BOTTOM) return true;
+        if (!(other instanceof DfListType o)) return false;
+        if (this.specialField != o.specialField) return false;
+        return this.specialFieldType.isSuperType(o.specialFieldType);
     }
 
     @Override
@@ -32,17 +35,31 @@ public class DfListType implements DfType {
 
     @Override
     public @NotNull DfType join(@NotNull DfType other) {
-        return this;
+        if (other == DfType.BOTTOM) return this;
+        if (!(other instanceof DfListType o)) return DfType.TOP;
+        if (this.specialField != o.specialField) return DfType.TOP;
+        DfType joinedField = this.specialFieldType.join(o.specialFieldType);
+        return specialField.asDfType(joinedField);
     }
 
     @Override
     public @Nullable DfType tryJoinExactly(@NotNull DfType other) {
-        return this;
+        if (other == DfType.BOTTOM) return this;
+        if (other == DfType.TOP) return other;
+        if (!(other instanceof DfListType o)) return null;
+        if (this.specialField != o.specialField) return null;
+        DfType joinedField = this.specialFieldType.tryJoinExactly(o.specialFieldType);
+        if (joinedField == null) return null;
+        return specialField.asDfType(joinedField);
     }
 
     @Override
     public @NotNull DfType meet(@NotNull DfType other) {
-        return this;
+        if (other == DfType.TOP) return this;
+        if (!(other instanceof DfListType o)) return DfType.BOTTOM;
+        if (this.specialField != o.specialField) return DfType.BOTTOM;
+        DfType metField = this.specialFieldType.meet(o.specialFieldType);
+        return specialField.asDfType(metField);
     }
 
     @Override
