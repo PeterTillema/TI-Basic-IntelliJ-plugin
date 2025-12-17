@@ -22,20 +22,19 @@ public class CommandInstruction extends Instruction {
 
     @Override
     public DfaInstructionState[] accept(@NotNull DataFlowInterpreter interpreter, @NotNull DfaMemoryState stateBefore) {
-        TIBasicCommand commandImpl = COMMAND_MAP.get(commandName);
-        if (commandImpl != null) {
-            int operands = this.operands;
-            DfaValue[] args;
-            if (operands == 0) {
-                args = DfaValue.EMPTY_ARRAY;
-            } else {
-                args = new DfaValue[operands];
-                for (int i = operands - 1; i >= 0; i--) {
-                    args[i] = stateBefore.pop();
-                }
+        int operands = this.operands;
+        DfaValue[] args;
+        if (operands == 0) {
+            args = DfaValue.EMPTY_ARRAY;
+        } else {
+            args = new DfaValue[operands];
+            for (int i = operands - 1; i >= 0; i--) {
+                args[i] = stateBefore.pop();
             }
-            commandImpl.evalCommand(stateBefore, args);
         }
+        TIBasicCommand commandImpl = COMMAND_MAP.get(commandName);
+        if (commandImpl != null) commandImpl.evalCommand(stateBefore, args);
+
         return nextStates(interpreter, stateBefore);
     }
 
