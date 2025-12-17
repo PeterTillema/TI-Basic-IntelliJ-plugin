@@ -5,10 +5,10 @@ import com.intellij.codeInspection.dataFlow.lang.ir.DfaInstructionState;
 import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
-import nl.petertillema.tibasic.analysis.commands.TIBasicCommand;
+import nl.petertillema.tibasic.controlFlow.commandFunction.commands.TIBasicCommand;
 import org.jetbrains.annotations.NotNull;
 
-import static nl.petertillema.tibasic.analysis.TIBasicCommandFunctionMap.COMMAND_MAP;
+import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.COMMAND_MAP;
 
 public class CommandInstruction extends Instruction {
 

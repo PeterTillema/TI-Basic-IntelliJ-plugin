@@ -13,8 +13,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import nl.petertillema.tibasic.TIBasicMessageBundle;
-import nl.petertillema.tibasic.analysis.commands.TIBasicCommand;
-import nl.petertillema.tibasic.analysis.functions.TIBasicFunction;
+import nl.petertillema.tibasic.controlFlow.commandFunction.commands.TIBasicCommand;
+import nl.petertillema.tibasic.controlFlow.commandFunction.functions.TIBasicFunction;
 import nl.petertillema.tibasic.psi.TIBasicCommandStatement;
 import nl.petertillema.tibasic.psi.TIBasicExpr;
 import nl.petertillema.tibasic.psi.TIBasicFuncExpr;
@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static com.intellij.psi.util.PsiTreeUtil.getElementsOfRange;
-import static nl.petertillema.tibasic.analysis.TIBasicCommandFunctionMap.COMMAND_MAP;
-import static nl.petertillema.tibasic.analysis.TIBasicCommandFunctionMap.FUNCTION_MAP;
+import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.COMMAND_MAP;
+import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.FUNCTION_MAP;
 
 public class TIBasicNrArgumentsAnnotator implements Annotator {
 

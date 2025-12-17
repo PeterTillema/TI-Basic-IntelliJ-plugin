@@ -6,11 +6,11 @@ import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
-import nl.petertillema.tibasic.analysis.functions.TIBasicFunction;
+import nl.petertillema.tibasic.controlFlow.commandFunction.functions.TIBasicFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static nl.petertillema.tibasic.analysis.TIBasicCommandFunctionMap.FUNCTION_MAP;
+import static nl.petertillema.tibasic.controlFlow.commandFunction.TIBasicCommandFunctionMap.FUNCTION_MAP;
 
 public class FunctionInstruction extends EvalInstruction {
 
@@ -25,7 +25,7 @@ public class FunctionInstruction extends EvalInstruction {
     public @NotNull DfaValue eval(@NotNull DfaValueFactory factory, @NotNull DfaMemoryState state, @NotNull DfaValue @NotNull ... arguments) {
         TIBasicFunction functionImpl = FUNCTION_MAP.get(functionName);
         if (functionImpl != null) {
-            DfType outDfType = functionImpl.evalFunction(state, arguments);
+            DfType outDfType = functionImpl.evalFunction(factory, state, arguments);
             return factory.fromDfType(outDfType);
         } else {
             System.out.println("Unknown function!!! - " + functionName);
