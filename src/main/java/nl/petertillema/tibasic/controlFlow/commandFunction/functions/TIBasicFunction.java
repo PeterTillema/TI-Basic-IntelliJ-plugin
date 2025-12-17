@@ -12,8 +12,8 @@ public interface TIBasicFunction {
 
     int getMaxNrArguments();
 
-    default DfType evalFunction(@NotNull DfaValueFactory factory, @NotNull DfaMemoryState state, @NotNull DfaValue @NotNull ... arguments) {
-        return DfType.TOP;
+    default DfaValue evalFunction(@NotNull DfaValueFactory factory, @NotNull DfaMemoryState state, @NotNull DfaValue @NotNull ... arguments) {
+        return factory.fromDfType(DfType.TOP);
     }
 
 }

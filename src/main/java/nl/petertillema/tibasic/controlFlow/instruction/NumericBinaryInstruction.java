@@ -50,7 +50,7 @@ public class NumericBinaryInstruction extends EvalInstruction {
             }
 
             // Special operations for TIMES and DIVIDE
-            case DfMatrixType ignored when (operator == BinaryOperator.TIMES || operator == BinaryOperator.DIVIDE) -> {
+            case DfMatrixType ignored when (rightType instanceof DfMatrixType && operator == BinaryOperator.TIMES || operator == BinaryOperator.DIVIDE) -> {
                 DfElementMap leftMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[0]);
                 DfElementMap rightMap = DfElementMap.loadFromSource((DfaMemoryStateImpl) state, (DfaVariableValue) arguments[1]);
                 DfaVariableValue outputList = factory.getVarFactory().createVariableValue(Synthetic.create());
