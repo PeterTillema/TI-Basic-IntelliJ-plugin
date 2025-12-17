@@ -24,6 +24,7 @@ import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.MatrixDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.StringDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
 import nl.petertillema.tibasic.controlFlow.descriptor.TIBasicVariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.instruction.AssignVariableInstruction;
@@ -917,7 +918,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             addInstruction(new PushValueInstruction(stringType));
         }
 
-        // All the other simple variables: EQUATION_VARIABLE, STRING_VARIABLE, SIMPLE_VARIABLE, WINDOW_VARIABLE
+        // String variables: EQUATION_VARIABLE, STRING_VARIABLE
+        else if (childType == TIBasicTypes.EQUATION_VARIABLE || childType == TIBasicTypes.STRING_VARIABLE) {
+            DfaVariableValue var = factory.getVarFactory().createVariableValue(new StringDescriptor(child.getText()));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+        }
+
+        // Numeric variables: SIMPLE_VARIABLE, WINDOW_VARIABLE
         else {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new TIBasicVariableDescriptor(child.getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
