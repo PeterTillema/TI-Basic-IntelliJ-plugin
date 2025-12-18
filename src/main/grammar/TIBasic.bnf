@@ -120,7 +120,7 @@ func_expr ::= (EXPR_FUNCTIONS_WITH_ARGS | DIM) LPAREN <<list expr>> optional_rpa
 func_optional_expr ::= EXPR_FUNCTIONS_OPTIONAL_ARGS [LPAREN <<list expr>> optional_rparen] { pin=1 }
 
 // Base literal
-literal_expr ::= list_index | matrix_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
+literal_expr ::= matrix_index | list_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIABLE | LIST_VARIABLE | custom_list | EQUATION_VARIABLE | STRING_VARIABLE | SIMPLE_VARIABLE | WINDOW_VARIABLE | MATRIX_VARIABLE | COLOR_VARIABLE | MATH_VARIABLE | NUMBER | STRING | anonymous_list | anonymous_matrix
 {
     methods=[getReferences]
 }
