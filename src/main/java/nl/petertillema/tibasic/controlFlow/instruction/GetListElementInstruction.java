@@ -44,7 +44,8 @@ public class GetListElementInstruction extends EvalInstruction {
         }
         if (candidates.size() == 1) {
             int idx = candidates.iterator().next();
-            return new ListElementDescriptor(idx).createValue(factory, listVal);
+            DfaValue value = new ListElementDescriptor(idx).createValue(factory, listVal);
+            return factory.fromDfType(state.getDfType(value));
         }
 
         // Join candidate element types for a small finite set
