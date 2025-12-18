@@ -38,7 +38,7 @@ public class CommandInstruction extends Instruction {
             }
         }
         TIBasicCommand commandImpl = COMMAND_MAP.get(commandName);
-        if (commandImpl != null) commandImpl.evalCommand(stateBefore, args);
+        if (commandImpl != null) commandImpl.evalCommand(interpreter.getFactory(), stateBefore, args);
 
         return nextStates(interpreter, stateBefore);
     }
