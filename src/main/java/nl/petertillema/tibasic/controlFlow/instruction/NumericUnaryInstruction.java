@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
+import static ch.obermuhlner.math.big.BigDecimalMath.pi;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MC;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
@@ -39,8 +40,8 @@ import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fro
  */
 public class NumericUnaryInstruction extends EvalInstruction {
 
-    private static final BigDecimal NUM_TO_RADIAN_CONSTANT = new BigDecimal("180").divide(new BigDecimal("3.1415926535897932384"), MC);
-    private static final BigDecimal NUM_TO_DEGREE_CONSTANT = new BigDecimal("3.1415926535897932384").divide(new BigDecimal("180"), MC);
+    private static final BigDecimal NUM_TO_RADIAN_CONSTANT = new BigDecimal("180").divide(pi(MC), MC);
+    private static final BigDecimal NUM_TO_DEGREE_CONSTANT = pi(MC).divide(new BigDecimal("180"), MC);
 
     private final UnaryOperator operator;
 

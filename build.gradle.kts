@@ -17,6 +17,7 @@ repositories {
 // Configure IntelliJ Platform Gradle Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
+    implementation("ch.obermuhlner:big-math:2.3.2")
     testImplementation("junit:junit:4.13.2")
 
     intellijPlatform {
