@@ -11,6 +11,7 @@ import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.SwapInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DfaControlTransferValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
@@ -20,6 +21,7 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.containers.FList;
 import nl.petertillema.tibasic.controlFlow.descriptor.AnsDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
@@ -42,6 +44,8 @@ import nl.petertillema.tibasic.controlFlow.instruction.NumericUnaryInstruction;
 import nl.petertillema.tibasic.controlFlow.operator.BinaryOperator;
 import nl.petertillema.tibasic.controlFlow.operator.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.operator.UnaryOperator;
+import nl.petertillema.tibasic.controlFlow.problem.ListIndexOutOfBoundsProblem;
+import nl.petertillema.tibasic.controlFlow.problem.MatrixIndexOutOfBoundsProblem;
 import nl.petertillema.tibasic.controlFlow.type.DfStringType;
 import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
@@ -761,7 +765,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             } else {
                 pushUnknown();
             }
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+            DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
         }
 
         // List
@@ -774,7 +779,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 } else {
                     expressions.getFirst().accept(this);
                 }
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+                DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
             }
         }
 
@@ -788,14 +794,16 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             } else {
                 pushUnknown();
             }
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+            DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new MatrixIndexOutOfBoundsProblem(), transfer));
 
             if (matrixIndex.getExprList().size() > 1) {
                 matrixIndex.getExprList().get(1).accept(this);
             } else {
                 pushUnknown();
             }
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+            transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
         }
 
         // Matrix
@@ -809,14 +817,16 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 } else {
                     expressions.getFirst().accept(this);
                 }
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+                DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new MatrixIndexOutOfBoundsProblem(), transfer));
 
                 if (expressions.size() < 2) {
                     pushUnknown();
                 } else {
                     expressions.get(1).accept(this);
                 }
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child)));
+                transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
             }
         }
 

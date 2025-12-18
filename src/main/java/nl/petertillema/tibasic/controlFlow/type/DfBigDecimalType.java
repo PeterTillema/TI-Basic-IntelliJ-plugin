@@ -81,4 +81,8 @@ public interface DfBigDecimalType extends DfType {
         BigDecimalRangeSet res = FULL_RANGE.subtract(range);
         return res.intersects(range) ? null : fromRange(res, null);
     }
+
+    static BigDecimalRangeSet extractRange(@NotNull DfType type) {
+        return type instanceof DfBigDecimalType bigDecimalType ? bigDecimalType.range() : FULL_RANGE;
+    }
 }

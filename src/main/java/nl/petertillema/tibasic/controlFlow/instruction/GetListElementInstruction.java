@@ -1,61 +1,70 @@
 package nl.petertillema.tibasic.controlFlow.instruction;
 
+import com.intellij.codeInspection.dataFlow.interpreter.DataFlowInterpreter;
 import com.intellij.codeInspection.dataFlow.lang.DfaAnchor;
-import com.intellij.codeInspection.dataFlow.lang.ir.EvalInstruction;
+import com.intellij.codeInspection.dataFlow.lang.ir.DfaInstructionState;
+import com.intellij.codeInspection.dataFlow.lang.ir.ExpressionPushingInstruction;
+import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.memory.DfaMemoryState;
-import com.intellij.codeInspection.dataFlow.types.DfType;
+import com.intellij.codeInspection.dataFlow.value.DfaControlTransferValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
-import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
+import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
+import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
+import nl.petertillema.tibasic.controlFlow.problem.IndexOutOfBoundsProblem;
+import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-
-import static nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor.extractIntegerIndexCandidates;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Instruction which fetches an element with a given index from a list. The length of the list must be known before
  * executing this instruction, otherwise the result will be an unknown value. If multiple integer indexes are candidate,
  * the result will be joined from all found values.
  */
-public class GetListElementInstruction extends EvalInstruction {
+public class GetListElementInstruction extends ExpressionPushingInstruction {
 
-    public GetListElementInstruction(@Nullable DfaAnchor anchor) {
-        super(anchor, 2);
+    private final @NotNull IndexOutOfBoundsProblem problem;
+    private final @Nullable DfaControlTransferValue outOfBoundsTransfer;
+
+    public GetListElementInstruction(@Nullable DfaAnchor anchor,
+                                     @NotNull IndexOutOfBoundsProblem indexProblem,
+                                     @Nullable DfaControlTransferValue outOfBoundsTransfer) {
+        super(anchor);
+        this.problem = indexProblem;
+        this.outOfBoundsTransfer = outOfBoundsTransfer;
     }
 
     @Override
-    public @NotNull DfaValue eval(@NotNull DfaValueFactory factory,
-                                  @NotNull DfaMemoryState state,
-                                  @NotNull DfaValue @NotNull ... arguments) {
-        DfaValue listVal = arguments[0];
-        DfaValue indexVal = arguments[1];
+    public @NotNull Instruction bindToFactory(@NotNull DfaValueFactory factory) {
+        DfaControlTransferValue newTransfer = outOfBoundsTransfer == null ? null : outOfBoundsTransfer.bindToFactory(factory);
+        return new GetListElementInstruction(getDfaAnchor(), problem, newTransfer);
+    }
 
-        if (!(listVal instanceof DfaVariableValue variableVar)) {
-            return factory.getUnknown();
+    @Override
+    public DfaInstructionState[] accept(@NotNull DataFlowInterpreter interpreter, @NotNull DfaMemoryState stateBefore) {
+        DfaValue index = stateBefore.pop();
+        DfaValue list = stateBefore.pop();
+        List<DfaInstructionState> finalStates = new ArrayList<>();
+        if (outOfBoundsTransfer != null) {
+            finalStates.addAll(IndexOutOfBoundsProblem.dispatchTransfer(interpreter, stateBefore.createCopy(), outOfBoundsTransfer));
         }
+        DfaInstructionState[] states = problem.processOutOfBounds(interpreter, stateBefore, index, list, outOfBoundsTransfer);
+        if (states != null) return states;
+        BigDecimalRangeSet rangeSet = DfBigDecimalType.extractRange(stateBefore.getDfType(index));
+        DfaValue result = ListElementDescriptor.getListElementValue(interpreter.getFactory(), stateBefore, list, rangeSet);
+        pushResult(interpreter, stateBefore, result);
+        finalStates.add(nextState(interpreter, stateBefore));
+        return finalStates.toArray(DfaInstructionState.EMPTY_ARRAY);
+    }
 
-        Set<Integer> candidates = extractIntegerIndexCandidates(state.getDfType(indexVal), null, 16);
-
-        if (candidates.isEmpty()) {
-            return factory.getUnknown();
-        }
-        if (candidates.size() == 1) {
-            int idx = candidates.iterator().next();
-            DfaValue value = new ListElementDescriptor(idx).createValue(factory, listVal);
-            return factory.fromDfType(state.getDfType(value));
-        }
-
-        // Join candidate element types for a small finite set
-        DfType joined = DfType.BOTTOM;
-        for (int idx : candidates) {
-            DfaValue elementVar = new ListElementDescriptor(idx).createValue(factory, variableVar);
-            DfType t = state.getDfType(elementVar);
-            joined = joined.join(t);
-        }
-        return factory.fromDfType(joined);
+    @Override
+    public List<VariableDescriptor> getRequiredDescriptors(@NotNull DfaValueFactory factory) {
+        return List.of(SpecialFieldDescriptor.LIST_LENGTH);
     }
 
     @Override

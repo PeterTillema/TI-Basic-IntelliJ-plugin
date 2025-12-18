@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 public class Empty implements BigDecimalRangeSet {
 
@@ -73,6 +74,11 @@ public class Empty implements BigDecimalRangeSet {
     @Override
     public BigDecimal[] asRangeArray() {
         return new BigDecimal[0];
+    }
+
+    @Override
+    public Stream<BigDecimal> stream() {
+        return Stream.empty();
     }
 
     @Override

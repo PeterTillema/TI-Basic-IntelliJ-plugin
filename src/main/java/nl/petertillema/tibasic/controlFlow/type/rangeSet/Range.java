@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MAX;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MIN;
@@ -209,6 +210,11 @@ public record Range(BigDecimal from, BigDecimal to) implements BigDecimalRangeSe
     @Override
     public BigDecimal[] asRangeArray() {
         return new BigDecimal[]{from, to};
+    }
+
+    @Override
+    public Stream<BigDecimal> stream() {
+        return Stream.empty();
     }
 
     @Override

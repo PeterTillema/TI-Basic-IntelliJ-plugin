@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MAX;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MC;
@@ -220,6 +221,8 @@ public interface BigDecimalRangeSet {
     }
 
     @NotNull BigDecimal[] asRangeArray();
+
+    Stream<BigDecimal> stream();
 
     /**
      * @return true if the set is empty

@@ -171,6 +171,11 @@ public record PointSet(Set<BigDecimal> values) implements BigDecimalRangeSet {
     }
 
     @Override
+    public Stream<BigDecimal> stream() {
+        return values.stream();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PointSet pointSet = (PointSet) o;

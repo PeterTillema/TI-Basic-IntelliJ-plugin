@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
@@ -116,6 +117,11 @@ public record Point(BigDecimal value) implements BigDecimalRangeSet {
     @Override
     public BigDecimal[] asRangeArray() {
         return new BigDecimal[]{value, value};
+    }
+
+    @Override
+    public Stream<BigDecimal> stream() {
+        return Stream.of(value);
     }
 
     @Override
