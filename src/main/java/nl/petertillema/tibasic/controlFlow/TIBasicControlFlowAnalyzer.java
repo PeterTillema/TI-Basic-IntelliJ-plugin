@@ -20,6 +20,7 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import nl.petertillema.tibasic.controlFlow.descriptor.AnsDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.MatrixDescriptor;
@@ -131,7 +132,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
     public TIBasicControlFlowAnalyzer(@NotNull DfaValueFactory factory, @NotNull PsiElement psiBlock) {
         this.factory = factory;
         this.psiBlock = psiBlock;
-        this.ansVariable = factory.getVarFactory().createVariableValue(new NumericDescriptor("Ans"));
+        this.ansVariable = factory.getVarFactory().createVariableValue(new AnsDescriptor("Ans"));
     }
 
     public ControlFlow buildControlFlow() {
@@ -764,7 +765,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         }
 
         // List
-        else if (child instanceof TIBasicCustomList || childType == TIBasicTypes.LIST_VARIABLE || childType == TIBasicTypes.ANS_VARIABLE) {
+        else if (child instanceof TIBasicCustomList || childType == TIBasicTypes.LIST_VARIABLE) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new ListDescriptor(child.getText()));
             addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
             if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
@@ -880,6 +881,11 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             }
 
             addInstruction(new PushInstruction(tempMatrixVar, new TIBasicDfaAnchor(child)));
+        }
+
+        // Ans
+        else if (childType == TIBasicTypes.ANS_VARIABLE) {
+            addInstruction(new PushInstruction(this.ansVariable, new TIBasicDfaAnchor(child)));
         }
 
         // Number, math variables

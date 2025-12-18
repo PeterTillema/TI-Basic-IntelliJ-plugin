@@ -26,7 +26,7 @@ public class ListDescriptor extends TIBasicVariableDescriptor {
         listName = listName.replace("⌊", "|L")
                 .replace("ʟ", "|L")
                 .replace("smallL", "|L");
-        if (listName.matches("^L[1-6]$") || listName.startsWith("|L")) return listName;
+        if (listName.matches("^L[1-6]$") || listName.startsWith("|L") || listName.equals("Ans")) return listName;
         return "|L" + listName;
     }
 
