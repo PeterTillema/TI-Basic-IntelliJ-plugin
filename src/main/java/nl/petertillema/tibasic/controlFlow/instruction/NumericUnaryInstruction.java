@@ -95,18 +95,28 @@ public class NumericUnaryInstruction extends EvalInstruction {
                     return out;
                 }
                 case TO_RADIAN: {
-                    if (dims != 1 || !(radianType instanceof DfBooleanConstantType constantType)) return factory.getUnknown();
+                    if (dims != 1) return factory.getUnknown();
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execOperator(v ->
-                            constantType.getValue() ? v : v.eval(fromValue(NUM_TO_RADIAN_CONSTANT), BinaryOperator.TIMES));
+                    DfElementMap res;
+                    if (radianType instanceof DfBooleanConstantType constantType) {
+                        res = elementMap.execOperator(v ->
+                                constantType.getValue() ? v : v.eval(fromValue(NUM_TO_RADIAN_CONSTANT), BinaryOperator.TIMES));
+                    } else {
+                        res = elementMap.unknownElements();
+                    }
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }
                 case TO_DEGREE: {
-                    if (dims != 1 || !(radianType instanceof DfBooleanConstantType constantType)) return factory.getUnknown();
+                    if (dims != 1) return factory.getUnknown();
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execOperator(v ->
-                            constantType.getValue() ? v.eval(fromValue(NUM_TO_DEGREE_CONSTANT), BinaryOperator.TIMES) : v);
+                    DfElementMap res;
+                    if (radianType instanceof DfBooleanConstantType constantType) {
+                        res = elementMap.execOperator(v ->
+                                constantType.getValue() ? v.eval(fromValue(NUM_TO_DEGREE_CONSTANT), BinaryOperator.TIMES) : v);
+                    } else {
+                        res = elementMap.unknownElements();
+                    }
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }

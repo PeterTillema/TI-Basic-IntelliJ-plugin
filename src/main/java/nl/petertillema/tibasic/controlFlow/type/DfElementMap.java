@@ -37,6 +37,10 @@ public class DfElementMap {
         return dimensionLengths;
     }
 
+    public DfElementMap unknownElements() {
+        return new DfElementMap(dimensions, new ArrayList<>(dimensionLengths), new HashMap<>());
+    }
+
     public DfElementMap execOperator(@NotNull Function<DfBigDecimalType, DfType> operator) {
         Map<Integer, Map<Integer, DfBigDecimalType>> newElements = new HashMap<>();
         for (Map.Entry<Integer, Map<Integer, DfBigDecimalType>> rowEntry : elements.entrySet()) {

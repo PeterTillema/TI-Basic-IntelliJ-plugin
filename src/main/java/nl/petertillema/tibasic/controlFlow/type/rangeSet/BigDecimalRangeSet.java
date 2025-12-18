@@ -34,6 +34,13 @@ public interface BigDecimalRangeSet {
         return values.length == 0 ? Empty.EMPTY : (values.length == 1 ? new Point(values[0]) : new PointSet(new HashSet<>(Arrays.asList(values))));
     }
 
+    static BigDecimalRangeSet modRange(@NotNull BigDecimal from, @NotNull BigDecimal to, @NotNull BigDecimal mod) {
+        if (from.compareTo(to) > 0) return Empty.EMPTY;
+        if (from.compareTo(to) == 0) return new Point(from);
+        if (mod.compareTo(BigDecimal.ZERO) <= 0) return Empty.EMPTY;
+        return new ModRange(from, to, mod);
+    }
+
     static BigDecimalRangeSet range(@NotNull BigDecimal from, @NotNull BigDecimal to) {
         return from.compareTo(to) == 0 ? point(from) : new Range(from, to);
     }
