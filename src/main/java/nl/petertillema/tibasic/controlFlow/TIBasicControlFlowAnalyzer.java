@@ -162,7 +162,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             if (foundLabel != null) {
                 gotoPair.getSecond().setOffset(foundLabel);
             } else {
-                System.out.println("Corresponding label not found!");
+                throw new AnalyzerException();
             }
         }
     }
