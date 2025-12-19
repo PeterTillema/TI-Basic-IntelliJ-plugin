@@ -77,8 +77,7 @@ public record ListElementDescriptor(int index) implements VariableDescriptor {
         int maxLength = isMatrix ? 99 : 999;
         if (min.compareTo(max) == 0) {
             DfaValue value = getListElementValue(factory, arrayDfaVar, min, maxLength);
-            if (value == null) return factory.getUnknown();
-            return state.getDfType(array) instanceof DfMatrixType ? value : factory.fromDfType(state.getDfType(value));
+            return value == null ? factory.getUnknown() : value;
         }
         DfType result = indexSet.stream()
                 .map(value -> getListElementValue(factory, arrayDfaVar, value, maxLength))

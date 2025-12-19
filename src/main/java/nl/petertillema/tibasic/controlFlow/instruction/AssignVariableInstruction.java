@@ -10,6 +10,7 @@ import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DerivedVariableDescriptor;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
+import nl.petertillema.tibasic.controlFlow.descriptor.Synthetic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,18 +30,29 @@ public class AssignVariableInstruction extends ExpressionPushingInstruction {
     public DfaInstructionState[] accept(@NotNull DataFlowInterpreter interpreter,
                                         @NotNull DfaMemoryState stateBefore) {
         DfaValue destination = stateBefore.pop();
-        DfaValue value = stateBefore.pop();
+        DfaValue source = stateBefore.pop();
 
         if (destination instanceof DfaVariableValue destinationVar) {
-            interpreter.getListener().beforeAssignment(value, destination, stateBefore, getDfaAnchor());
+            interpreter.getListener().beforeAssignment(source, destination, stateBefore, getDfaAnchor());
+
+            // In rare cases where the source depends on the destination, such as with L1->L1 or Ans(2)->Ans, we must
+            // ensure that before the destination gets flushed entirely, the source is read. This is done by copying it
+            // to a temporary variable (which gets flushed at the end of the statement anyway) and replacing the source
+            // value with this new temporary variable. This means that flushing the destination variable doesn't impact
+            // the source value at all.
+            if (source.dependsOn(destinationVar)) {
+                DfaVariableValue tempVar = interpreter.getFactory().getVarFactory().createVariableValue(Synthetic.create());
+                copy(stateBefore, source, tempVar);
+                source = tempVar;
+            }
 
             stateBefore.flushVariable(destinationVar);
-            copy(stateBefore, value, destinationVar);
+            copy(stateBefore, source, destinationVar);
 
-            interpreter.getListener().afterAssignment(value, destination, stateBefore, getDfaAnchor());
+            interpreter.getListener().afterAssignment(source, destination, stateBefore, getDfaAnchor());
             pushResult(interpreter, stateBefore, destinationVar);
         } else {
-            pushResult(interpreter, stateBefore, value);
+            pushResult(interpreter, stateBefore, source);
         }
 
         return nextStates(interpreter, stateBefore);
