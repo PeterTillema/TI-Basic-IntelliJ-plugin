@@ -964,14 +964,43 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr optional_rparen
+  // ANS_VARIABLE LPAREN expr COMMA expr optional_rparen
+  static boolean matrix_ans_index(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "matrix_ans_index")) return false;
+    if (!nextTokenIs(b, ANS_VARIABLE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 0, ANS_VARIABLE, LPAREN);
+    r = r && expr(b, l + 1, -1);
+    r = r && consumeToken(b, COMMA);
+    p = r; // pin = 4
+    r = r && report_error_(b, expr(b, l + 1, -1));
+    r = p && optional_rparen(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // matrix_normal_index | matrix_ans_index
   public static boolean matrix_index(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "matrix_index")) return false;
     if (!nextTokenIs(b, "<matrix index>", ANS_VARIABLE, MATRIX_VARIABLE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, MATRIX_INDEX, "<matrix index>");
-    r = matrix_index_0(b, l + 1);
-    r = r && consumeToken(b, LPAREN);
+    r = matrix_normal_index(b, l + 1);
+    if (!r) r = matrix_ans_index(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // MATRIX_VARIABLE LPAREN expr COMMA expr optional_rparen
+  static boolean matrix_normal_index(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "matrix_normal_index")) return false;
+    if (!nextTokenIs(b, MATRIX_VARIABLE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 2, MATRIX_VARIABLE, LPAREN);
     p = r; // pin = 2
     r = r && report_error_(b, expr(b, l + 1, -1));
     r = p && report_error_(b, consumeToken(b, COMMA)) && r;
@@ -979,15 +1008,6 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = p && optional_rparen(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // MATRIX_VARIABLE | ANS_VARIABLE
-  private static boolean matrix_index_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "matrix_index_0")) return false;
-    boolean r;
-    r = consumeToken(b, MATRIX_VARIABLE);
-    if (!r) r = consumeToken(b, ANS_VARIABLE);
-    return r;
   }
 
   /* ********************************************************** */

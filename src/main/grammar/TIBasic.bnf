@@ -128,7 +128,9 @@ literal_expr ::= matrix_index | list_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIAB
     methods=[getReferences]
 }
 list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list) LPAREN expr optional_rparen { pin=2 }
-matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr optional_rparen { pin=2 }
+matrix_index ::= matrix_normal_index | matrix_ans_index
+private matrix_normal_index ::= MATRIX_VARIABLE LPAREN expr COMMA expr optional_rparen { pin=2 }
+private matrix_ans_index ::= ANS_VARIABLE LPAREN expr COMMA expr optional_rparen { pin=4 } // Ans(expr) is considered a list index, so only pin after a comma is encountered
 anonymous_list ::= LCURLY <<list expr>> optional_rcurly { pin=1 }
 anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> optional_rbracket { pin=1 }
 anonymous_matrix_row ::= LBRACKET <<list expr>> optional_rbracket { pin=1 }
@@ -180,7 +182,6 @@ plot_statement ::= PLOT_COMMAND LPAREN PLOT_TYPE COMMA expr COMMA expr [COMMA PL
 command_statement ::= simple_command | arguments_command
 private simple_command ::= COMMAND_NO_PARENS [<<list expr>>] { pin=1 }
 private arguments_command ::= COMMAND_WITH_PARENS LPAREN <<list expr>> optional_rparen { pin=1 }
-
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////
 
 ////////////////////////////////////// COMPOUND STATEMENTS ///////////////////////////////////////
