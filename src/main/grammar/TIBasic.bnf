@@ -27,7 +27,10 @@ private statement_internal ::= compound_statement | simple_statement
 fake statement ::=
 
 private meta list ::= <<p>> (COMMA <<p>>)*
-private optional_rparen ::= [RPAREN]
+private optional_rparen ::= RPAREN | before_sto_or_newline
+private optional_rcurly ::= RCURLY | before_sto_or_newline
+private optional_rbracket ::= RBRACKET | before_sto_or_newline
+private before_sto_or_newline ::= &(<<eof>> | NEWLINE | STO)
 private optional_end ::= [END]
 
 private NEWLINE ::= CRLF | COLON
@@ -126,9 +129,9 @@ literal_expr ::= matrix_index | list_index | EXPR_FUNCTIONS_NO_ARGS | ANS_VARIAB
 }
 list_index ::= (LIST_VARIABLE | ANS_VARIABLE | custom_list) LPAREN expr optional_rparen { pin=2 }
 matrix_index ::= (MATRIX_VARIABLE | ANS_VARIABLE) LPAREN expr COMMA expr optional_rparen { pin=2 }
-anonymous_list ::= LCURLY <<list expr>> [RCURLY] { pin=1 }
-anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> [RBRACKET] { pin=1 }
-anonymous_matrix_row ::= LBRACKET <<list expr>> [RBRACKET] { pin=1 }
+anonymous_list ::= LCURLY <<list expr>> optional_rcurly { pin=1 }
+anonymous_matrix ::= LBRACKET <<list anonymous_matrix_row>> optional_rbracket { pin=1 }
+anonymous_matrix_row ::= LBRACKET <<list expr>> optional_rbracket { pin=1 }
 //////////////////////////////////////// BASIC EXPRESSION ////////////////////////////////////////
 
 /////////////////////////////////////// SIMPLE STATEMENTS ////////////////////////////////////////

@@ -1,15 +1,38 @@
 // This is a generated file. Not intended for manual editing.
 package nl.petertillema.tibasic.parser;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.LightPsiParser;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
+
+import static com.intellij.lang.parser.GeneratedParserUtilBase.Parser;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.TRUE_CONDITION;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._AND_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._COLLAPSE_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._LEFT_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._NONE_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase._NOT_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.adapt_builder_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.addVariant;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeToken;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeTokenSmart;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeTokens;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.create_token_set_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.current_position_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.empty_element_parsed_guard_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.enter_section_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.eof;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.exit_section_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.nextTokenIs;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.nextTokenIsSmart;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.parseTokens;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.recursion_guard_;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.report_error_;
+import static nl.petertillema.tibasic.psi.TIBasicTypes.*;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class TIBasicParser implements PsiParser, LightPsiParser {
@@ -62,7 +85,7 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LCURLY <<list expr>> [RCURLY]
+  // LCURLY <<list expr>> optional_rcurly
   public static boolean anonymous_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_list")) return false;
     if (!nextTokenIs(b, LCURLY)) return false;
@@ -71,20 +94,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LCURLY);
     p = r; // pin = 1
     r = r && report_error_(b, list(b, l + 1, expr_parser_));
-    r = p && anonymous_list_2(b, l + 1) && r;
+    r = p && optional_rcurly(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [RCURLY]
-  private static boolean anonymous_list_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "anonymous_list_2")) return false;
-    consumeToken(b, RCURLY);
-    return true;
-  }
-
   /* ********************************************************** */
-  // LBRACKET <<list anonymous_matrix_row>> [RBRACKET]
+  // LBRACKET <<list anonymous_matrix_row>> optional_rbracket
   public static boolean anonymous_matrix(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_matrix")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
@@ -93,20 +109,13 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LBRACKET);
     p = r; // pin = 1
     r = r && report_error_(b, list(b, l + 1, TIBasicParser::anonymous_matrix_row));
-    r = p && anonymous_matrix_2(b, l + 1) && r;
+    r = p && optional_rbracket(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [RBRACKET]
-  private static boolean anonymous_matrix_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "anonymous_matrix_2")) return false;
-    consumeToken(b, RBRACKET);
-    return true;
-  }
-
   /* ********************************************************** */
-  // LBRACKET <<list expr>> [RBRACKET]
+  // LBRACKET <<list expr>> optional_rbracket
   public static boolean anonymous_matrix_row(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "anonymous_matrix_row")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
@@ -115,16 +124,9 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LBRACKET);
     p = r; // pin = 1
     r = r && report_error_(b, list(b, l + 1, expr_parser_));
-    r = p && anonymous_matrix_row_2(b, l + 1) && r;
+    r = p && optional_rbracket(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // [RBRACKET]
-  private static boolean anonymous_matrix_row_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "anonymous_matrix_row_2")) return false;
-    consumeToken(b, RBRACKET);
-    return true;
   }
 
   /* ********************************************************** */
@@ -264,6 +266,29 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, SIMPLE_VARIABLE);
     if (!r) r = consumeToken(b, MATRIX_VARIABLE);
     if (!r) r = consumeToken(b, WINDOW_VARIABLE);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // &(<<eof>> | NEWLINE | STO)
+  static boolean before_sto_or_newline(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "before_sto_or_newline")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _AND_);
+    r = before_sto_or_newline_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // <<eof>> | NEWLINE | STO
+  private static boolean before_sto_or_newline_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "before_sto_or_newline_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = eof(b, l + 1);
+    if (!r) r = NEWLINE(b, l + 1);
+    if (!r) r = consumeToken(b, STO);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1005,11 +1030,33 @@ public class TIBasicParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [RPAREN]
+  // RBRACKET | before_sto_or_newline
+  static boolean optional_rbracket(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "optional_rbracket")) return false;
+    boolean r;
+    r = consumeToken(b, RBRACKET);
+    if (!r) r = before_sto_or_newline(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // RCURLY | before_sto_or_newline
+  static boolean optional_rcurly(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "optional_rcurly")) return false;
+    boolean r;
+    r = consumeToken(b, RCURLY);
+    if (!r) r = before_sto_or_newline(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // RPAREN | before_sto_or_newline
   static boolean optional_rparen(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "optional_rparen")) return false;
-    consumeToken(b, RPAREN);
-    return true;
+    boolean r;
+    r = consumeToken(b, RPAREN);
+    if (!r) r = before_sto_or_newline(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */

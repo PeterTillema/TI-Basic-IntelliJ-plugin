@@ -12,6 +12,10 @@ public class TIBasicGrammarBadExpressionTestCase extends ParsingTestCase {
         doTest(true);
     }
 
+    public void testExpressionMissingRParen() {
+        doTest(true);
+    }
+
     @Override
     protected String getTestDataPath() {
         return "src/test/testData/parser/";
