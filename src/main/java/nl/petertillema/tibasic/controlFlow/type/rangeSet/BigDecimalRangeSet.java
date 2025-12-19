@@ -1,7 +1,6 @@
 package nl.petertillema.tibasic.controlFlow.type.rangeSet;
 
 import com.intellij.codeInspection.dataFlow.value.RelationType;
-import nl.petertillema.tibasic.controlFlow.BigDecimalUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +15,7 @@ import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MC;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MIN;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.nextDown;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.nextUp;
+import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 
 public interface BigDecimalRangeSet {
 
@@ -28,7 +28,7 @@ public interface BigDecimalRangeSet {
     static BigDecimalRangeSet point(@NotNull BigDecimal value) {
         if (value.compareTo(BigDecimal.ZERO) == 0) return Point.ZERO;
         if (value.compareTo(BigDecimal.ONE) == 0) return Point.ONE;
-        return new Point(BigDecimalUtil.round(value));
+        return new Point(round(value));
     }
 
     static BigDecimalRangeSet pointSet(@NotNull BigDecimal... values) {
@@ -211,13 +211,13 @@ public interface BigDecimalRangeSet {
         }
         if (dividendMin.compareTo(BigDecimal.ZERO) >= 0) {
             return divisorMin.compareTo(BigDecimal.ZERO) > 0
-                    ? range(dividendMin.divide(divisorMax, MC), dividendMax.divide(divisorMin, MC))
-                    : range(dividendMax.divide(divisorMax, MC), dividendMin.divide(divisorMin, MC));
+                    ? range(round(dividendMin.divide(divisorMax, MC)), round(dividendMax.divide(divisorMin, MC)))
+                    : range(round(dividendMax.divide(divisorMax, MC)), round(dividendMin.divide(divisorMin, MC)));
         }
         if (divisorMin.compareTo(BigDecimal.ZERO) > 0) {
-            return range(dividendMin.divide(divisorMin, MC), dividendMax.divide(divisorMax, MC));
+            return range(round(dividendMin.divide(divisorMin, MC)), round(dividendMax.divide(divisorMax, MC)));
         }
-        return range(dividendMax.divide(divisorMin, MC), dividendMin.divide(divisorMax, MC));
+        return range(round(dividendMax.divide(divisorMin, MC)), round(dividendMin.divide(divisorMax, MC)));
     }
 
     @NotNull BigDecimal[] asRangeArray();

@@ -13,6 +13,7 @@ import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MAX;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MIN;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.nextDown;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.nextUp;
+import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.range;
 
@@ -129,16 +130,16 @@ public record Range(BigDecimal from, BigDecimal to) implements BigDecimalRangeSe
     @Override
     public @NotNull BigDecimalRangeSet plus(BigDecimalRangeSet other) {
         if (other.isEmpty()) return other;
-        BigDecimal min = from.add(other.min());
-        BigDecimal max = to.add(other.max());
+        BigDecimal min = round(from.add(other.min()));
+        BigDecimal max = round(to.add(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 
     @Override
     public @NotNull BigDecimalRangeSet mul(BigDecimalRangeSet other) {
         if (other.isEmpty()) return other;
-        BigDecimal min = from.multiply(other.min());
-        BigDecimal max = to.multiply(other.max());
+        BigDecimal min = round(from.multiply(other.min()));
+        BigDecimal max = round(to.multiply(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 
@@ -150,6 +151,11 @@ public record Range(BigDecimal from, BigDecimal to) implements BigDecimalRangeSe
             if (value.compareTo(from) < 0 || value.compareTo(to) > 0) return this;
             if (value.compareTo(from) == 0) return range(nextUp(from), to);
             if (value.compareTo(to) == 0) return range(from, nextDown(to));
+            BigDecimal downValue = nextDown(value);
+            BigDecimal nextValue = nextUp(value);
+            // This is possible due to rounding errors
+            if (downValue.compareTo(from) < 0) return range(nextValue, to);
+            if (nextValue.compareTo(to) > 0) return range(from, downValue);
             return new RangeSet(new BigDecimal[]{from, nextDown(value), nextUp(value), to});
         }
         if (other instanceof PointSet(Set<BigDecimal> values)) {
@@ -174,17 +180,16 @@ public record Range(BigDecimal from, BigDecimal to) implements BigDecimalRangeSe
             }
             return fromRanges(result, i);
         }
-        if (other instanceof Range(BigDecimal from1, BigDecimal v)) {
-            BigDecimalRangeSet toJoin = Empty.EMPTY;
-            if (v.compareTo(this.from) < 0 || from1.compareTo(this.to) > 0) return this;
-            if (from1.compareTo(this.from) <= 0 && v.compareTo(this.to) >= 0) return toJoin;
-            if (from1.compareTo(this.from) > 0 && v.compareTo(this.to) < 0) {
-                return new RangeSet(new BigDecimal[]{this.from, nextDown(from1), nextUp(v), this.to}).join(toJoin);
+        if (other instanceof Range(BigDecimal from1, BigDecimal to1)) {
+            if (to1.compareTo(this.from) < 0 || from1.compareTo(this.to) > 0) return this;
+            if (from1.compareTo(this.from) <= 0 && to1.compareTo(this.to) >= 0) return Empty.EMPTY;
+            if (from1.compareTo(this.from) > 0 && to1.compareTo(this.to) < 0) {
+                return new RangeSet(new BigDecimal[]{this.from, nextDown(from1), nextUp(to1), this.to});
             }
             if (from1.compareTo(this.from) <= 0) {
-                return range(nextUp(v), this.to).join(toJoin);
+                return range(nextUp(to1), this.to);
             }
-            return range(this.from, nextDown(from1)).join(toJoin);
+            return range(this.from, nextDown(from1));
         }
         BigDecimal[] ranges = ((RangeSet) other).ranges();
         BigDecimalRangeSet result = this;

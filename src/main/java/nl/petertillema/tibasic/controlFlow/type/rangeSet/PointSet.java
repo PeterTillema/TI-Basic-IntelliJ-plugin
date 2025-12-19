@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.range;
 
@@ -107,17 +108,17 @@ public record PointSet(Set<BigDecimal> values) implements BigDecimalRangeSet {
         if (other instanceof Point(BigDecimal value)) {
             if (value.compareTo(BigDecimal.ZERO) == 0) return this;
             Set<BigDecimal> out = new HashSet<>();
-            values.forEach(val -> out.add(val.add(value)));
+            values.forEach(val -> out.add(round(val.add(value))));
             return new PointSet(out);
         }
         if (other instanceof PointSet(Set<BigDecimal> values1)) {
             Set<BigDecimal> out = new HashSet<>();
             values.forEach(thisValue ->
-                    values1.forEach(otherValue -> out.add(thisValue.add(otherValue))));
+                    values1.forEach(otherValue -> out.add(round(thisValue.add(otherValue)))));
             return new PointSet(out);
         }
-        BigDecimal min = min().add(other.min());
-        BigDecimal max = max().add(other.max());
+        BigDecimal min = round(min().add(other.min()));
+        BigDecimal max = round(max().add(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 
@@ -128,17 +129,17 @@ public record PointSet(Set<BigDecimal> values) implements BigDecimalRangeSet {
             if (value.compareTo(BigDecimal.ZERO) == 0) return empty();
             if (value.compareTo(BigDecimal.ONE) == 0) return this;
             Set<BigDecimal> out = new HashSet<>();
-            values.forEach(val -> out.add(val.multiply(value)));
+            values.forEach(val -> out.add(round(val.multiply(value))));
             return new PointSet(out);
         }
         if (other instanceof PointSet(Set<BigDecimal> values1)) {
             Set<BigDecimal> out = new HashSet<>();
             values.forEach(thisValue ->
-                    values1.forEach(otherValue -> out.add(thisValue.multiply(otherValue))));
+                    values1.forEach(otherValue -> out.add(round(thisValue.multiply(otherValue)))));
             return new PointSet(out);
         }
-        BigDecimal min = min().multiply(other.min());
-        BigDecimal max = max().multiply(other.max());
+        BigDecimal min = round(min().multiply(other.min()));
+        BigDecimal max = round(max().multiply(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 

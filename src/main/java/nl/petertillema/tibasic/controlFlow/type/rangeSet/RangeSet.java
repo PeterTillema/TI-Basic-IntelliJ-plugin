@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.round;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.all;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.fromRanges;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.range;
@@ -105,20 +106,20 @@ public record RangeSet(BigDecimal[] ranges) implements BigDecimalRangeSet {
         if (other instanceof Point(BigDecimal value)) {
             BigDecimal[] out = new BigDecimal[ranges.length];
             for (int i = 0; i < ranges.length; i++) {
-                out[i] = ranges[i].add(value);
+                out[i] = round(ranges[i].add(value));
             }
             return new RangeSet(out);
         }
-        BigDecimal min = min().add(other.min());
-        BigDecimal max = max().add(other.max());
+        BigDecimal min = round(min().add(other.min()));
+        BigDecimal max = round(max().add(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 
     @Override
     public @NotNull BigDecimalRangeSet mul(BigDecimalRangeSet other) {
         if (other.isEmpty()) return other;
-        BigDecimal min = min().multiply(other.min());
-        BigDecimal max = max().multiply(other.max());
+        BigDecimal min = round(min().multiply(other.min()));
+        BigDecimal max = round(max().multiply(other.max()));
         return min.compareTo(max) <= 0 ? range(min, max) : range(max, min);
     }
 

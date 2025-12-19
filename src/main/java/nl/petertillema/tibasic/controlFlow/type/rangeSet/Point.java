@@ -87,7 +87,7 @@ public record Point(BigDecimal value) implements BigDecimalRangeSet {
     public @NotNull BigDecimalRangeSet plus(BigDecimalRangeSet other) {
         if (other.isEmpty()) return other;
         if (other instanceof Point(BigDecimal value1)) {
-            return point(value.add(value1));
+            return point(round(value.add(value1)));
         }
         return other.plus(this);
     }
@@ -99,7 +99,7 @@ public record Point(BigDecimal value) implements BigDecimalRangeSet {
         if (value.compareTo(BigDecimal.ONE) == 0) return multiplier;
         if (value.compareTo(BigDecimal.valueOf(-1)) == 0) return multiplier.negate();
         if (multiplier instanceof Point(BigDecimal value1)) {
-            return point(value.multiply(value1));
+            return point(round(value.multiply(value1)));
         }
         return multiplier.mul(this);
     }
