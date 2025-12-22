@@ -12,7 +12,7 @@ import nl.petertillema.tibasic.controlFlow.operator.LogicalOperator;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
 import nl.petertillema.tibasic.controlFlow.type.TypeEvaluator;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,8 +22,8 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
-import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.point;
-import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet.point;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet.pointSet;
 
 /**
  * An instruction which performs a logical binary comparison against two values. These include the standard logical
@@ -97,7 +97,7 @@ public class LogicalBinaryInstruction extends ExpressionPushingInstruction {
         }
 
         static Truth fromDfType(DfBigDecimalType bd) {
-            BigDecimalRangeSet range = bd.range();
+            RangeSet range = bd.range();
             boolean canBeZero = range.contains(ZERO);
             boolean canBeNonZero = !range.subtract(point(ZERO)).isEmpty();
             if (canBeZero && !canBeNonZero) return ALWAYS_FALSE;

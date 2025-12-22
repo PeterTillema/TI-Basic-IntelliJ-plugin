@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
-import static nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet.pointSet;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet.pointSet;
 
 /**
  * An instruction which performs a boolean binary comparison against two values. These include the standard relation

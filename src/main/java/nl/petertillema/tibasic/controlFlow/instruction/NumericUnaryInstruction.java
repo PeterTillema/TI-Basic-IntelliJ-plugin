@@ -17,6 +17,7 @@ import nl.petertillema.tibasic.controlFlow.type.DfBooleanConstantType;
 import nl.petertillema.tibasic.controlFlow.type.DfElementMap;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
 import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,6 @@ import java.math.BigDecimal;
 import static ch.obermuhlner.math.big.BigDecimalMath.pi;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.MC;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
-import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 
 /**
@@ -91,7 +91,7 @@ public class NumericUnaryInstruction extends EvalInstruction {
                 case FACTORIAL: {
                     if (dims != 1) return factory.getUnknown();
                     DfaVariableValue out = factory.getVarFactory().createVariableValue(Synthetic.create());
-                    DfElementMap res = elementMap.execOperator(v -> fromRange(FULL_RANGE));
+                    DfElementMap res = elementMap.execOperator(v -> fromRange(RangeSet.ALL));
                     res.exportTo((DfaMemoryStateImpl) state, out);
                     return out;
                 }
@@ -145,7 +145,7 @@ public class NumericUnaryInstruction extends EvalInstruction {
                 if (!constantType.getValue()) yield factory.fromDfType(v);
                 yield factory.fromDfType(v.eval(fromValue(NUM_TO_DEGREE_CONSTANT), BinaryOperator.TIMES));
             }
-            case FACTORIAL -> factory.fromDfType(fromRange(FULL_RANGE));
+            case FACTORIAL -> factory.fromDfType(fromRange(RangeSet.ALL));
             case TRANSPOSE -> factory.getUnknown();
         };
     }

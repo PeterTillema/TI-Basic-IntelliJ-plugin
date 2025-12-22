@@ -6,13 +6,13 @@ import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import nl.petertillema.tibasic.controlFlow.type.DfListType;
 import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
 import nl.petertillema.tibasic.controlFlow.type.DfStringType;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet.range;
 
 /**
  * These values are special descriptors, in the sense that those are not actual variable types which you will see in
@@ -25,7 +25,7 @@ public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
         @Override
         public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
             int length = qualifier != null && qualifier.getDfType() instanceof DfMatrixType ? 99 : 999;
-            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(length)));
+            return fromRange(range(BigDecimal.ZERO, BigDecimal.valueOf(length)));
         }
 
         @Override
@@ -37,7 +37,7 @@ public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
     MATRIX_LENGTH {
         @Override
         public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99)));
+            return fromRange(range(BigDecimal.ZERO, BigDecimal.valueOf(99)));
         }
 
         @Override
@@ -49,7 +49,7 @@ public enum SpecialFieldDescriptor implements DerivedVariableDescriptor {
     STRING_LENGTH {
         @Override
         public @NotNull DfType getDfType(@Nullable DfaVariableValue qualifier) {
-            return fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(999)));
+            return fromRange(range(BigDecimal.ZERO, BigDecimal.valueOf(999)));
         }
 
         @Override

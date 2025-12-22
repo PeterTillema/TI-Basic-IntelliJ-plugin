@@ -7,16 +7,15 @@ import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
 import com.intellij.codeInspection.dataFlow.value.VariableDescriptor;
 import nl.petertillema.tibasic.controlFlow.type.DfMatrixType;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.Range;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
+import static nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet.range;
 
 /**
  * A descriptor for a list element, which could be a single element within a normal list, or a row in a matrix.
@@ -35,9 +34,9 @@ public record ListElementDescriptor(int index) implements VariableDescriptor {
         // Is it a row in a matrix? If so, it should be a list. If not, it's a regular numeric value within the
         // TI-BASIC range.
         if (qualifier != null && qualifier.getDfType() instanceof DfMatrixType) {
-            return SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromRange(new Range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
+            return SpecialFieldDescriptor.LIST_LENGTH.asDfType(fromRange(range(BigDecimal.ZERO, BigDecimal.valueOf(99))));
         }
-        return fromRange(FULL_RANGE);
+        return fromRange(RangeSet.ALL);
     }
 
     @Override
@@ -68,7 +67,7 @@ public record ListElementDescriptor(int index) implements VariableDescriptor {
     public static @NotNull DfaValue getListElementValue(@NotNull DfaValueFactory factory,
                                                         @NotNull DfaMemoryState state,
                                                         @NotNull DfaValue array,
-                                                        @NotNull BigDecimalRangeSet indexSet) {
+                                                        @NotNull RangeSet indexSet) {
         if (!(array instanceof DfaVariableValue arrayDfaVar)) return factory.getUnknown();
         if (indexSet.isEmpty()) return factory.getUnknown();
         boolean isMatrix = state.getDfType(array) instanceof DfMatrixType;

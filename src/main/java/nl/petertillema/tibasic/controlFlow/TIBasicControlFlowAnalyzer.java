@@ -47,7 +47,7 @@ import nl.petertillema.tibasic.controlFlow.operator.UnaryOperator;
 import nl.petertillema.tibasic.controlFlow.problem.ListIndexOutOfBoundsProblem;
 import nl.petertillema.tibasic.controlFlow.problem.MatrixIndexOutOfBoundsProblem;
 import nl.petertillema.tibasic.controlFlow.type.DfStringType;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import nl.petertillema.tibasic.psi.TIBasicAndExpr;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousList;
 import nl.petertillema.tibasic.psi.TIBasicAnonymousMatrix;
@@ -119,7 +119,6 @@ import java.util.Map;
 import static nl.petertillema.tibasic.TIBasicPaletteColors.TIBASIC_COLOR_NUMS;
 import static nl.petertillema.tibasic.controlFlow.BigDecimalUtil.numToString;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalConstantType.fromValue;
-import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.FULL_RANGE;
 import static nl.petertillema.tibasic.controlFlow.type.DfBigDecimalRangeType.fromRange;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.FunctionRangeSetDomain.GETKEY_DOMAIN;
 import static nl.petertillema.tibasic.controlFlow.type.rangeSet.FunctionRangeSetDomain.RAND_DOMAIN;
@@ -913,13 +912,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         // Expression function
         else if (childType == TIBasicTypes.EXPR_FUNCTIONS_NO_ARGS) {
             String fname = child.getText();
-            BigDecimalRangeSet domain;
+            RangeSet domain;
             if ("rand".equals(fname)) {
                 domain = RAND_DOMAIN;
             } else if ("getKey".equals(fname)) {
                 domain = GETKEY_DOMAIN;
             } else {
-                domain = FULL_RANGE;
+                domain = RangeSet.ALL;
             }
             addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(child)));
         }

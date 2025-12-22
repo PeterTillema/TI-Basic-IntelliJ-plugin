@@ -3,7 +3,7 @@ package nl.petertillema.tibasic.controlFlow.type;
 import com.intellij.codeInspection.dataFlow.types.DfConstantType;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.RelationType;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,9 +12,9 @@ import java.util.Objects;
 
 public class DfBigDecimalConstantType extends DfConstantType<BigDecimal> implements DfBigDecimalType {
 
-    private final @Nullable BigDecimalRangeSet wideRange;
+    private final @Nullable RangeSet wideRange;
 
-    public DfBigDecimalConstantType(BigDecimal value, @Nullable BigDecimalRangeSet wideRange) {
+    public DfBigDecimalConstantType(BigDecimal value, @Nullable RangeSet wideRange) {
         super(value);
         this.wideRange = wideRange;
     }
@@ -43,12 +43,12 @@ public class DfBigDecimalConstantType extends DfConstantType<BigDecimal> impleme
     }
 
     @Override
-    public @NotNull BigDecimalRangeSet range() {
-        return BigDecimalRangeSet.point(getValue());
+    public @NotNull RangeSet range() {
+        return RangeSet.point(getValue());
     }
 
     @Override
-    public @NotNull BigDecimalRangeSet wideRange() {
+    public @NotNull RangeSet wideRange() {
         return wideRange == null ? range() : this.wideRange;
     }
 

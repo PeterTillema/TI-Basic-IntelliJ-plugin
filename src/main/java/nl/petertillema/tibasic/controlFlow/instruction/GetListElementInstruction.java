@@ -14,7 +14,7 @@ import nl.petertillema.tibasic.controlFlow.descriptor.ListElementDescriptor;
 import nl.petertillema.tibasic.controlFlow.descriptor.SpecialFieldDescriptor;
 import nl.petertillema.tibasic.controlFlow.problem.IndexOutOfBoundsProblem;
 import nl.petertillema.tibasic.controlFlow.type.DfBigDecimalType;
-import nl.petertillema.tibasic.controlFlow.type.rangeSet.BigDecimalRangeSet;
+import nl.petertillema.tibasic.controlFlow.type.rangeSet.RangeSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,7 @@ public class GetListElementInstruction extends ExpressionPushingInstruction {
         }
         DfaInstructionState[] states = problem.processOutOfBounds(interpreter, stateBefore, index, list, outOfBoundsTransfer);
         if (states != null) return states;
-        BigDecimalRangeSet rangeSet = DfBigDecimalType.extractRange(stateBefore.getDfType(index));
+        RangeSet rangeSet = DfBigDecimalType.extractRange(stateBefore.getDfType(index));
         DfaValue result = ListElementDescriptor.getListElementValue(interpreter.getFactory(), stateBefore, list, rangeSet);
         pushResult(interpreter, stateBefore, result);
         finalStates.add(nextState(interpreter, stateBefore));
