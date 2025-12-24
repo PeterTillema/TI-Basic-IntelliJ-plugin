@@ -9,6 +9,7 @@ import com.intellij.codeInspection.dataFlow.lang.ir.Instruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PopInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.PushValueInstruction;
+import com.intellij.codeInspection.dataFlow.lang.ir.ResultOfInstruction;
 import com.intellij.codeInspection.dataFlow.lang.ir.SwapInstruction;
 import com.intellij.codeInspection.dataFlow.types.DfType;
 import com.intellij.codeInspection.dataFlow.value.DfaControlTransferValue;
@@ -641,6 +642,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         addInstruction(new SwapInstruction());
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.DIVIDE));
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.POW));
+        addInstruction(new ResultOfInstruction(new TIBasicDfaAnchor(expr)));
     }
 
     @Override
@@ -715,7 +717,8 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         addInstruction(new DupInstruction());
         addInstruction(new DupInstruction());
         addInstruction(new NumericBinaryInstruction(null, BinaryOperator.TIMES));
-        addInstruction(new NumericBinaryInstruction(new TIBasicDfaAnchor(expr), BinaryOperator.TIMES));
+        addInstruction(new NumericBinaryInstruction(null, BinaryOperator.TIMES));
+        addInstruction(new ResultOfInstruction(new TIBasicDfaAnchor(expr)));
     }
 
     @Override
@@ -743,6 +746,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         } else {
             pushUnknown();
         }
+        addInstruction(new ResultOfInstruction(new TIBasicDfaAnchor(expr)));
     }
 
     @Override
@@ -757,7 +761,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
         // List index
         if (child instanceof TIBasicListIndex listIndex) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new ListDescriptor(listIndex.getFirstChild().getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(listIndex.getFirstChild())));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
 
             if (listIndex.getExpr() != null) {
                 listIndex.getExpr().accept(this);
@@ -765,13 +769,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 pushUnknown();
             }
             DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new ListIndexOutOfBoundsProblem(), transfer));
         }
 
         // List
         else if (child instanceof TIBasicCustomList || childType == TIBasicTypes.LIST_VARIABLE) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new ListDescriptor(child.getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
             if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
                 if (expressions.isEmpty()) {
                     pushUnknown();
@@ -779,14 +783,14 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                     expressions.getFirst().accept(this);
                 }
                 DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new ListIndexOutOfBoundsProblem(), transfer));
             }
         }
 
         // Matrix index
         else if (child instanceof TIBasicMatrixIndex matrixIndex) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new MatrixDescriptor(matrixIndex.getFirstChild().getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(matrixIndex.getFirstChild())));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
 
             if (!matrixIndex.getExprList().isEmpty()) {
                 matrixIndex.getExprList().getFirst().accept(this);
@@ -794,7 +798,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 pushUnknown();
             }
             DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new MatrixIndexOutOfBoundsProblem(), transfer));
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new MatrixIndexOutOfBoundsProblem(), transfer));
 
             if (matrixIndex.getExprList().size() > 1) {
                 matrixIndex.getExprList().get(1).accept(this);
@@ -802,13 +806,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                 pushUnknown();
             }
             transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
+            addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new ListIndexOutOfBoundsProblem(), transfer));
         }
 
         // Matrix
         else if (childType == TIBasicTypes.MATRIX_VARIABLE) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new MatrixDescriptor(child.getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
 
             if (child.getNextSibling() != null && child.getNextSibling().getNode().getElementType() == TIBasicTypes.LPAREN) {
                 if (expressions.isEmpty()) {
@@ -817,7 +821,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                     expressions.getFirst().accept(this);
                 }
                 DfaControlTransferValue transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new MatrixIndexOutOfBoundsProblem(), transfer));
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new MatrixIndexOutOfBoundsProblem(), transfer));
 
                 if (expressions.size() < 2) {
                     pushUnknown();
@@ -825,7 +829,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
                     expressions.get(1).accept(this);
                 }
                 transfer = factory.controlTransfer(DfaControlTransferValue.RETURN_TRANSFER, FList.emptyList());
-                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(child), new ListIndexOutOfBoundsProblem(), transfer));
+                addInstruction(new GetListElementInstruction(new TIBasicDfaAnchor(element), new ListIndexOutOfBoundsProblem(), transfer));
             }
         }
 
@@ -836,7 +840,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
             addInstruction(new PushValueInstruction(listType));
             addInstruction(new PushInstruction(tempListVar, null));
-            addInstruction(new AssignVariableInstruction(null));
+            addInstruction(new AssignVariableInstruction(new TIBasicDfaAnchor(element)));
             addInstruction(new PopInstruction());
 
             int idx = 1;
@@ -894,7 +898,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
 
         // Ans
         else if (childType == TIBasicTypes.ANS_VARIABLE) {
-            addInstruction(new PushInstruction(this.ansVariable, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushInstruction(this.ansVariable, new TIBasicDfaAnchor(element)));
         }
 
         // Number, math variables
@@ -906,7 +910,7 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             else num = element.getText();
 
             DfType numberType = fromValue(numToString(num));
-            addInstruction(new PushValueInstruction(numberType, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushValueInstruction(numberType, new TIBasicDfaAnchor(element)));
         }
 
         // Expression function
@@ -920,13 +924,13 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             } else {
                 domain = RangeSet.ALL;
             }
-            addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(child)));
+            addInstruction(new PushValueInstruction(fromRange(domain), new TIBasicDfaAnchor(element)));
         }
 
         // Color variable
         else if (childType == TIBasicTypes.COLOR_VARIABLE) {
             DfType colorType = fromValue(TIBASIC_COLOR_NUMS.get(child.getText()));
-            addInstruction(new PushValueInstruction(colorType, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushValueInstruction(colorType, new TIBasicDfaAnchor(element)));
         }
 
         // String
@@ -936,19 +940,19 @@ public class TIBasicControlFlowAnalyzer extends TIBasicVisitor {
             if (text.endsWith("\"")) text = text.substring(0, text.length() - 1);
             DfStringType stringType = (DfStringType) SpecialFieldDescriptor.STRING_LENGTH.asDfType(fromValue(text.length()));
             stringType.setText(text);
-            addInstruction(new PushValueInstruction(stringType));
+            addInstruction(new PushValueInstruction(stringType, new TIBasicDfaAnchor(element)));
         }
 
         // String variables: EQUATION_VARIABLE, STRING_VARIABLE
         else if (childType == TIBasicTypes.EQUATION_VARIABLE || childType == TIBasicTypes.STRING_VARIABLE) {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new StringDescriptor(child.getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
         }
 
         // Numeric variables: SIMPLE_VARIABLE, WINDOW_VARIABLE
         else {
             DfaVariableValue var = factory.getVarFactory().createVariableValue(new NumericDescriptor(child.getText()));
-            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(child)));
+            addInstruction(new PushInstruction(var, new TIBasicDfaAnchor(element)));
         }
     }
 
