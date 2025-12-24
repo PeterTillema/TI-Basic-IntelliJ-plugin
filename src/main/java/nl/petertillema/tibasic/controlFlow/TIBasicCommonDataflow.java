@@ -15,6 +15,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
+import nl.petertillema.tibasic.controlFlow.anchor.TIBasicDfaAnchor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
